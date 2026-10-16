@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión Policial - NUEVE96SEIS</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- PANTALLA DE LOGIN (ACCESO RESTRINGIDO) -->
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-card">
+            <div class="login-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h2>NUEVE96SEIS</h2>
+            <p>Acceso Restringido - Comisaría Quinta</p>
+            
+            <form id="loginForm" onsubmit="realizarLogin(event)">
+                <div class="login-group">
+                    <label for="user"><i class="fa-solid fa-user"></i> Usuario</label>
+                    <input type="text" id="user" class="input-field" placeholder="COMISARIA QUINTA" required>
+                </div>
+                <div class="login-group">
+                    <label for="pass"><i class="fa-solid fa-lock"></i> Contraseña</label>
+                    <input type="password" id="pass" class="input-field" placeholder="Contraseña institucional" required>
+                </div>
+                <div id="loginError" class="login-error" style="display: none;">
+                    Usuario o contraseña incorrectos.
+                </div>
+                <button type="submit" class="btn-login">
+                    <i class="fa-solid fa-right-to-bracket"></i> Ingresar al Sistema
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SIDEBAR DE NAVEGACIÓN (PRINCIPAL) -->
+    <aside class="sidebar" id="mainSidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>NUEVE96SEIS</span>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="#narraciones" class="nav-link active" onclick="seleccionarMenu(this)"><i class="fa-solid fa-file-lines"></i> Plantillas de Narraciones</a></li>
+            <li><a href="#identificados" class="nav-link" onclick="seleccionarMenu(this)"><i class="fa-solid fa-id-card"></i> Datos de Identificados</a></li>
+        </ul>
+        <div class="sidebar-footer-logout">
+            <button type="button" onclick="cerrarSesion()" class="btn-logout" title="Cerrar Sesión">
+                <i class="fa-solid fa-power-off"></i> Cerrar Sesión
+            </button>
+        </div>
+    </aside>
+
+    <!-- VISTA PRINCIPAL DEL SISTEMA -->
+    <div class="main-container" id="vistaPrincipal">
+        
+        <!-- HEADER SUPERIOR -->
+        <header class="top-header">
+            <div class="header-title">
+                <h1>Panel de Operaciones Policiales</h1>
+                <p>Gestión rápida de actas, identificaciones y registros de eventos en servicio</p>
+            </div>
+            <div class="header-badge">
+                <span class="pulse-dot"></span> EN SERVICIO (SGSP)
+            </div>
+        </header>
+
+        <!-- CONTENIDO -->
+        <main class="content-body">
+
+            <!-- SECCIÓN 1: PLANTILLAS DE NARRACIONES -->
+            <section id="narraciones" class="section-card">
+                <div class="section-header">
+                    <h2><i class="fa-solid fa-file-pen"></i> Plantillas de Narraciones Operativas</h2>
+                    <div class="header-actions">
+                        <button type="button" id="btnNuevaPlantilla" class="btn-add-plantilla" title="Agregar nueva plantilla">
+                            <i class="fa-solid fa-plus"></i> Nueva Plantilla
+                        </button>
+                    </div>
+                </div>
+                <p class="section-desc">Seleccione y copie la plantilla requerida para su parte diario o actuaciones en el móvil SM15783[cite: 1]. Haga clic en el texto o título de cualquier plantilla para editarla.</p>
+
+                <div class="grid-plantillas" id="gridPlantillas">
+                    <!-- 1. Operativo Ciudad -->
+                    <div class="card-plantilla">
+                        <h3 contenteditable="true">1. Operativo Ciudad</h3>
+                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en Móvil Of SM15783 se procede a efectuar OPERATIVO CIUDAD estático con conos para la ordenanza del transito en EL LUGAR DEL HECHO
+Procediendo a identificar a los siguientes CONDUCTORES con sus respectivos Vehículos que a
+continuación se detalla:
+1)- CONDUCTOR:
+VEHÍCULO:
+2)- CONDUCTOR:
+VEHÍCULO:
+Cursados los datos filiatorios de los conductores y sus vehículos en el Sistema de Gestión de Seguridad Publica carecen de requisitoria pendiente al día de la fecha.</code></pre>
+                        <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+
+                    <!-- 2. Recorrida Autobalza -->
+                    <div class="card-plantilla">
+                        <h3 contenteditable="true">2. Recorrida Autobalza</h3>
+                        <pre><code contenteditable="true">En el dia de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SM15783, se efectuaron recorridas por AUTO BALSA, PLAYA SANTA MARIA Y CAMINOS VECINALES de la zona. Finalizando sin novedad.-[cite: 1]</code></pre>
+                        <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+
+                    <!-- 3. Liceo 6 y Escuela 13 -->
+                    <div class="card-plantilla">
+                        <h3 contenteditable="true">3. Liceo 6 y Escuela 13</h3>
+                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO CALLE MONSEÑOR NICOLINI ESQUINA DOCTOR VICTOR GRILLE C (OBRA EN CONSTRUCCIÓN), en prevención y disuacion de los delitos, finalizando sin novedad.-[cite: 2]</code></pre>
+                        <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+
+                    <!-- 4. Policlínica Nuevo Paysandú -->
+                    <div class="card-plantilla">
+                        <h3 contenteditable="true">4. Policlínica Nvo.Pay</h3>
+                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se realizo recorrida por el LUGAR DEL HECHO CALLE JUAN MANUEL BLANES ESQUINA AVENIDA DE LAS AMERICAS Y MONSEÑOR NICOLINI, zona de Policlínica de Salud Publica, finalizando sin novedad.-[cite: 2]</code></pre>
+                        <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+
+                    <!-- 5. Recorrida Nuevo Paysandú -->
+                    <div class="card-plantilla">
+                        <h3 contenteditable="true">5. Recorrida Nvo. Paysandú</h3>
+                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se efectuó recorrida en Barrio Nuevo Paysandú, por las calles, Monseñor Nicolini, María Ustia de Goya, Park Way, José Segundo Carballo, Calle 100, Juan Manuel Blanes, Víctor Grille, Raúl Celone, Marcelina Brugos de Fleitas, etc, finalizando sin novedad.-[cite: 2]</code></pre>
+                        <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+
+                    <!-- 6. Puesto Escuela Barrio Norte -->
+                    <div class="card-plantilla">
+                        <h3 contenteditable="true">6. Puesto ELA Barrio Norte</h3>
+                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI 5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO CALLE REPÚBLICA DE VENEZUELA ESQUINA ASUNCIÓN, por prevención y disuasión de los delitos, finalizando sin novedad.[cite: 2]</code></pre>
+                        <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+
+                    <!-- 7. Recorrida Barrio Norte -->
+                    <div class="card-plantilla">
+                        <h3 contenteditable="true">7. Recorrida B. Norte</h3>
+                        <pre><code contenteditable="true">En el día de la fecha FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se procede a realizar recorridas por calle Valparaiso, Asuncion, La Paz, Ecuador, Bolivia Colombia Costa Rica, Panama Rep, Venezuela y calles internas del Barrio Norte. Finalizando sin novedad.-[cite: 2]</code></pre>
+                        <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+
+                    <!-- 8. Cancha de Padel -->
+                    <div class="card-plantilla">
+                        <h3 contenteditable="true">8. Cancha de padel</h3>
+                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se efectuó puesto de observación en CAMINO LAS CANTERAS Y REPÚBLICA DE CHILE (cancha de biopadel), finalizando sin novedad.-[cite: 2]</code></pre>
+                        <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+
+                    <!-- 9. Cancha de Racing -->
+                    <div class="card-plantilla">
+                        <h3 contenteditable="true">9. Cancha de Racing</h3>
+                        <pre><code contenteditable="true">En el día de la fecha por parte de FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se efectuó recorrida en la UBICACIÓN DEL HECHO CALLE REPUBLICA DE CHILE ESQUINA COSTA RICA(CANCHA DE RACING), finalizando sin novedad.[cite: 3]</code></pre>
+                        <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+
+                    <!-- 10. Puesto Melchora -->
+                    <div class="card-plantilla">
+                        <h3 contenteditable="true">10. Puesto Melchora</h3>
+                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO AVENIDAS LAS AMERICAS Y CAMINO LAS CANTERAS (centro educativo agrario MELCHORA CUENCA), por prevención y disuasión de los delitos, finalizando sin novedad.[cite: 3]</code></pre>
+                        <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+
+                    <!-- 11. Recorrida Constancia -->
+                    <div class="card-plantilla">
+                        <h3 contenteditable="true">11. Recorrida Constancia</h3>
+                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO RUTA 3 KILÓMETRO 383, Localidad de Constancia. Finalizando sin novedad.[cite: 3]</code></pre>
+                        <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+
+                    <!-- 12. Recorrida Moteles -->
+                    <div class="card-plantilla">
+                        <h3 contenteditable="true">12. Recorridas MOTELES</h3>
+                        <pre><code contenteditable="true">VENUS: En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por BULEVAR ARTIGAS ENTRE REPUBLICA DE CHILE Y REPUBLICA DE BOLIVIA, en Motel VENUS y zonas aledañas, finalizando sin novedad.-
+GENESIS: En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se procede a realizar recorridas por ESTFANEL Y COSTA RICA, en Motel GENESIS y zonas aledañas, finalizando sin novedad.-
+FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede a realizar recorridas por AVENIDA DOCTOR ROLDAN Y CALLE LOS OLIVOS, en Motel FEELING y FECHORIAS este ultimo actuellement abandonado y zonas aledañas, finalizando sin novedad.-[cite: 3, 4]</code></pre>
+                        <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+
+                    <!-- 13. AFE -->
+                    <div class="card-plantilla">
+                        <h3 contenteditable="true">13. AFE</h3>
+                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO CALLE COMERCIO ESQUINA AVENIDA DE LAS AMERICAS(Deposito AFE) en prevención y disuacion de los delitos, finalizando sin novedad.-[cite: 4]</code></pre>
+                        <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+
+                    <!-- 14. Identificados -->
+                    <div class="card-plantilla">
+                        <h3 contenteditable="true">14. IDENTIFICADOS</h3>
+                        <pre><code contenteditable="true">En el día de la fecha en circunstancias de recorridas, por parte de los FUNCIONARIOS ACTUANTES AGENTE AGENTE, en móvil SM15783, se procede a Identificar al los TESTIGOS DEL EVENTO en el horario comprendido de en las inmediaciones Consultado a SGSP no poseen requisitoria al momento, a posterior se les permite continuar. Finalizando sin novedad.-[cite: 4]</code></pre>
+                        <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+
+                    <!-- 15. Citación Cumplida -->
+                    <div class="card-plantilla">
+                        <h3 contenteditable="true">15. CITACIÓN CUMPLIDA</h3>
+                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil oficial SMI 5783 se concurre al domicilio de TESTIGO DEL EVENTO quien firma recibo de citación dejando constancia de su notificación.-[cite: 4]</code></pre>
+                        <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SECCIÓN 2: DATOS DE IDENTIFICADOS -->
+            <section id="identificados" class="section-card">
+                <div class="section-header">
+                    <h2><i class="fa-solid fa-address-book"></i> Datos de Identificados</h2>
+                </div>
+                <p class="section-desc">Haga clic sobre cualquier ciudadano en la tabla para acceder a su ficha individual de inteligencia y mapa.</p>
+
+                <!-- FORMULARIO DE INGRESO -->
+                <div class="form-identificado-container">
+                    <input type="text" id="inputCedula" placeholder="Cédula / ID" class="input-field">
+                    <input type="text" id="inputNombre" placeholder="Nombre Completo (Apellido y Nombre)" class="input-field">
+                    <input type="text" id="inputApodo" placeholder="Apodo / Alias" class="input-field">
+                    <input type="date" id="inputFecha" class="input-field">
+                    <input type="text" id="inputDomicilio" placeholder="Domicilio / Antecedentes" class="input-field">
+                    <button type="button" id="btnAgregar" class="btn-agregar">
+                        <i class="fa-solid fa-user-plus"></i> Agregar Identificado
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 15%;">Cédula / ID</th>
+                                <th style="width: 25%;">Nombre Completo</th>
+                                <th style="width: 15%;">Apodo</th>
+                                <th style="width: 15%;">Fecha Nac.</th>
+                                <th style="width: 25%;">Domicilio / Antecedentes</th>
+                                <th style="width: 5%;">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaIdentificadosBody">
+                            <!-- Registros dinámicos -->
+                        </tbody>
+                    </table>
+                    <div id="empty-state" class="empty-state-msg">
+                        <i class="fa-solid fa-folder-open"></i>
+                        <span>No hay registros cargados. Complete el formulario superior y presione "Agregar Identificado".</span>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="footer">
+            <p><i class="fa-solid fa-scale-balanced"></i> "Proteger, servir y hacer cumplir la ley con firmeza, honor y absoluta vocación de justicia."</p>
+        </footer>
+    </div>
+
+
+    <!-- VISTA SECUNDARIA: FICHA INDIVIDUAL DEL IDENTIFICADO -->
+    <div class="profile-container" id="vistaPerfil" style="display: none;">
+        
+        <!-- HEADER DE LA FICHA -->
+        <header class="top-header profile-header">
+            <div class="header-title">
+                <button type="button" class="btn-volver" onclick="volverAlInicio()">
+                    <i class="fa-solid fa-arrow-left"></i> Volver al Panel
+                </button>
+                <h1 id="perfilTituloNombre">Ficha del Identificado</h1>
+                <p id="perfilSubInfo">Cédula: - | Apodo: -</p>
+            </div>
+            <div class="header-badge profile-badge">
+                <i class="fa-solid fa-folder-closed"></i> EXPEDIENTE DIGITAL
+            </div>
+        </header>
+
+        <!-- CONTENIDO DE LA FICHA -->
+        <main class="content-body">
+            <div class="profile-grid">
+                
+                <!-- COLUMNA 1: MAPA Y NOTAS -->
+                <div class="profile-col">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2><i class="fa-solid fa-map-location-dot"></i> Ubicación y Mapa del Domicilio</h2>
+                        </div>
+                        <p class="section-desc">Adjunte imágenes del mapa donde reside el individuo o puntos de interés operativo.</p>
+                        
+                        <div class="upload-box" onclick="document.getElementById('inputMapaFile').click()">
+                            <i class="fa-solid fa-map"></i>
+                            <span>Haga clic para subir imagen del mapa</span>
+                            <input type="file" id="inputMapaFile" accept="image/*" style="display: none;" onchange="cargarMultimedia(event, 'mapa')">
+                        </div>
+                        <div id="contenedorMapa" class="multimedia-preview-container"></div>
+                    </div>
+
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2><i class="fa-solid fa-file-lines"></i> Notas de Inteligencia / Observaciones</h2>
+                        </div>
+                        <textarea id="txtNotasPerfil" class="input-field textarea-field" placeholder="Escriba aquí observaciones de campo, vehículos frecuentes, horarios o vínculos..." oninput="guardarNotasPerfil()"></textarea>
+                    </div>
+                </div>
+
+                <!-- COLUMNA 2: FOTOGRAFÍAS Y VIDEOS -->
+                <div class="profile-col">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2><i class="fa-solid fa-camera"></i> Fotografías del Sujeto / Entorno</h2>
+                        </div>
+                        <p class="section-desc">Cargue imágenes fotográficas. Haga clic sobre cualquier foto para verla en pantalla completa o descargarla.</p>
+                        
+                        <div class="upload-box" onclick="document.getElementById('inputFotoFile').click()">
+                            <i class="fa-solid fa-image"></i>
+                            <span>Haga clic para subir fotografías</span>
+                            <input type="file" id="inputFotoFile" accept="image/*" multiple style="display: none;" onchange="cargarMultimedia(event, 'fotos')">
+                        </div>
+                        <div id="contenedorFotos" class="multimedia-preview-grid"></div>
+                    </div>
+
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2><i class="fa-solid fa-video"></i> Registros en Video</h2>
+                        </div>
+                        <p class="section-desc">Cargue archivos de video relacionados con intervenciones o seguimientos.</p>
+                        
+                        <div class="upload-box" onclick="document.getElementById('inputVideoFile').click()">
+                            <i class="fa-solid fa-file-video"></i>
+                            <span>Haga clic para subir videos</span>
+                            <input type="file" id="inputVideoFile" accept="video/*" multiple style="display: none;" onchange="cargarMultimedia(event, 'videos')">
+                        </div>
+                        <div id="contenedorVideos" class="multimedia-preview-grid"></div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p><i class="fa-solid fa-shield-halved"></i> "Comisaría Quinta - Sistema de Archivo Táctico Multimedia"</p>
+        </footer>
+    </div>
+
+
+    <!-- MODAL PARA VER FOTOS EN PANTALLA COMPLETA -->
+    <div id="modalImagen" class="image-modal" style="display: none;" onclick="cerrarModalImagen()">
+        <span class="modal-close">&times;</span>
+        <img id="imgModalAmpliada" src="" alt="Vista ampliada">
+    </div>
+
+
+    <!-- SCRIPT DE LOGIN, NAVEGACIÓN Y MULTIMEDIA -->
+    <script>
+        let idCiudadanoActual = null;
+
+        // --- CONTROL DE ACCESO (LOGIN) ---
+        function realizarLogin(event) {
+            event.preventDefault();
+            const usuarioInput = document.getElementById('user').value.trim();
+            const passwordInput = document.getElementById('pass').value.trim();
+            
+            const usuarioValido = "COMISARIA QUINTA";
+            const passwordValida = "UNIDA";
+
+            if (usuarioInput.toUpperCase() === usuarioValido && passwordInput === passwordValida) {
+                localStorage.setItem('sesion_activa', 'true');
+                document.getElementById('loginOverlay').style.display = 'none';
+            } else {
+                const errorDiv = document.getElementById('loginError');
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        function cerrarSesion() {
+            localStorage.removeItem('sesion_activa');
+            document.getElementById('user').value = '';
+            document.getElementById('pass').value = '';
+            document.getElementById('loginOverlay').style.display = 'flex';
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const sesionActiva = localStorage.getItem('sesion_activa');
+            if (sesionActiva === 'true') {
+                document.getElementById('loginOverlay').style.display = 'none';
+            }
+            renderizarTablaIdentificados();
+        });
+
+        function seleccionarMenu(elemento) {
+            const navLinks = document.querySelectorAll('.sidebar-menu .nav-link');
+            navLinks.forEach(link => link.classList.remove('active'));
+            elemento.classList.add('active');
+        }
+
+        // --- GESTIÓN DE IDENTIFICADOS ---
+        document.getElementById('btnAgregar').addEventListener('click', function() {
+            const cedula = document.getElementById('inputCedula').value.trim();
+            const nombre = document.getElementById('inputNombre').value.trim();
+            const apodo = document.getElementById('inputApodo').value.trim();
+            const fecha = document.getElementById('inputFecha').value;
+            const domicilio = document.getElementById('inputDomicilio').value.trim();
+
+            if (!nombre) {
+                alert('Por favor, ingrese al menos el nombre completo.');
+                return;
+            }
+
+            let fechaFormateada = '-';
+            if (fecha) {
+                const partes = fecha.split('-');
+                fechaFormateada = `${partes[2]}/${partes[1]}/${partes[0]}`;
+            }
+
+            const nuevoRegistro = {
+                id: Date.now(),
+                cedula: cedula || '-',
+                nombre: nombre,
+                apodo: apodo || '-',
+                fechaNac: fechaFormateada,
+                domicilio: domicilio || '-',
+                notas: '',
+                mapa: null,
+                fotos: [],
+                videos: []
+            };
+
+            let listaIdentificados = JSON.parse(localStorage.getItem('policia_identificados') || '[]');
+            listaIdentificados.push(nuevoRegistro);
+            listaIdentificados.sort((a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' }));
+
+            localStorage.setItem('policia_identificados', JSON.stringify(listaIdentificados));
+            renderizarTablaIdentificados();
+
+            document.getElementById('inputCedula').value = '';
+            document.getElementById('inputNombre').value = '';
+            document.getElementById('inputApodo').value = '';
+            document.getElementById('inputFecha').value = '';
+            document.getElementById('inputDomicilio').value = '';
+        });
+
+        function renderizarTablaIdentificados() {
+            const tbody = document.getElementById('tablaIdentificadosBody');
+            const emptyState = document.getElementById('empty-state');
+            let listaIdentificados = JSON.parse(localStorage.getItem('policia_identificados') || '[]');
+
+            if(!tbody) return;
+            tbody.innerHTML = '';
+
+            if (listaIdentificados.length === 0) {
+                emptyState.style.display = 'flex';
+                return;
+            } else {
+                emptyState.style.display = 'none';
+            }
+
+            listaIdentificados.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td onclick="abrirPerfil(${item.id})"><strong>${item.cedula}</strong></td>
+                    <td onclick="abrirPerfil(${item.id})">${item.nombre}</td>
+                    <td onclick="abrirPerfil(${item.id})"><span class="apodo-badge">${item.apodo}</span></td>
+                    <td onclick="abrirPerfil(${item.id})">${item.fechaNac}</td>
+                    <td onclick="abrirPerfil(${item.id})">${item.domicilio}</td>
+                    <td>
+                        <button type="button" onclick="event.stopPropagation(); eliminarIdentificado(${item.id})" class="btn-eliminar" title="Eliminar registro">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function eliminarIdentificado(id) {
+            let listaIdentificados = JSON.parse(localStorage.getItem('policia_identificados') || '[]');
+            listaIdentificados = listaIdentificados.filter(item => item.id !== id);
+            localStorage.setItem('policia_identificados', JSON.stringify(listaIdentificados));
+            renderizarTablaIdentificados();
+        }
+
+        // --- NAVEGACIÓN A PERFIL INDIVIDUAL ---
+        function abrirPerfil(id) {
+            idCiudadanoActual = id;
+            let listaIdentificados = JSON.parse(localStorage.getItem('policia_identificados') || '[]');
+            let ciudadano = listaIdentificados.find(item => item.id === id);
+
+            if (!ciudadano) return;
+
+            document.getElementById('perfilTituloNombre').innerText = ciudadano.nombre;
+            document.getElementById('perfilSubInfo').innerText = `Cédula: ${ciudadano.cedula} | Apodo: ${ciudadano.apodo} | Domicilio: ${ciudadano.domicilio}`;
+            document.getElementById('txtNotasPerfil').value = ciudadano.notas || '';
+
+            renderizarMultimediaPerfil(ciudadano);
+
+            document.getElementById('vistaPrincipal').style.display = 'none';
+            document.getElementById('mainSidebar').style.display = 'none';
+            document.getElementById('vistaPerfil').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function volverAlInicio() {
+            idCiudadanoActual = null;
+            document.getElementById('vistaPerfil').style.display = 'none';
+            document.getElementById('vistaPrincipal').style.display = 'flex';
+            document.getElementById('mainSidebar').style.display = 'flex';
+        }
+
+        // --- NOTAS Y MULTIMEDIA ---
+        function guardarNotasPerfil() {
+            if (!idCiudadanoActual) return;
+            let listaIdentificados = JSON.parse(localStorage.getItem('policia_identificados') || '[]');
+            let index = listaIdentificados.findIndex(item => item.id === idCiudadanoActual);
+            if (index !== -1) {
+                listaIdentificados[index].notas = document.getElementById('txtNotasPerfil').value;
+                localStorage.setItem('policia_identificados', JSON.stringify(listaIdentificados));
+            }
+        }
+
+        function cargarMultimedia(event, tipo) {
+            if (!idCiudadanoActual) return;
+            const files = event.target.files;
+            if (!files || files.length === 0) return;
+
+            let listaIdentificados = JSON.parse(localStorage.getItem('policia_identificados') || '[]');
+            let index = listaIdentificados.findIndex(item => item.id === idCiudadanoActual);
+            if (index === -1) return;
+
+            let ciudadano = listaIdentificados[index];
+
+            for (let i = 0; i < files.length; i++) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (tipo === 'mapa') {
+                        ciudadano.mapa = e.target.result;
+                    } else if (tipo === 'fotos') {
+                        ciudadano.fotos.push(e.target.result);
+                    } else if (tipo === 'videos') {
+                        ciudadano.videos.push(e.target.result);
+                    }
+                    localStorage.setItem('policia_identificados', JSON.stringify(listaIdentificados));
+                    renderizarMultimediaPerfil(ciudadano);
+                };
+                reader.readAsDataURL(files[i]);
+            }
+        }
+
+        function renderizarMultimediaPerfil(ciudadano) {
+            // Mapa
+            const contMapa = document.getElementById('contenedorMapa');
+            contMapa.innerHTML = '';
+            if (ciudadano.mapa) {
+                contMapa.innerHTML = `
+                    <div class="multimedia-preview-item">
+                        <img src="${ciudadano.mapa}" alt="Mapa domicilio" onclick="ampliarImagen('${ciudadano.mapa}')">
+                        <div class="media-actions">
+                            <a href="${ciudadano.mapa}" download="mapa_${ciudadano.cedula}.png" class="btn-media-action" title="Descargar" onclick="event.stopPropagation()"><i class="fa-solid fa-download"></i></a>
+                            <button type="button" class="btn-media-action delete" onclick="event.stopPropagation(); eliminarMultimedia('mapa', 0)" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Fotos
+            const contFotos = document.getElementById('contenedorFotos');
+            contFotos.innerHTML = '';
+            ciudadano.fotos.forEach((foto, idx) => {
+                const div = document.createElement('div');
+                div.className = 'multimedia-preview-item';
+                div.innerHTML = `
+                    <img src="${foto}" alt="Foto sujeto" onclick="ampliarImagen('${foto}')">
+                    <div class="media-actions">
+                        <a href="${foto}" download="foto_${ciudadano.cedula}_${idx+1}.png" class="btn-media-action" title="Descargar" onclick="event.stopPropagation()"><i class="fa-solid fa-download"></i></a>
+                        <button type="button" class="btn-media-action delete" onclick="event.stopPropagation(); eliminarMultimedia('fotos', ${idx})" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+                contFotos.appendChild(div);
+            });
+
+            // Videos
+            const contVideos = document.getElementById('contenedorVideos');
+            contVideos.innerHTML = '';
+            ciudadano.videos.forEach((video, idx) => {
+                const div = document.createElement('div');
+                div.className = 'multimedia-preview-item';
+                div.innerHTML = `
+                    <video controls src="${video}"></video>
+                    <div class="media-actions">
+                        <a href="${video}" download="video_${ciudadano.cedula}_${idx+1}.mp4" class="btn-media-action" title="Descargar" onclick="event.stopPropagation()"><i class="fa-solid fa-download"></i></a>
+                        <button type="button" class="btn-media-action delete" onclick="event.stopPropagation(); eliminarMultimedia('videos', ${idx})" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+                contVideos.appendChild(div);
+            });
+        }
+
+        function eliminarMultimedia(tipo, idx) {
+            if (!idCiudadanoActual) return;
+            let listaIdentificados = JSON.parse(localStorage.getItem('policia_identificados') || '[]');
+            let index = listaIdentificados.findIndex(item => item.id === idCiudadanoActual);
+            if (index === -1) return;
+
+            let ciudadano = listaIdentificados[index];
+            if (tipo === 'mapa') {
+                ciudadano.mapa = null;
+            } else if (tipo === 'fotos') {
+                ciudadano.fotos.splice(idx, 1);
+            } else if (tipo === 'videos') {
+                ciudadano.videos.splice(idx, 1);
+            }
+
+            localStorage.setItem('policia_identificados', JSON.stringify(listaIdentificados));
+            renderizarMultimediaPerfil(ciudadano);
+        }
+
+        // --- VISUALIZADOR DE IMAGEN EN GRANDE (MODAL) ---
+        function ampliarImagen(src) {
+            const modal = document.getElementById('modalImagen');
+            const imgModal = document.getElementById('imgModalAmpliada');
+            imgModal.src = src;
+            modal.style.display = 'flex';
+        }
+
+        function cerrarModalImagen() {
+            document.getElementById('modalImagen').style.display = 'none';
+        }
+
+        // --- PLANTILLAS ---
+        document.getElementById('btnNuevaPlantilla').addEventListener('click', function() {
+            const grid = document.getElementById('gridPlantillas');
+            const nuevaCard = document.createElement('div');
+            nuevaCard.className = 'card-plantilla';
+            nuevaCard.innerHTML = `
+                <h3 contenteditable="true">Nueva Plantilla (Editar Título)</h3>
+                <pre><code contenteditable="true">Escriba aquí los detalles de la nueva narración operativa...</code></pre>
+                <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            `;
+            grid.insertBefore(nuevaCard, grid.firstChild);
+        });
+    </script>
+</body>
+</html>
