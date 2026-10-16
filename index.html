@@ -6,6 +6,11 @@
     <title>Sistema de Gestión Policial - NUEVE96SEIS</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- SDKs de Firebase (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
 </head>
 <body>
 
@@ -173,28 +178,28 @@ Cursados los datos filiatorios de los conductores y sus vehículos en el Sistema
                         <h3 contenteditable="true">12. Recorridas MOTELES</h3>
                         <pre><code contenteditable="true">VENUS: En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por BULEVAR ARTIGAS ENTRE REPUBLICA DE CHILE Y REPUBLICA DE BOLIVIA, en Motel VENUS y zonas aledañas, finalizando sin novedad.-
 GENESIS: En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se procede a realizar recorridas por ESTFANEL Y COSTA RICA, en Motel GENESIS y zonas aledañas, finalizando sin novedad.-
-FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede a realizar recorridas por AVENIDA DOCTOR ROLDAN Y CALLE LOS OLIVOS, en Motel FEELING y FECHORIAS este ultimo actuellement abandonado y zonas aledañas, finalizando sin novedad.-[cite: 3, 4]</code></pre>
+FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede a realizar recorridas por AVENIDA DOCTOR ROLDAN Y CALLE LOS OLIVOS, en Motel FEELING y FECHORIAS este ultimo actuellement abandonado y zonas aledañas, finalizando sin novedad.-[cite: 3]</code></pre>
                         <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
 
                     <!-- 13. AFE -->
                     <div class="card-plantilla">
                         <h3 contenteditable="true">13. AFE</h3>
-                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO CALLE COMERCIO ESQUINA AVENIDA DE LAS AMERICAS(Deposito AFE) en prevención y disuacion de los delitos, finalizando sin novedad.-[cite: 4]</code></pre>
+                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO CALLE COMERCIO ESQUINA AVENIDA DE LAS AMERICAS(Deposito AFE) en prevención y disuacion de los delitos, finalizando sin novedad.-</code></pre>
                         <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
 
                     <!-- 14. Identificados -->
                     <div class="card-plantilla">
                         <h3 contenteditable="true">14. IDENTIFICADOS</h3>
-                        <pre><code contenteditable="true">En el día de la fecha en circunstancias de recorridas, por parte de los FUNCIONARIOS ACTUANTES AGENTE AGENTE, en móvil SM15783, se procede a Identificar al los TESTIGOS DEL EVENTO en el horario comprendido de en las inmediaciones Consultado a SGSP no poseen requisitoria al momento, a posterior se les permite continuar. Finalizando sin novedad.-[cite: 4]</code></pre>
+                        <pre><code contenteditable="true">En el día de la fecha en circunstancias de recorridas, por parte de los FUNCIONARIOS ACTUANTES AGENTE AGENTE, en móvil SM15783, se procede a Identificar al los TESTIGOS DEL EVENTO en el horario comprendido de en las inmediaciones Consultado a SGSP no poseen requisitoria al momento, a posterior se les permite continuar. Finalizando sin novedad.-</code></pre>
                         <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
 
                     <!-- 15. Citación Cumplida -->
                     <div class="card-plantilla">
                         <h3 contenteditable="true">15. CITACIÓN CUMPLIDA</h3>
-                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil oficial SMI 5783 se concurre al domicilio de TESTIGO DEL EVENTO quien firma recibo de citación dejando constancia de su notificación.-[cite: 4]</code></pre>
+                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil oficial SMI 5783 se concurre al domicilio de TESTIGO DEL EVENTO quien firma recibo de citación dejando constancia de su notificación.-</code></pre>
                         <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
 
@@ -233,7 +238,7 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
                             </tr>
                         </thead>
                         <tbody id="tablaIdentificadosBody">
-                            <!-- Registros dinámicos -->
+                            <!-- Registros dinámicos sincronizados desde Firebase -->
                         </tbody>
                     </table>
                     <div id="empty-state" class="empty-state-msg">
@@ -264,7 +269,7 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
                 <p id="perfilSubInfo">Cédula: - | Apodo: -</p>
             </div>
             <div class="header-badge profile-badge">
-                <i class="fa-solid fa-folder-closed"></i> EXPEDIENTE DIGITAL
+                <i class="fa-solid fa-folder-closed"></i> EXPEDIENTE DIGITAL CLOUD
             </div>
         </header>
 
@@ -283,7 +288,7 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
                         <div class="upload-box" onclick="document.getElementById('inputMapaFile').click()">
                             <i class="fa-solid fa-map"></i>
                             <span>Haga clic para subir imagen del mapa</span>
-                            <input type="file" id="inputMapaFile" accept="image/*" style="display: none;" onchange="cargarMultimedia(event, 'mapa')">
+                            <input type="file" id="inputMapaFile" accept="image/*" style="display: none;" onchange="subirMultimediaCloud(event, 'mapa')">
                         </div>
                         <div id="contenedorMapa" class="multimedia-preview-container"></div>
                     </div>
@@ -292,7 +297,7 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
                         <div class="section-header">
                             <h2><i class="fa-solid fa-file-lines"></i> Notas de Inteligencia / Observaciones</h2>
                         </div>
-                        <textarea id="txtNotasPerfil" class="input-field textarea-field" placeholder="Escriba aquí observaciones de campo, vehículos frecuentes, horarios o vínculos..." oninput="guardarNotasPerfil()"></textarea>
+                        <textarea id="txtNotasPerfil" class="input-field textarea-field" placeholder="Escriba aquí observaciones de campo, vehículos frecuentes, horarios o vínculos..." oninput="guardarNotasCloud()"></textarea>
                     </div>
                 </div>
 
@@ -307,7 +312,7 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
                         <div class="upload-box" onclick="document.getElementById('inputFotoFile').click()">
                             <i class="fa-solid fa-image"></i>
                             <span>Haga clic para subir fotografías</span>
-                            <input type="file" id="inputFotoFile" accept="image/*" multiple style="display: none;" onchange="cargarMultimedia(event, 'fotos')">
+                            <input type="file" id="inputFotoFile" accept="image/*" multiple style="display: none;" onchange="subirMultimediaCloud(event, 'fotos')">
                         </div>
                         <div id="contenedorFotos" class="multimedia-preview-grid"></div>
                     </div>
@@ -321,7 +326,7 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
                         <div class="upload-box" onclick="document.getElementById('inputVideoFile').click()">
                             <i class="fa-solid fa-file-video"></i>
                             <span>Haga clic para subir videos</span>
-                            <input type="file" id="inputVideoFile" accept="video/*" multiple style="display: none;" onchange="cargarMultimedia(event, 'videos')">
+                            <input type="file" id="inputVideoFile" accept="video/*" multiple style="display: none;" onchange="subirMultimediaCloud(event, 'videos')">
                         </div>
                         <div id="contenedorVideos" class="multimedia-preview-grid"></div>
                     </div>
@@ -343,9 +348,23 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
     </div>
 
 
-    <!-- SCRIPT DE LOGIN, NAVEGACIÓN Y MULTIMEDIA -->
+    <!-- SCRIPT DE FIREBASE Y FUNCIONALIDAD -->
     <script>
+        // --- CONFIGURACIÓN DE FIREBASE ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyDNB6ZzRQCM30h9F4r5cq5LZ9r9lhZwXrM",
+            authDomain: "nueve96seis-837ab.firebaseapp.com",
+            projectId: "nueve96seis-837ab",
+            storageBucket: "nueve96seis-837ab.firebasestorage.app",
+            messagingSenderId: "1084500805948",
+            appId: "1:1084500805948:web:e91f3ce7f2a3eed7639"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
         let idCiudadanoActual = null;
+        let ciudadanoActualData = null;
 
         // --- CONTROL DE ACCESO (LOGIN) ---
         function realizarLogin(event) {
@@ -377,7 +396,7 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
             if (sesionActiva === 'true') {
                 document.getElementById('loginOverlay').style.display = 'none';
             }
-            renderizarTablaIdentificados();
+            sincronizarTablaIdentificados();
         });
 
         function seleccionarMenu(elemento) {
@@ -386,7 +405,7 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
             elemento.classList.add('active');
         }
 
-        // --- GESTIÓN DE IDENTIFICADOS ---
+        // --- GESTIÓN DE IDENTIFICADOS EN FIREBASE ---
         document.getElementById('btnAgregar').addEventListener('click', function() {
             const cedula = document.getElementById('inputCedula').value.trim();
             const nombre = document.getElementById('inputNombre').value.trim();
@@ -406,135 +425,149 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
             }
 
             const nuevoRegistro = {
-                id: Date.now(),
                 cedula: cedula || '-',
                 nombre: nombre,
                 apodo: apodo || '-',
                 fechaNac: fechaFormateada,
                 domicilio: domicilio || '-',
                 notas: '',
-                mapa: null,
+                mapa: '',
                 fotos: [],
-                videos: []
+                videos: [],
+                creado: firebase.firestore.FieldValue.serverTimestamp()
             };
 
-            let listaIdentificados = JSON.parse(localStorage.getItem('policia_identificados') || '[]');
-            listaIdentificados.push(nuevoRegistro);
-            listaIdentificados.sort((a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' }));
-
-            localStorage.setItem('policia_identificados', JSON.stringify(listaIdentificados));
-            renderizarTablaIdentificados();
-
-            document.getElementById('inputCedula').value = '';
-            document.getElementById('inputNombre').value = '';
-            document.getElementById('inputApodo').value = '';
-            document.getElementById('inputFecha').value = '';
-            document.getElementById('inputDomicilio').value = '';
+            db.collection("identificados").add(nuevoRegistro)
+                .then(() => {
+                    document.getElementById('inputCedula').value = '';
+                    document.getElementById('inputNombre').value = '';
+                    document.getElementById('inputApodo').value = '';
+                    document.getElementById('inputFecha').value = '';
+                    document.getElementById('inputDomicilio').value = '';
+                })
+                .catch(error => {
+                    alert("Error al guardar en la nube: " + error.message);
+                });
         });
 
-        function renderizarTablaIdentificados() {
+        // Sincronización en tiempo real con Firestore
+        function sincronizarTablaIdentificados() {
             const tbody = document.getElementById('tablaIdentificadosBody');
             const emptyState = document.getElementById('empty-state');
-            let listaIdentificados = JSON.parse(localStorage.getItem('policia_identificados') || '[]');
 
-            if(!tbody) return;
-            tbody.innerHTML = '';
+            db.collection("identificados").orderBy("nombre").onSnapshot((snapshot) => {
+                if(!tbody) return;
+                tbody.innerHTML = '';
 
-            if (listaIdentificados.length === 0) {
-                emptyState.style.display = 'flex';
-                return;
-            } else {
-                emptyState.style.display = 'none';
-            }
+                if (snapshot.empty) {
+                    emptyState.style.display = 'flex';
+                    return;
+                } else {
+                    emptyState.style.display = 'none';
+                }
 
-            listaIdentificados.forEach(item => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td onclick="abrirPerfil(${item.id})"><strong>${item.cedula}</strong></td>
-                    <td onclick="abrirPerfil(${item.id})">${item.nombre}</td>
-                    <td onclick="abrirPerfil(${item.id})"><span class="apodo-badge">${item.apodo}</span></td>
-                    <td onclick="abrirPerfil(${item.id})">${item.fechaNac}</td>
-                    <td onclick="abrirPerfil(${item.id})">${item.domicilio}</td>
-                    <td>
-                        <button type="button" onclick="event.stopPropagation(); eliminarIdentificado(${item.id})" class="btn-eliminar" title="Eliminar registro">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
+                snapshot.forEach((doc) => {
+                    const item = doc.data();
+                    const id = doc.id;
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td onclick="abrirPerfil('${id}')"><strong>${item.cedula}</strong></td>
+                        <td onclick="abrirPerfil('${id}')">${item.nombre}</td>
+                        <td onclick="abrirPerfil('${id}')"><span class="apodo-badge">${item.apodo}</span></td>
+                        <td onclick="abrirPerfil('${id}')">${item.fechaNac}</td>
+                        <td onclick="abrirPerfil('${id}')">${item.domicilio}</td>
+                        <td>
+                            <button type="button" onclick="event.stopPropagation(); eliminarIdentificado('${id}')" class="btn-eliminar" title="Eliminar registro">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
             });
         }
 
         function eliminarIdentificado(id) {
-            let listaIdentificados = JSON.parse(localStorage.getItem('policia_identificados') || '[]');
-            listaIdentificados = listaIdentificados.filter(item => item.id !== id);
-            localStorage.setItem('policia_identificados', JSON.stringify(listaIdentificados));
-            renderizarTablaIdentificados();
+            if (confirm("¿Está seguro de eliminar este registro y sus archivos asociados?")) {
+                db.collection("identificados").doc(id).delete().catch(error => {
+                    alert("Error al eliminar: " + error.message);
+                });
+            }
         }
 
         // --- NAVEGACIÓN A PERFIL INDIVIDUAL ---
         function abrirPerfil(id) {
             idCiudadanoActual = id;
-            let listaIdentificados = JSON.parse(localStorage.getItem('policia_identificados') || '[]');
-            let ciudadano = listaIdentificados.find(item => item.id === id);
+            db.collection("identificados").doc(id).get().then((doc) => {
+                if (doc.exists) {
+                    ciudadanoActualData = doc.data();
 
-            if (!ciudadano) return;
+                    document.getElementById('perfilTituloNombre').innerText = ciudadanoActualData.nombre;
+                    document.getElementById('perfilSubInfo').innerText = `Cédula: ${ciudadanoActualData.cedula} | Apodo: ${ciudadanoActualData.apodo} | Domicilio: ${ciudadanoActualData.domicilio}`;
+                    document.getElementById('txtNotasPerfil').value = ciudadanoActualData.notas || '';
 
-            document.getElementById('perfilTituloNombre').innerText = ciudadano.nombre;
-            document.getElementById('perfilSubInfo').innerText = `Cédula: ${ciudadano.cedula} | Apodo: ${ciudadano.apodo} | Domicilio: ${ciudadano.domicilio}`;
-            document.getElementById('txtNotasPerfil').value = ciudadano.notas || '';
+                    renderizarMultimediaPerfil(ciudadanoActualData);
 
-            renderizarMultimediaPerfil(ciudadano);
-
-            document.getElementById('vistaPrincipal').style.display = 'none';
-            document.getElementById('mainSidebar').style.display = 'none';
-            document.getElementById('vistaPerfil').style.display = 'block';
-            window.scrollTo(0, 0);
+                    document.getElementById('vistaPrincipal').style.display = 'none';
+                    document.getElementById('mainSidebar').style.display = 'none';
+                    document.getElementById('vistaPerfil').style.display = 'block';
+                    window.scrollTo(0, 0);
+                }
+            });
         }
 
         function volverAlInicio() {
             idCiudadanoActual = null;
+            ciudadanoActualData = null;
             document.getElementById('vistaPerfil').style.display = 'none';
             document.getElementById('vistaPrincipal').style.display = 'flex';
             document.getElementById('mainSidebar').style.display = 'flex';
         }
 
-        // --- NOTAS Y MULTIMEDIA ---
-        function guardarNotasPerfil() {
+        // --- NOTAS Y MULTIMEDIA EN FIREBASE STORAGE ---
+        function guardarNotasCloud() {
             if (!idCiudadanoActual) return;
-            let listaIdentificados = JSON.parse(localStorage.getItem('policia_identificados') || '[]');
-            let index = listaIdentificados.findIndex(item => item.id === idCiudadanoActual);
-            if (index !== -1) {
-                listaIdentificados[index].notas = document.getElementById('txtNotasPerfil').value;
-                localStorage.setItem('policia_identificados', JSON.stringify(listaIdentificados));
-            }
+            const notas = document.getElementById('txtNotasPerfil').value;
+            db.collection("identificados").doc(idCiudadanoActual).update({ notas: notas });
         }
 
-        function cargarMultimedia(event, tipo) {
+        function subirMultimediaCloud(event, tipo) {
             if (!idCiudadanoActual) return;
             const files = event.target.files;
             if (!files || files.length === 0) return;
 
-            let listaIdentificados = JSON.parse(localStorage.getItem('policia_identificados') || '[]');
-            let index = listaIdentificados.findIndex(item => item.id === idCiudadanoActual);
-            if (index === -1) return;
-
-            let ciudadano = listaIdentificados[index];
-
             for (let i = 0; i < files.length; i++) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    if (tipo === 'mapa') {
-                        ciudadano.mapa = e.target.result;
-                    } else if (tipo === 'fotos') {
-                        ciudadano.fotos.push(e.target.result);
-                    } else if (tipo === 'videos') {
-                        ciudadano.videos.push(e.target.result);
-                    }
-                    localStorage.setItem('policia_identificados', JSON.stringify(listaIdentificados));
-                    renderizarMultimediaPerfil(ciudadano);
-                };
-                reader.readAsDataURL(files[i]);
+                const file = files[i];
+                const storageRef = storage.ref(`expedientes/${idCiudadanoActual}/${tipo}/${Date.now()}_${file.name}`);
+                
+                const uploadTask = storageRef.put(file);
+                uploadTask.then(snapshot => {
+                    snapshot.ref.getDownloadURL().then(downloadURL => {
+                        const docRef = db.collection("identificados").doc(idCiudadanoActual);
+                        
+                        db.runTransaction(transaction => {
+                            return transaction.get(docRef).then(doc => {
+                                if (!doc.exists) return;
+                                let data = doc.data();
+                                if (tipo === 'mapa') {
+                                    transaction.update(docRef, { mapa: downloadURL });
+                                } else if (tipo === 'fotos') {
+                                    let fotos = data.fotos || [];
+                                    fotos.push(downloadURL);
+                                    transaction.update(docRef, { fotos: fotos });
+                                } else if (tipo === 'videos') {
+                                    let videos = data.videos || [];
+                                    videos.push(downloadURL);
+                                    transaction.update(docRef, { videos: videos });
+                                }
+                            });
+                        }).then(() => {
+                            abrirPerfil(idCiudadanoActual); // Recargar perfil
+                        });
+                    });
+                }).catch(error => {
+                    alert("Error al subir archivo: " + error.message);
+                });
             }
         }
 
@@ -547,8 +580,8 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
                     <div class="multimedia-preview-item">
                         <img src="${ciudadano.mapa}" alt="Mapa domicilio" onclick="ampliarImagen('${ciudadano.mapa}')">
                         <div class="media-actions">
-                            <a href="${ciudadano.mapa}" download="mapa_${ciudadano.cedula}.png" class="btn-media-action" title="Descargar" onclick="event.stopPropagation()"><i class="fa-solid fa-download"></i></a>
-                            <button type="button" class="btn-media-action delete" onclick="event.stopPropagation(); eliminarMultimedia('mapa', 0)" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                            <a href="${ciudadano.mapa}" target="_blank" download class="btn-media-action" title="Descargar"><i class="fa-solid fa-download"></i></a>
+                            <button type="button" class="btn-media-action delete" onclick="eliminarMultimediaCloud('mapa', '${ciudadano.mapa}')" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>
                 `;
@@ -557,56 +590,64 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
             // Fotos
             const contFotos = document.getElementById('contenedorFotos');
             contFotos.innerHTML = '';
-            ciudadano.fotos.forEach((foto, idx) => {
-                const div = document.createElement('div');
-                div.className = 'multimedia-preview-item';
-                div.innerHTML = `
-                    <img src="${foto}" alt="Foto sujeto" onclick="ampliarImagen('${foto}')">
-                    <div class="media-actions">
-                        <a href="${foto}" download="foto_${ciudadano.cedula}_${idx+1}.png" class="btn-media-action" title="Descargar" onclick="event.stopPropagation()"><i class="fa-solid fa-download"></i></a>
-                        <button type="button" class="btn-media-action delete" onclick="event.stopPropagation(); eliminarMultimedia('fotos', ${idx})" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                `;
-                contFotos.appendChild(div);
-            });
+            if (ciudadano.fotos) {
+                ciudadano.fotos.forEach((foto) => {
+                    const div = document.createElement('div');
+                    div.className = 'multimedia-preview-item';
+                    div.innerHTML = `
+                        <img src="${foto}" alt="Foto sujeto" onclick="ampliarImagen('${foto}')">
+                        <div class="media-actions">
+                            <a href="${foto}" target="_blank" download class="btn-media-action" title="Descargar"><i class="fa-solid fa-download"></i></a>
+                            <button type="button" class="btn-media-action delete" onclick="eliminarMultimediaCloud('fotos', '${foto}')" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    `;
+                    contFotos.appendChild(div);
+                });
+            }
 
             // Videos
             const contVideos = document.getElementById('contenedorVideos');
             contVideos.innerHTML = '';
-            ciudadano.videos.forEach((video, idx) => {
-                const div = document.createElement('div');
-                div.className = 'multimedia-preview-item';
-                div.innerHTML = `
-                    <video controls src="${video}"></video>
-                    <div class="media-actions">
-                        <a href="${video}" download="video_${ciudadano.cedula}_${idx+1}.mp4" class="btn-media-action" title="Descargar" onclick="event.stopPropagation()"><i class="fa-solid fa-download"></i></a>
-                        <button type="button" class="btn-media-action delete" onclick="event.stopPropagation(); eliminarMultimedia('videos', ${idx})" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                `;
-                contVideos.appendChild(div);
+            if (ciudadano.videos) {
+                ciudadano.videos.forEach((video) => {
+                    const div = document.createElement('div');
+                    div.className = 'multimedia-preview-item';
+                    div.innerHTML = `
+                        <video controls src="${video}"></video>
+                        <div class="media-actions">
+                            <a href="${video}" target="_blank" download class="btn-media-action" title="Descargar"><i class="fa-solid fa-download"></i></a>
+                            <button type="button" class="btn-media-action delete" onclick="eliminarMultimediaCloud('videos', '${video}')" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    `;
+                    contVideos.appendChild(div);
+                });
+            }
+        }
+
+        function eliminarMultimediaCloud(tipo, urlArchivo) {
+            if (!idCiudadanoActual) return;
+            const docRef = db.collection("identificados").doc(idCiudadanoActual);
+
+            db.runTransaction(transaction => {
+                return transaction.get(docRef).then(doc => {
+                    if (!doc.exists) return;
+                    let data = doc.data();
+                    if (tipo === 'mapa') {
+                        transaction.update(docRef, { mapa: '' });
+                    } else if (tipo === 'fotos') {
+                        let fotos = (data.fotos || []).filter(item => item !== urlArchivo);
+                        transaction.update(docRef, { fotos: fotos });
+                    } else if (tipo === 'videos') {
+                        let videos = (data.videos || []).filter(item => item !== urlArchivo);
+                        transaction.update(docRef, { videos: videos });
+                    }
+                });
+            }).then(() => {
+                abrirPerfil(idCiudadanoActual);
             });
         }
 
-        function eliminarMultimedia(tipo, idx) {
-            if (!idCiudadanoActual) return;
-            let listaIdentificados = JSON.parse(localStorage.getItem('policia_identificados') || '[]');
-            let index = listaIdentificados.findIndex(item => item.id === idCiudadanoActual);
-            if (index === -1) return;
-
-            let ciudadano = listaIdentificados[index];
-            if (tipo === 'mapa') {
-                ciudadano.mapa = null;
-            } else if (tipo === 'fotos') {
-                ciudadano.fotos.splice(idx, 1);
-            } else if (tipo === 'videos') {
-                ciudadano.videos.splice(idx, 1);
-            }
-
-            localStorage.setItem('policia_identificados', JSON.stringify(listaIdentificados));
-            renderizarMultimediaPerfil(ciudadano);
-        }
-
-        // --- VISUALIZADOR DE IMAGEN EN GRANDE (MODAL) ---
+        // --- MODAL DE IMAGEN ---
         function ampliarImagen(src) {
             const modal = document.getElementById('modalImagen');
             const imgModal = document.getElementById('imgModalAmpliada');
