@@ -6,11 +6,6 @@
     <title>Sistema de Gestión Policial - NUEVE96SEIS</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- SDKs de Firebase (Compat) -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
 </head>
 <body>
 
@@ -23,7 +18,7 @@
             <h2>NUEVE96SEIS</h2>
             <p>Acceso Restringido - Comisaría Quinta</p>
             
-            <form id="loginForm" onsubmit="realizarLogin(event)">
+            <form id="loginForm">
                 <div class="login-group">
                     <label for="user"><i class="fa-solid fa-user"></i> Usuario</label>
                     <input type="text" id="user" class="input-field" placeholder="COMISARIA QUINTA" required>
@@ -53,7 +48,7 @@
             <li><a href="#identificados" class="nav-link" onclick="seleccionarMenu(this)"><i class="fa-solid fa-id-card"></i> Datos de Identificados</a></li>
         </ul>
         <div class="sidebar-footer-logout">
-            <button type="button" onclick="cerrarSesion()" class="btn-logout" title="Cerrar Sesión">
+            <button type="button" id="btnLogout" class="btn-logout" title="Cerrar Sesión">
                 <i class="fa-solid fa-power-off"></i> Cerrar Sesión
             </button>
         </div>
@@ -177,7 +172,7 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
                 <div class="section-header">
                     <h2><i class="fa-solid fa-address-book"></i> Datos de Identificados</h2>
                 </div>
-                <p class="section-desc">Haga clic sobre cualquier ciudadano en la tabla para acceder a su ficha individual de inteligencia y mapa.</p>
+                <p class="section-desc">Haga clic sobre cualquier ciudadano en la tabla para acceder a su ficha individual de inteligencia.</p>
 
                 <div class="form-identificado-container">
                     <input type="text" id="inputCedula" placeholder="Cédula / ID" class="input-field">
@@ -222,7 +217,7 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
     <div class="profile-container" id="vistaPerfil" style="display: none;">
         <header class="top-header profile-header">
             <div class="header-title">
-                <button type="button" class="btn-volver" onclick="volverAlInicio()">
+                <button type="button" class="btn-volver" id="btnVolverInicio">
                     <i class="fa-solid fa-arrow-left"></i> Volver al Panel
                 </button>
                 <h1 id="perfilTituloNombre">Ficha del Identificado</h1>
@@ -235,74 +230,27 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
 
         <main class="content-body">
             <div class="profile-grid">
-                <div class="profile-col">
-                    <div class="section-card">
-                        <div class="section-header">
-                            <h2><i class="fa-solid fa-map-location-dot"></i> Ubicación y Mapa del Domicilio</h2>
-                        </div>
-                        <p class="section-desc">Adjunte imágenes del mapa donde reside el individuo o puntos de interés operativo.</p>
-                        
-                        <div class="upload-box" onclick="document.getElementById('inputMapaFile').click()">
-                            <i class="fa-solid fa-map"></i>
-                            <span>Haga clic para subir imagen del mapa</span>
-                            <input type="file" id="inputMapaFile" accept="image/*" style="display: none;" onchange="subirMultimediaCloud(event, 'mapa')">
-                        </div>
-                        <div id="contenedorMapa" class="multimedia-preview-container"></div>
-                    </div>
-
+                <div class="profile-col" style="grid-column: span 2;">
                     <div class="section-card">
                         <div class="section-header">
                             <h2><i class="fa-solid fa-file-lines"></i> Notas de Inteligencia / Observaciones</h2>
                         </div>
-                        <textarea id="txtNotasPerfil" class="input-field textarea-field" placeholder="Escriba aquí observaciones de campo, vehículos frecuentes, horarios o vínculos..." oninput="guardarNotasCloud()"></textarea>
-                    </div>
-                </div>
-
-                <div class="profile-col">
-                    <div class="section-card">
-                        <div class="section-header">
-                            <h2><i class="fa-solid fa-camera"></i> Fotografías del Sujeto / Entorno</h2>
-                        </div>
-                        <p class="section-desc">Cargue imágenes fotográficas. Haga clic sobre cualquier foto para verla en pantalla completa o descargarla.</p>
-                        
-                        <div class="upload-box" onclick="document.getElementById('inputFotoFile').click()">
-                            <i class="fa-solid fa-image"></i>
-                            <span>Haga clic para subir fotografías</span>
-                            <input type="file" id="inputFotoFile" accept="image/*" multiple style="display: none;" onchange="subirMultimediaCloud(event, 'fotos')">
-                        </div>
-                        <div id="contenedorFotos" class="multimedia-preview-grid"></div>
-                    </div>
-
-                    <div class="section-card">
-                        <div class="section-header">
-                            <h2><i class="fa-solid fa-video"></i> Registros en Video</h2>
-                        </div>
-                        <p class="section-desc">Cargue archivos de video relacionados con intervenciones o seguimientos.</p>
-                        
-                        <div class="upload-box" onclick="document.getElementById('inputVideoFile').click()">
-                            <i class="fa-solid fa-file-video"></i>
-                            <span>Haga clic para subir videos</span>
-                            <input type="file" id="inputVideoFile" accept="video/*" multiple style="display: none;" onchange="subirMultimediaCloud(event, 'videos')">
-                        </div>
-                        <div id="contenedorVideos" class="multimedia-preview-grid"></div>
+                        <textarea id="txtNotasPerfil" class="input-field textarea-field" rows="8" placeholder="Escriba aquí observaciones de campo, vehículos frecuentes, horarios o vínculos..."></textarea>
                     </div>
                 </div>
             </div>
         </main>
 
         <footer class="footer">
-            <p><i class="fa-solid fa-shield-halved"></i> "Comisaría Quinta - Sistema de Archivo Táctico Multimedia"</p>
+            <p><i class="fa-solid fa-shield-halved"></i> "Comisaría Quinta - Sistema de Archivo Táctico"</p>
         </footer>
     </div>
 
-    <!-- MODAL PARA VER FOTOS EN PANTALLA COMPLETA -->
-    <div id="modalImagen" class="image-modal" style="display: none;" onclick="cerrarModalImagen()">
-        <span class="modal-close">&times;</span>
-        <img id="imgModalAmpliada" src="" alt="Vista ampliada">
-    </div>
+    <!-- SCRIPT DE NAVEGACIÓN Y FIREBASE MODULAR -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, serverTimestamp, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    <!-- SCRIPT DE FIREBASE Y FUNCIONALIDAD -->
-    <script>
         const firebaseConfig = {
             apiKey: "AIzaSyDNB6ZzRQCM30h9F4r5cq5LZ9r9lhZwXrM",
             authDomain: "nueve96seis-837ab.firebaseapp.com",
@@ -311,52 +259,95 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
             messagingSenderId: "1084500805948",
             appId: "1:1084500805948:web:e91f3ce7f2a3eed7639"
         };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const storage = firebase.storage();
 
-        let idCiudadanoActual = null;
-        let ciudadanoActualData = null;
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-        function realizarLogin(event) {
-            event.preventDefault();
-            const usuarioInput = document.getElementById('user').value.trim();
-            const passwordInput = document.getElementById('pass').value.trim();
-            
-            const usuarioValido = "COMISARIA QUINTA";
-            const passwordValida = "UNIDA";
+        // Control de Sesión
+        const loginForm = document.getElementById('loginForm');
+        const loginOverlay = document.getElementById('loginOverlay');
+        const btnLogout = document.getElementById('btnLogout');
 
-            if (usuarioInput.toUpperCase() === usuarioValido && passwordInput === passwordValida) {
+        if (localStorage.getItem('sesion_activa') === 'true') {
+            loginOverlay.style.display = 'none';
+        }
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const user = document.getElementById('user').value.trim().toUpperCase();
+            const pass = document.getElementById('pass').value.trim();
+
+            if (user === "COMISARIA QUINTA" && pass === "UNIDA") {
                 localStorage.setItem('sesion_activa', 'true');
-                document.getElementById('loginOverlay').style.display = 'none';
+                loginOverlay.style.display = 'none';
             } else {
-                const errorDiv = document.getElementById('loginError');
-                errorDiv.style.display = 'block';
+                document.getElementById('loginError').style.display = 'block';
             }
-        }
-
-        function cerrarSesion() {
-            localStorage.removeItem('sesion_activa');
-            document.getElementById('user').value = '';
-            document.getElementById('pass').value = '';
-            document.getElementById('loginOverlay').style.display = 'flex';
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const sesionActiva = localStorage.getItem('sesion_activa');
-            if (sesionActiva === 'true') {
-                document.getElementById('loginOverlay').style.display = 'none';
-            }
-            sincronizarTablaIdentificados();
         });
 
-        function seleccionarMenu(elemento) {
+        btnLogout.addEventListener('click', () => {
+            localStorage.removeItem('sesion_activa');
+            location.reload();
+        });
+
+        // Navegación Sidebar
+        window.seleccionarMenu = function(elemento) {
             const navLinks = document.querySelectorAll('.sidebar-menu .nav-link');
             navLinks.forEach(link => link.classList.remove('active'));
             elemento.classList.add('active');
-        }
+        };
 
-        document.getElementById('btnAgregar').addEventListener('click', function() {
+        // Escucha en tiempo real de identificados
+        const tbody = document.getElementById('tablaIdentificadosBody');
+        const emptyState = document.getElementById('empty-state');
+
+        onSnapshot(collection(db, "identificados"), (snapshot) => {
+            tbody.innerHTML = '';
+            if (snapshot.empty) {
+                if (emptyState) emptyState.style.display = 'flex';
+                return;
+            }
+            if (emptyState) emptyState.style.display = 'none';
+
+            snapshot.forEach((documento) => {
+                const item = documento.data();
+                const id = documento.id;
+
+                const tr = document.createElement('tr');
+                tr.style.cursor = 'pointer';
+                tr.innerHTML = `
+                    <td><strong>${item.cedula || '-'}</strong></td>
+                    <td>${item.nombre || '-'}</td>
+                    <td><span class="apodo-badge">${item.apodo || '-'}</span></td>
+                    <td>${item.fechaNac || '-'}</td>
+                    <td>${item.domicilio || '-'}</td>
+                    <td>
+                        <button type="button" class="btn-eliminar" title="Eliminar registro">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                `;
+
+                // Clic en la fila para abrir perfil
+                tr.querySelectorAll('td:not(:last-child)').forEach(cell => {
+                    cell.addEventListener('click', () => abrirPerfilCloud(id));
+                });
+
+                // Botón eliminar
+                tr.querySelector('.btn-eliminar').addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    if (confirm("¿Desea borrar este registro de la nube?")) {
+                        await deleteDoc(doc(db, "identificados", id));
+                    }
+                });
+
+                tbody.appendChild(tr);
+            });
+        });
+
+        // Agregar Identificado
+        const btnAgregar = document.getElementById('btnAgregar');
+        btnAgregar.addEventListener('click', async () => {
             const cedula = document.getElementById('inputCedula').value.trim();
             const nombre = document.getElementById('inputNombre').value.trim();
             const apodo = document.getElementById('inputApodo').value.trim();
@@ -364,7 +355,7 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
             const domicilio = document.getElementById('inputDomicilio').value.trim();
 
             if (!nombre) {
-                alert('Por favor, ingrese al menos el nombre completo.');
+                alert('Ingrese al menos el nombre completo.');
                 return;
             }
 
@@ -374,244 +365,66 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
                 fechaFormateada = `${partes[2]}/${partes[1]}/${partes[0]}`;
             }
 
-            const nuevoRegistro = {
-                cedula: cedula || '-',
-                nombre: nombre,
-                apodo: apodo || '-',
-                fechaNac: fechaFormateada,
-                domicilio: domicilio || '-',
-                notas: '',
-                mapa: '',
-                fotos: [],
-                videos: [],
-                creado: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            db.collection("identificados").add(nuevoRegistro)
-                .then(() => {
-                    document.getElementById('inputCedula').value = '';
-                    document.getElementById('inputNombre').value = '';
-                    document.getElementById('inputApodo').value = '';
-                    document.getElementById('inputFecha').value = '';
-                    document.getElementById('inputDomicilio').value = '';
-                })
-                .catch(error => {
-                    alert("Error al guardar en la nube: " + error.message);
+            try {
+                await addDoc(collection(db, "identificados"), {
+                    cedula: cedula || '-',
+                    nombre: nombre,
+                    apodo: apodo || '-',
+                    fechaNac: fechaFormateada,
+                    domicilio: domicilio || '-',
+                    notas: '',
+                    creado: serverTimestamp()
                 });
+
+                document.getElementById('inputCedula').value = '';
+                document.getElementById('inputNombre').value = '';
+                document.getElementById('inputApodo').value = '';
+                document.getElementById('inputFecha').value = '';
+                document.getElementById('inputDomicilio').value = '';
+            } catch (error) {
+                alert("Error al guardar en la nube: " + error.message);
+            }
         });
 
-        function sincronizarTablaIdentificados() {
-            const tbody = document.getElementById('tablaIdentificadosBody');
-            const emptyState = document.getElementById('empty-state');
+        // Abrir Ficha Individual del Identificado
+        async function abrirPerfilCloud(id) {
+            const docRef = doc(db, "identificados", id);
+            const snap = await getDoc(docRef);
+            if (snap.exists()) {
+                const data = snap.data();
+                document.getElementById('perfilTituloNombre').innerText = data.nombre;
+                document.getElementById('perfilSubInfo').innerText = `Cédula: ${data.cedula} | Apodo: ${data.apodo} | Domicilio: ${data.domicilio}`;
+                
+                const txtNotas = document.getElementById('txtNotasPerfil');
+                txtNotas.value = data.notas || '';
+                
+                txtNotas.oninput = async () => {
+                    await updateDoc(docRef, { notas: txtNotas.value });
+                };
 
-            db.collection("identificados").orderBy("nombre").onSnapshot((snapshot) => {
-                if(!tbody) return;
-                tbody.innerHTML = '';
-
-                if (snapshot.empty) {
-                    emptyState.style.display = 'flex';
-                    return;
-                } else {
-                    emptyState.style.display = 'none';
-                }
-
-                snapshot.forEach((doc) => {
-                    const item = doc.data();
-                    const id = doc.id;
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td onclick="abrirPerfil('${id}')"><strong>${item.cedula}</strong></td>
-                        <td onclick="abrirPerfil('${id}')">${item.nombre}</td>
-                        <td onclick="abrirPerfil('${id}')"><span class="apodo-badge">${item.apodo}</span></td>
-                        <td onclick="abrirPerfil('${id}')">${item.fechaNac}</td>
-                        <td onclick="abrirPerfil('${id}')">${item.domicilio}</td>
-                        <td>
-                            <button type="button" onclick="event.stopPropagation(); eliminarIdentificado('${id}')" class="btn-eliminar" title="Eliminar registro">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            });
-        }
-
-        function eliminarIdentificado(id) {
-            if (confirm("¿Está seguro de eliminar este registro y sus archivos asociados?")) {
-                db.collection("identificados").doc(id).delete().catch(error => {
-                    alert("Error al eliminar: " + error.message);
-                });
+                document.getElementById('vistaPrincipal').style.display = 'none';
+                document.getElementById('mainSidebar').style.display = 'none';
+                document.getElementById('vistaPerfil').style.display = 'block';
+                window.scrollTo(0, 0);
             }
         }
 
-        function abrirPerfil(id) {
-            idCiudadanoActual = id;
-            db.collection("identificados").doc(id).get().then((doc) => {
-                if (doc.exists) {
-                    ciudadanoActualData = doc.data();
-
-                    document.getElementById('perfilTituloNombre').innerText = ciudadanoActualData.nombre;
-                    document.getElementById('perfilSubInfo').innerText = `Cédula: ${ciudadanoActualData.cedula} | Apodo: ${ciudadanoActualData.apodo} | Domicilio: ${ciudadanoActualData.domicilio}`;
-                    document.getElementById('txtNotasPerfil').value = ciudadanoActualData.notas || '';
-
-                    renderizarMultimediaPerfil(ciudadanoActualData);
-
-                    document.getElementById('vistaPrincipal').style.display = 'none';
-                    document.getElementById('mainSidebar').style.display = 'none';
-                    document.getElementById('vistaPerfil').style.display = 'block';
-                    window.scrollTo(0, 0);
-                }
-            });
-        }
-
-        function volverAlInicio() {
-            idCiudadanoActual = null;
-            ciudadanoActualData = null;
+        // Volver al Panel
+        document.getElementById('btnVolverInicio').addEventListener('click', () => {
             document.getElementById('vistaPerfil').style.display = 'none';
             document.getElementById('vistaPrincipal').style.display = 'flex';
             document.getElementById('mainSidebar').style.display = 'flex';
-        }
+        });
 
-        function guardarNotasCloud() {
-            if (!idCiudadanoActual) return;
-            const notas = document.getElementById('txtNotasPerfil').value;
-            db.collection("identificados").doc(idCiudadanoActual).update({ notas: notas });
-        }
-
-        function subirMultimediaCloud(event, tipo) {
-            if (!idCiudadanoActual) return;
-            const files = event.target.files;
-            if (!files || files.length === 0) return;
-
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const storageRef = storage.ref(`expedientes/${idCiudadanoActual}/${tipo}/${Date.now()}_${file.name}`);
-                
-                const uploadTask = storageRef.put(file);
-                uploadTask.then(snapshot => {
-                    snapshot.ref.getDownloadURL().then(downloadURL => {
-                        const docRef = db.collection("identificados").doc(idCiudadanoActual);
-                        
-                        db.runTransaction(transaction => {
-                            return transaction.get(docRef).then(doc => {
-                                if (!doc.exists) return;
-                                let data = doc.data();
-                                if (tipo === 'mapa') {
-                                    transaction.update(docRef, { mapa: downloadURL });
-                                } else if (tipo === 'fotos') {
-                                    let fotos = data.fotos || [];
-                                    fotos.push(downloadURL);
-                                    transaction.update(docRef, { fotos: fotos });
-                                } else if (tipo === 'videos') {
-                                    let videos = data.videos || [];
-                                    videos.push(downloadURL);
-                                    transaction.update(docRef, { videos: videos });
-                                }
-                            });
-                        }).then(() => {
-                            abrirPerfil(idCiudadanoActual);
-                        });
-                    });
-                }).catch(error => {
-                    alert("Error al subir archivo: " + error.message);
-                });
-            }
-        }
-
-        function renderizarMultimediaPerfil(ciudadano) {
-            const contMapa = document.getElementById('contenedorMapa');
-            contMapa.innerHTML = '';
-            if (ciudadano.mapa) {
-                contMapa.innerHTML = `
-                    <div class="multimedia-preview-item">
-                        <img src="${ciudadano.mapa}" alt="Mapa domicilio" onclick="ampliarImagen('${ciudadano.mapa}')">
-                        <div class="media-actions">
-                            <a href="${ciudadano.mapa}" target="_blank" download class="btn-media-action" title="Descargar"><i class="fa-solid fa-download"></i></a>
-                            <button type="button" class="btn-media-action delete" onclick="eliminarMultimediaCloud('mapa', '${ciudadano.mapa}')" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>
-                `;
-            }
-
-            const contFotos = document.getElementById('contenedorFotos');
-            contFotos.innerHTML = '';
-            if (ciudadano.fotos) {
-                ciudadano.fotos.forEach((foto) => {
-                    const div = document.createElement('div');
-                    div.className = 'multimedia-preview-item';
-                    div.innerHTML = `
-                        <img src="${foto}" alt="Foto sujeto" onclick="ampliarImagen('${foto}')">
-                        <div class="media-actions">
-                            <a href="${foto}" target="_blank" download class="btn-media-action" title="Descargar"><i class="fa-solid fa-download"></i></a>
-                            <button type="button" class="btn-media-action delete" onclick="eliminarMultimediaCloud('fotos', '${foto}')" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    `;
-                    contFotos.appendChild(div);
-                });
-            }
-
-            const contVideos = document.getElementById('contenedorVideos');
-            contVideos.innerHTML = '';
-            if (ciudadano.videos) {
-                ciudadano.videos.forEach((video) => {
-                    const div = document.createElement('div');
-                    div.className = 'multimedia-preview-item';
-                    div.innerHTML = `
-                        <video controls src="${video}"></video>
-                        <div class="media-actions">
-                            <a href="${video}" target="_blank" download class="btn-media-action" title="Descargar"><i class="fa-solid fa-download"></i></a>
-                            <button type="button" class="btn-media-action delete" onclick="eliminarMultimediaCloud('videos', '${video}')" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    `;
-                    contVideos.appendChild(div);
-                });
-            }
-        }
-
-        function eliminarMultimediaCloud(tipo, urlArchivo) {
-            if (!idCiudadanoActual) return;
-            const docRef = db.collection("identificados").doc(idCiudadanoActual);
-
-            db.runTransaction(transaction => {
-                return transaction.get(docRef).then(doc => {
-                    if (!doc.exists) return;
-                    let data = doc.data();
-                    if (tipo === 'mapa') {
-                        transaction.update(docRef, { mapa: '' });
-                    } else if (tipo === 'fotos') {
-                        let fotos = (data.fotos || []).filter(item => item !== urlArchivo);
-                        transaction.update(docRef, { fotos: fotos });
-                    } else if (tipo === 'videos') {
-                        let videos = (data.videos || []).filter(item => item !== urlArchivo);
-                        transaction.update(docRef, { videos: videos });
-                    }
-                });
-            }).then(() => {
-                abrirPerfil(idCiudadanoActual);
-            });
-        }
-
-        function ampliarImagen(src) {
-            const modal = document.getElementById('modalImagen');
-            const imgModal = document.getElementById('imgModalAmpliada');
-            imgModal.src = src;
-            modal.style.display = 'flex';
-        }
-
-        function cerrarModalImagen() {
-            document.getElementById('modalImagen').style.display = 'none';
-        }
-
-        document.getElementById('btnNuevaPlantilla').addEventListener('click', function() {
+        // Botón agregar plantilla
+        document.getElementById('btnNuevaPlantilla').addEventListener('click', () => {
             const grid = document.getElementById('gridPlantillas');
             const nuevaCard = document.createElement('div');
             nuevaCard.className = 'card-plantilla';
             nuevaCard.innerHTML = `
-                <h3 contenteditable="true">Nueva Plantilla (Editar Título)</h3>
-                <pre><code contenteditable="true">Escriba aquí los detalles de la nueva narración operativa...</code></pre>
-                <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla">
-                    <i class="fa-solid fa-trash-can"></i>
-                </button>
+                <h3 contenteditable="true">Nueva Plantilla</h3>
+                <pre><code contenteditable="true">Escriba aquí los detalles...</code></pre>
+                <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();"><i class="fa-solid fa-trash-can"></i></button>
             `;
             grid.insertBefore(nuevaCard, grid.firstChild);
         });
