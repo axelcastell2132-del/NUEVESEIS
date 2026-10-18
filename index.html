@@ -42,7 +42,7 @@
         </div>
     </div>
 
-    <!-- SIDEBAR DE NAVEGACIÓN (PRINCIPAL) -->
+    <!-- SIDEBAR DE NAVEGACIÓN -->
     <aside class="sidebar" id="mainSidebar">
         <div class="sidebar-brand">
             <i class="fa-solid fa-shield-halved"></i>
@@ -61,8 +61,6 @@
 
     <!-- VISTA PRINCIPAL DEL SISTEMA -->
     <div class="main-container" id="vistaPrincipal">
-        
-        <!-- HEADER SUPERIOR -->
         <header class="top-header">
             <div class="header-title">
                 <h1>Panel de Operaciones Policiales</h1>
@@ -73,9 +71,7 @@
             </div>
         </header>
 
-        <!-- CONTENIDO -->
         <main class="content-body">
-
             <!-- SECCIÓN 1: PLANTILLAS DE NARRACIONES -->
             <section id="narraciones" class="section-card">
                 <div class="section-header">
@@ -86,10 +82,9 @@
                         </button>
                     </div>
                 </div>
-                <p class="section-desc">Seleccione y copie la plantilla requerida para su parte diario o actuaciones en el móvil SM15783[cite: 1]. Haga clic en el texto o título de cualquier plantilla para editarla.</p>
+                <p class="section-desc">Seleccione y copie la plantilla requerida para su parte diario o actuaciones en el móvil SM15783. Haga clic en el texto o título de cualquier plantilla para editarla.</p>
 
                 <div class="grid-plantillas" id="gridPlantillas">
-                    <!-- 1. Operativo Ciudad -->
                     <div class="card-plantilla">
                         <h3 contenteditable="true">1. Operativo Ciudad</h3>
                         <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en Móvil Of SM15783 se procede a efectuar OPERATIVO CIUDAD estático con conos para la ordenanza del transito en EL LUGAR DEL HECHO
@@ -102,107 +97,78 @@ VEHÍCULO:
 Cursados los datos filiatorios de los conductores y sus vehículos en el Sistema de Gestión de Seguridad Publica carecen de requisitoria pendiente al día de la fecha.</code></pre>
                         <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
-
-                    <!-- 2. Recorrida Autobalza -->
                     <div class="card-plantilla">
                         <h3 contenteditable="true">2. Recorrida Autobalza</h3>
-                        <pre><code contenteditable="true">En el dia de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SM15783, se efectuaron recorridas por AUTO BALSA, PLAYA SANTA MARIA Y CAMINOS VECINALES de la zona. Finalizando sin novedad.-[cite: 1]</code></pre>
+                        <pre><code contenteditable="true">En el dia de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SM15783, se efectuaron recorridas por AUTO BALSA, PLAYA SANTA MARIA Y CAMINOS VECINALES de la zona. Finalizando sin novedad.-</code></pre>
                         <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
-
-                    <!-- 3. Liceo 6 y Escuela 13 -->
                     <div class="card-plantilla">
                         <h3 contenteditable="true">3. Liceo 6 y Escuela 13</h3>
-                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO CALLE MONSEÑOR NICOLINI ESQUINA DOCTOR VICTOR GRILLE C (OBRA EN CONSTRUCCIÓN), en prevención y disuacion de los delitos, finalizando sin novedad.-[cite: 2]</code></pre>
+                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO CALLE MONSEÑOR NICOLINI ESQUINA DOCTOR VICTOR GRILLE C (OBRA EN CONSTRUCCIÓN), en prevención y disuacion de los delitos, finalizando sin novedad.-</code></pre>
                         <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
-
-                    <!-- 4. Policlínica Nuevo Paysandú -->
                     <div class="card-plantilla">
                         <h3 contenteditable="true">4. Policlínica Nvo.Pay</h3>
-                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se realizo recorrida por el LUGAR DEL HECHO CALLE JUAN MANUEL BLANES ESQUINA AVENIDA DE LAS AMERICAS Y MONSEÑOR NICOLINI, zona de Policlínica de Salud Publica, finalizando sin novedad.-[cite: 2]</code></pre>
+                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se realizo recorrida por el LUGAR DEL HECHO CALLE JUAN MANUEL BLANES ESQUINA AVENIDA DE LAS AMERICAS Y MONSEÑOR NICOLINI, zona de Policlínica de Salud Publica, finalizando sin novedad.-</code></pre>
                         <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
-
-                    <!-- 5. Recorrida Nuevo Paysandú -->
                     <div class="card-plantilla">
                         <h3 contenteditable="true">5. Recorrida Nvo. Paysandú</h3>
-                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se efectuó recorrida en Barrio Nuevo Paysandú, por las calles, Monseñor Nicolini, María Ustia de Goya, Park Way, José Segundo Carballo, Calle 100, Juan Manuel Blanes, Víctor Grille, Raúl Celone, Marcelina Brugos de Fleitas, etc, finalizando sin novedad.-[cite: 2]</code></pre>
+                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se efectuó recorrida en Barrio Nuevo Paysandú, por las calles, Monseñor Nicolini, María Ustia de Goya, Park Way, José Segundo Carballo, Calle 100, Juan Manuel Blanes, Víctor Grille, Raúl Celone, Marcelina Brugos de Fleitas, etc, finalizando sin novedad.-</code></pre>
                         <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
-
-                    <!-- 6. Puesto Escuela Barrio Norte -->
                     <div class="card-plantilla">
                         <h3 contenteditable="true">6. Puesto ELA Barrio Norte</h3>
-                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI 5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO CALLE REPÚBLICA DE VENEZUELA ESQUINA ASUNCIÓN, por prevención y disuasión de los delitos, finalizando sin novedad.[cite: 2]</code></pre>
+                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI 5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO CALLE REPÚBLICA DE VENEZUELA ESQUINA ASUNCIÓN, por prevención y disuasión de los delitos, finalizando sin novedad.</code></pre>
                         <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
-
-                    <!-- 7. Recorrida Barrio Norte -->
                     <div class="card-plantilla">
                         <h3 contenteditable="true">7. Recorrida B. Norte</h3>
-                        <pre><code contenteditable="true">En el día de la fecha FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se procede a realizar recorridas por calle Valparaiso, Asuncion, La Paz, Ecuador, Bolivia Colombia Costa Rica, Panama Rep, Venezuela y calles internas del Barrio Norte. Finalizando sin novedad.-[cite: 2]</code></pre>
+                        <pre><code contenteditable="true">En el día de la fecha FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se procede a realizar recorridas por calle Valparaiso, Asuncion, La Paz, Ecuador, Bolivia Colombia Costa Rica, Panama Rep, Venezuela y calles internas del Barrio Norte. Finalizando sin novedad.-</code></pre>
                         <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
-
-                    <!-- 8. Cancha de Padel -->
                     <div class="card-plantilla">
                         <h3 contenteditable="true">8. Cancha de padel</h3>
-                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se efectuó puesto de observación en CAMINO LAS CANTERAS Y REPÚBLICA DE CHILE (cancha de biopadel), finalizando sin novedad.-[cite: 2]</code></pre>
+                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se efectuó puesto de observación en CAMINO LAS CANTERAS Y REPÚBLICA DE CHILE (cancha de biopadel), finalizando sin novedad.-</code></pre>
                         <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
-
-                    <!-- 9. Cancha de Racing -->
                     <div class="card-plantilla">
                         <h3 contenteditable="true">9. Cancha de Racing</h3>
-                        <pre><code contenteditable="true">En el día de la fecha por parte de FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se efectuó recorrida en la UBICACIÓN DEL HECHO CALLE REPUBLICA DE CHILE ESQUINA COSTA RICA(CANCHA DE RACING), finalizando sin novedad.[cite: 3]</code></pre>
+                        <pre><code contenteditable="true">En el día de la fecha por parte de FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se efectuó recorrida en la UBICACIÓN DEL HECHO CALLE REPUBLICA DE CHILE ESQUINA COSTA RICA(CANCHA DE RACING), finalizando sin novedad.</code></pre>
                         <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
-
-                    <!-- 10. Puesto Melchora -->
                     <div class="card-plantilla">
                         <h3 contenteditable="true">10. Puesto Melchora</h3>
-                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO AVENIDAS LAS AMERICAS Y CAMINO LAS CANTERAS (centro educativo agrario MELCHORA CUENCA), por prevención y disuasión de los delitos, finalizando sin novedad.[cite: 3]</code></pre>
+                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO AVENIDAS LAS AMERICAS Y CAMINO LAS CANTERAS (centro educativo agrario MELCHORA CUENCA), por prevención y disuasión de los delitos, finalizando sin novedad.</code></pre>
                         <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
-
-                    <!-- 11. Recorrida Constancia -->
                     <div class="card-plantilla">
                         <h3 contenteditable="true">11. Recorrida Constancia</h3>
-                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO RUTA 3 KILÓMETRO 383, Localidad de Constancia. Finalizando sin novedad.[cite: 3]</code></pre>
+                        <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO RUTA 3 KILÓMETRO 383, Localidad de Constancia. Finalizando sin novedad.</code></pre>
                         <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
-
-                    <!-- 12. Recorrida Moteles -->
                     <div class="card-plantilla">
                         <h3 contenteditable="true">12. Recorridas MOTELES</h3>
                         <pre><code contenteditable="true">VENUS: En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por BULEVAR ARTIGAS ENTRE REPUBLICA DE CHILE Y REPUBLICA DE BOLIVIA, en Motel VENUS y zonas aledañas, finalizando sin novedad.-
 GENESIS: En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se procede a realizar recorridas por ESTFANEL Y COSTA RICA, en Motel GENESIS y zonas aledañas, finalizando sin novedad.-
-FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede a realizar recorridas por AVENIDA DOCTOR ROLDAN Y CALLE LOS OLIVOS, en Motel FEELING y FECHORIAS este ultimo actuellement abandonado y zonas aledañas, finalizando sin novedad.-[cite: 3]</code></pre>
+FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede a realizar recorridas por AVENIDA DOCTOR ROLDAN Y CALLE LOS OLIVOS, en Motel FEELING y FECHORIAS este ultimo actuellement abandonado y zonas aledañas, finalizando sin novedad.-</code></pre>
                         <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
-
-                    <!-- 13. AFE -->
                     <div class="card-plantilla">
                         <h3 contenteditable="true">13. AFE</h3>
                         <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SM15783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO CALLE COMERCIO ESQUINA AVENIDA DE LAS AMERICAS(Deposito AFE) en prevención y disuacion de los delitos, finalizando sin novedad.-</code></pre>
                         <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
-
-                    <!-- 14. Identificados -->
                     <div class="card-plantilla">
                         <h3 contenteditable="true">14. IDENTIFICADOS</h3>
                         <pre><code contenteditable="true">En el día de la fecha en circunstancias de recorridas, por parte de los FUNCIONARIOS ACTUANTES AGENTE AGENTE, en móvil SM15783, se procede a Identificar al los TESTIGOS DEL EVENTO en el horario comprendido de en las inmediaciones Consultado a SGSP no poseen requisitoria al momento, a posterior se les permite continuar. Finalizando sin novedad.-</code></pre>
                         <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
-
-                    <!-- 15. Citación Cumplida -->
                     <div class="card-plantilla">
                         <h3 contenteditable="true">15. CITACIÓN CUMPLIDA</h3>
                         <pre><code contenteditable="true">En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil oficial SMI 5783 se concurre al domicilio de TESTIGO DEL EVENTO quien firma recibo de citación dejando constancia de su notificación.-</code></pre>
                         <button type="button" class="btn-eliminar-plantilla" onclick="this.closest('.card-plantilla').remove();" title="Eliminar plantilla"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
-
                 </div>
             </section>
 
@@ -213,7 +179,6 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
                 </div>
                 <p class="section-desc">Haga clic sobre cualquier ciudadano en la tabla para acceder a su ficha individual de inteligencia y mapa.</p>
 
-                <!-- FORMULARIO DE INGRESO -->
                 <div class="form-identificado-container">
                     <input type="text" id="inputCedula" placeholder="Cédula / ID" class="input-field">
                     <input type="text" id="inputNombre" placeholder="Nombre Completo (Apellido y Nombre)" class="input-field">
@@ -238,7 +203,6 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
                             </tr>
                         </thead>
                         <tbody id="tablaIdentificadosBody">
-                            <!-- Registros dinámicos sincronizados desde Firebase -->
                         </tbody>
                     </table>
                     <div id="empty-state" class="empty-state-msg">
@@ -247,7 +211,6 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
                     </div>
                 </div>
             </section>
-
         </main>
 
         <footer class="footer">
@@ -255,11 +218,8 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
         </footer>
     </div>
 
-
     <!-- VISTA SECUNDARIA: FICHA INDIVIDUAL DEL IDENTIFICADO -->
     <div class="profile-container" id="vistaPerfil" style="display: none;">
-        
-        <!-- HEADER DE LA FICHA -->
         <header class="top-header profile-header">
             <div class="header-title">
                 <button type="button" class="btn-volver" onclick="volverAlInicio()">
@@ -273,11 +233,8 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
             </div>
         </header>
 
-        <!-- CONTENIDO DE LA FICHA -->
         <main class="content-body">
             <div class="profile-grid">
-                
-                <!-- COLUMNA 1: MAPA Y NOTAS -->
                 <div class="profile-col">
                     <div class="section-card">
                         <div class="section-header">
@@ -301,7 +258,6 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
                     </div>
                 </div>
 
-                <!-- COLUMNA 2: FOTOGRAFÍAS Y VIDEOS -->
                 <div class="profile-col">
                     <div class="section-card">
                         <div class="section-header">
@@ -331,7 +287,6 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
                         <div id="contenedorVideos" class="multimedia-preview-grid"></div>
                     </div>
                 </div>
-
             </div>
         </main>
 
@@ -340,17 +295,14 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
         </footer>
     </div>
 
-
     <!-- MODAL PARA VER FOTOS EN PANTALLA COMPLETA -->
     <div id="modalImagen" class="image-modal" style="display: none;" onclick="cerrarModalImagen()">
         <span class="modal-close">&times;</span>
         <img id="imgModalAmpliada" src="" alt="Vista ampliada">
     </div>
 
-
     <!-- SCRIPT DE FIREBASE Y FUNCIONALIDAD -->
     <script>
-        // --- CONFIGURACIÓN DE FIREBASE ---
         const firebaseConfig = {
             apiKey: "AIzaSyDNB6ZzRQCM30h9F4r5cq5LZ9r9lhZwXrM",
             authDomain: "nueve96seis-837ab.firebaseapp.com",
@@ -366,7 +318,6 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
         let idCiudadanoActual = null;
         let ciudadanoActualData = null;
 
-        // --- CONTROL DE ACCESO (LOGIN) ---
         function realizarLogin(event) {
             event.preventDefault();
             const usuarioInput = document.getElementById('user').value.trim();
@@ -405,7 +356,6 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
             elemento.classList.add('active');
         }
 
-        // --- GESTIÓN DE IDENTIFICADOS EN FIREBASE ---
         document.getElementById('btnAgregar').addEventListener('click', function() {
             const cedula = document.getElementById('inputCedula').value.trim();
             const nombre = document.getElementById('inputNombre').value.trim();
@@ -450,7 +400,6 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
                 });
         });
 
-        // Sincronización en tiempo real con Firestore
         function sincronizarTablaIdentificados() {
             const tbody = document.getElementById('tablaIdentificadosBody');
             const emptyState = document.getElementById('empty-state');
@@ -495,7 +444,6 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
             }
         }
 
-        // --- NAVEGACIÓN A PERFIL INDIVIDUAL ---
         function abrirPerfil(id) {
             idCiudadanoActual = id;
             db.collection("identificados").doc(id).get().then((doc) => {
@@ -524,7 +472,6 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
             document.getElementById('mainSidebar').style.display = 'flex';
         }
 
-        // --- NOTAS Y MULTIMEDIA EN FIREBASE STORAGE ---
         function guardarNotasCloud() {
             if (!idCiudadanoActual) return;
             const notas = document.getElementById('txtNotasPerfil').value;
@@ -562,7 +509,7 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
                                 }
                             });
                         }).then(() => {
-                            abrirPerfil(idCiudadanoActual); // Recargar perfil
+                            abrirPerfil(idCiudadanoActual);
                         });
                     });
                 }).catch(error => {
@@ -572,7 +519,6 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
         }
 
         function renderizarMultimediaPerfil(ciudadano) {
-            // Mapa
             const contMapa = document.getElementById('contenedorMapa');
             contMapa.innerHTML = '';
             if (ciudadano.mapa) {
@@ -587,7 +533,6 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
                 `;
             }
 
-            // Fotos
             const contFotos = document.getElementById('contenedorFotos');
             contFotos.innerHTML = '';
             if (ciudadano.fotos) {
@@ -605,7 +550,6 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
                 });
             }
 
-            // Videos
             const contVideos = document.getElementById('contenedorVideos');
             contVideos.innerHTML = '';
             if (ciudadano.videos) {
@@ -647,7 +591,6 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
             });
         }
 
-        // --- MODAL DE IMAGEN ---
         function ampliarImagen(src) {
             const modal = document.getElementById('modalImagen');
             const imgModal = document.getElementById('imgModalAmpliada');
@@ -659,7 +602,6 @@ FEELING Y FECHORIAS: En el día de la fecha en móvil Oficial SM15783 se procede
             document.getElementById('modalImagen').style.display = 'none';
         }
 
-        // --- PLANTILLAS ---
         document.getElementById('btnNuevaPlantilla').addEventListener('click', function() {
             const grid = document.getElementById('gridPlantillas');
             const nuevaCard = document.createElement('div');
