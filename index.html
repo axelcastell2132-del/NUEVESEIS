@@ -6,33 +6,94 @@
     <title>Sistema de Gestión Policial - NUEVE96SEIS</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Estilos de luz neón interactivos para la pestaña Formato de Acta */
+        .card-acta-61 {
+            background: linear-gradient(145deg, rgba(220, 38, 38, 0.15), rgba(15, 23, 42, 0.9));
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-acta-61:hover {
+            transform: translateY(-4px);
+            border-color: rgba(239, 68, 68, 0.9);
+            box-shadow: 0 0 25px rgba(239, 68, 68, 0.45), inset 0 0 15px rgba(239, 68, 68, 0.2);
+        }
+
+        .card-acta-denunciante {
+            background: linear-gradient(145deg, rgba(30, 58, 138, 0.2), rgba(15, 23, 42, 0.9));
+            border: 1px solid rgba(59, 130, 246, 0.35);
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-acta-denunciante:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.9);
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.45), inset 0 0 15px rgba(59, 130, 246, 0.2);
+        }
+    </style>
 </head>
 <body>
 
-    <!-- PANTALLA DE LOGIN (ACCESO RESTRINGIDO) -->
+    <!-- PANTALLA DE LOGIN / REGISTRO -->
     <div id="loginOverlay" class="login-overlay">
         <div class="login-card">
             <div class="login-icon" style="background: transparent; border: none;">
                 <img src="logo-minterior.png" alt="Ministerio del Interior" style="width: 75px; height: 75px; object-fit: contain;">
             </div>
             <h2>NUEVE96SEIS</h2>
-            <p>Acceso Restringido - Comisaría Quinta</p>
+            <p id="subtextLogin">Acceso Restringido - Comisaría Quinta</p>
             
+            <!-- FORMULARIO DE INGRESO -->
             <form id="loginForm">
                 <div class="login-group">
                     <label for="user"><i class="fa-solid fa-user"></i> Usuario</label>
-                    <input type="text" id="user" class="input-field" placeholder="COMISARIA QUINTA" required>
+                    <input type="text" id="user" class="input-field" placeholder="SU NOMBRE O USUARIO" required>
                 </div>
                 <div class="login-group">
                     <label for="pass"><i class="fa-solid fa-lock"></i> Contraseña</label>
-                    <input type="password" id="pass" class="input-field" placeholder="Contraseña institucional" required>
+                    <input type="password" id="pass" class="input-field" placeholder="Contraseña" required>
                 </div>
-                <div id="loginError" class="login-error" style="display: none;">
-                    Usuario o contraseña incorrectos.
-                </div>
+                <div id="loginError" class="login-error" style="display: none;"></div>
+                
                 <button type="submit" class="btn-login">
                     <i class="fa-solid fa-right-to-bracket"></i> Ingresar al Sistema
                 </button>
+                
+                <div style="text-align: center; margin-top: 15px;">
+                    <a href="#" id="linkMostrarRegistro" style="color: #60a5fa; font-size: 0.85rem; text-decoration: none;">¿No tienes cuenta? Solicitar acceso</a>
+                </div>
+            </form>
+
+            <!-- FORMULARIO DE REGISTRO / SOLICITUD -->
+            <form id="registerForm" style="display: none;">
+                <div class="login-group">
+                    <label for="regUser"><i class="fa-solid fa-user-plus"></i> Nuevo Usuario</label>
+                    <input type="text" id="regUser" class="input-field" placeholder="NOMBRE Y APELLIDO / RANGO" required>
+                </div>
+                <div class="login-group">
+                    <label for="regPass"><i class="fa-solid fa-lock"></i> Contraseña</label>
+                    <input type="password" id="regPass" class="input-field" placeholder="Cree una contraseña" required>
+                </div>
+                <div id="registerError" class="login-error" style="display: none;"></div>
+                
+                <button type="submit" class="btn-login" style="background: #2563eb;">
+                    <i class="fa-solid fa-paper-plane"></i> Enviar Solicitud de Acceso
+                </button>
+                
+                <div style="text-align: center; margin-top: 15px;">
+                    <a href="#" id="linkVolverLogin" style="color: #94a3b8; font-size: 0.85rem; text-decoration: none;">← Volver al Login</a>
+                </div>
             </form>
         </div>
     </div>
@@ -47,8 +108,12 @@
             <li><a href="#" class="nav-link active" onclick="seleccionarMenu(this, 'narraciones')"><i class="fa-solid fa-file-lines"></i> Plantillas de Narraciones</a></li>
             <li><a href="#" class="nav-link" onclick="seleccionarMenu(this, 'identificados')"><i class="fa-solid fa-id-card"></i> Datos de Identificados</a></li>
             <li><a href="#" class="nav-link" onclick="seleccionarMenu(this, 'documentos')"><i class="fa-solid fa-folder-open"></i> Documentos e Impresiones</a></li>
+            <li><a href="#" class="nav-link" onclick="seleccionarMenu(this, 'formatoActa')"><i class="fa-solid fa-file-signature"></i> Formato de Acta</a></li>
+            <!-- Panel Admin visible solo para COMISARIA QUINTA -->
+            <li id="menuAdminItem" style="display: none;"><a href="#" class="nav-link" onclick="seleccionarMenu(this, 'panelAdmin')"><i class="fa-solid fa-user-shield" style="color: #f59e0b;"></i> Administrar Usuarios</a></li>
         </ul>
         <div class="sidebar-footer-logout">
+            <div id="infoUsuarioLogueado" style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; text-align: center; overflow: hidden; text-overflow: ellipsis;"></div>
             <button type="button" id="btnLogout" class="btn-logout" title="Cerrar Sesión">
                 <i class="fa-solid fa-power-off"></i> Cerrar Sesión
             </button>
@@ -72,7 +137,7 @@
             <!-- SECCIÓN 1: PLANTILLAS DE NARRACIONES -->
             <section id="narraciones" class="section-card">
 
-                <!-- BLOQUE: CONFIGURADOR DE FUNCIONARIOS ACTUANTES (8 HORAS) - EXCLUSIVO DE NARRACIONES -->
+                <!-- BLOQUE: CONFIGURADOR DE FUNCIONARIOS ACTUANTES (8 HORAS) -->
                 <div style="padding: 18px 24px; margin-bottom: 25px; background: linear-gradient(145deg, rgba(30, 58, 138, 0.25), rgba(16, 24, 39, 0.95)); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px;">
                     <div class="section-header" style="margin-bottom: 12px;">
                         <h2 style="font-size: 1.1rem;"><i class="fa-solid fa-user-shield" style="color: #60a5fa;"></i> Funcionarios Actuantes en Servicio (Autofill 8 Horas)</h2>
@@ -139,7 +204,8 @@
                                 <th style="width: 25%;">Nombre Completo</th>
                                 <th style="width: 15%;">Apodo</th>
                                 <th style="width: 15%;">Fecha Nac.</th>
-                                <th style="width: 25%;">Domicilio / Antecedentes</th>
+                                <th style="width: 20%;">Domicilio</th>
+                                <th style="width: 10%;">Registrado por</th>
                                 <th style="width: 5%;">Acción</th>
                             </tr>
                         </thead>
@@ -160,11 +226,10 @@
                 </div>
                 <p class="section-desc">Cargue y administre aquí los formularios, planillas y actas para tenerlos disponibles en la comisaría.</p>
 
-                <!-- FORMULARIO DE CARGA DE ARCHIVOS -->
                 <div style="background: rgba(15, 23, 42, 0.6); border: 1px dashed rgba(59, 130, 246, 0.4); padding: 18px; border-radius: 8px; margin-bottom: 25px;">
                     <h3 style="font-size: 0.95rem; margin-bottom: 12px; color: #60a5fa;"><i class="fa-solid fa-cloud-arrow-up"></i> Cargar Nuevo Documento</h3>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) auto; gap: 12px; align-items: center;">
-                        <input type="text" id="inputNombreDoc" placeholder="Nombre del Documento (Ej: Constancia de Autoevacuados)" class="input-field">
+                        <input type="text" id="inputNombreDoc" placeholder="Nombre del Documento" class="input-field">
                         <input type="file" id="inputFileDoc" class="input-field" style="padding: 6px;" accept=".pdf,.doc,.docx,.xls,.xlsx,.odt">
                         <button type="button" id="btnSubirDoc" class="btn-agregar" style="margin: 0;">
                             <i class="fa-solid fa-upload"></i> Guardar Documento
@@ -173,13 +238,94 @@
                     <div id="estadoSubidaDoc" style="font-size: 0.78rem; color: #34d399; margin-top: 8px; font-weight: 600; display: none;"></div>
                 </div>
 
-                <!-- GRID DE DOCUMENTOS CARGADOS -->
-                <div class="grid-plantillas" id="gridDocumentos">
-                    <!-- Se cargan dinámicamente desde Firebase -->
-                </div>
+                <div class="grid-plantillas" id="gridDocumentos"></div>
                 <div id="empty-docs-msg" class="empty-state-msg" style="display: none;">
                     <i class="fa-solid fa-folder-open"></i>
-                    <span>No hay documentos cargados aún. Utilice el módulo superior para subir el primer archivo.</span>
+                    <span>No hay documentos cargados aún.</span>
+                </div>
+            </section>
+
+            <!-- SECCIÓN 4: FORMATO DE ACTA -->
+            <section id="formatoActa" class="section-card" style="display: none;">
+                <div class="section-header" style="border-bottom: 2px solid rgba(59, 130, 246, 0.3); padding-bottom: 12px; margin-bottom: 20px;">
+                    <h2><i class="fa-solid fa-file-signature" style="color: #60a5fa;"></i> FORMATO DE ACTA</h2>
+                    <button type="button" id="btnToggleAdminActas" class="btn-volver" style="font-size: 0.75rem; padding: 4px 10px; display: none;">
+                        <i class="fa-solid fa-gear"></i> Modo Carga
+                    </button>
+                </div>
+                <p class="section-desc">Modelos oficiales estandarizados de actas de la Comisaría Quinta.</p>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-top: 25px;">
+                    
+                    <!-- RECUADRO 1: ACTA ART 61 CPP -->
+                    <div class="card-acta-61">
+                        <div style="position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: #ef4444;"></div>
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                            <h3 style="font-size: 1.1rem; color: #fca5a5; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                                <i class="fa-solid fa-scale-balanced" style="font-size: 1.3rem; color: #ef4444;"></i> ACTA ART 61 CPP
+                            </h3>
+                            <span style="font-size: 0.7rem; background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); padding: 3px 8px; border-radius: 12px; font-weight: 600;">OFICIAL</span>
+                        </div>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 18px;">Modelo oficial de Acta de Derechos del Indagado.</p>
+
+                        <div id="panelCargaActa1" style="display: none; background: rgba(0, 0, 0, 0.3); padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px dashed #ef4444;">
+                            <input type="file" id="inputFileActa1" class="input-field" style="padding: 4px; margin-bottom: 8px; font-size: 0.8rem;" accept=".pdf,.doc,.docx,.odt">
+                            <button type="button" id="btnSubirActa1" class="btn-agregar" style="width: 100%; justify-content: center; background: #dc2626; font-size: 0.8rem; margin: 0;">Subir/Actualizar Acta 61</button>
+                            <div id="estadoActa1" style="font-size: 0.75rem; color: #34d399; margin-top: 6px; font-weight: 600; display: none;"></div>
+                        </div>
+
+                        <div id="contenedorActa1">
+                            <div class="empty-state-msg" style="padding: 15px; font-size: 0.8rem;"><i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem;"></i><span>Cargando formato...</span></div>
+                        </div>
+                    </div>
+
+                    <!-- RECUADRO 2: ACTA DENUNCIANTE -->
+                    <div class="card-acta-denunciante">
+                        <div style="position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: #3b82f6;"></div>
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                            <h3 style="font-size: 1.1rem; color: #93c5fd; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                                <i class="fa-solid fa-user-pen" style="font-size: 1.3rem; color: #3b82f6;"></i> ACTA DENUNCIANTE
+                            </h3>
+                            <span style="font-size: 0.7rem; background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); padding: 3px 8px; border-radius: 12px; font-weight: 600;">OFICIAL</span>
+                        </div>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 18px;">Modelo oficial de Acta de Declaración de Denunciante.</p>
+
+                        <div id="panelCargaActa2" style="display: none; background: rgba(0, 0, 0, 0.3); padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px dashed #3b82f6;">
+                            <input type="file" id="inputFileActa2" class="input-field" style="padding: 4px; margin-bottom: 8px; font-size: 0.8rem;" accept=".pdf,.doc,.docx,.odt">
+                            <button type="button" id="btnSubirActa2" class="btn-agregar" style="width: 100%; justify-content: center; background: #2563eb; font-size: 0.8rem; margin: 0;">Subir/Actualizar Acta Denunciante</button>
+                            <div id="estadoActa2" style="font-size: 0.75rem; color: #34d399; margin-top: 6px; font-weight: 600; display: none;"></div>
+                        </div>
+
+                        <div id="contenedorActa2">
+                            <div class="empty-state-msg" style="padding: 15px; font-size: 0.8rem;"><i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem;"></i><span>Cargando formato...</span></div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SECCIÓN 5: PANEL DE ADMINISTRACIÓN DE USUARIOS (SOLO ADMIN) -->
+            <section id="panelAdmin" class="section-card" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fa-solid fa-user-shield" style="color: #f59e0b;"></i> Solicitudes Pendientes de Acceso</h2>
+                </div>
+                <p class="section-desc">Apruebe o rechace a los compañeros que han solicitado registrarse en el sistema.</p>
+
+                <div class="table-container">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Usuario / Funcionario</th>
+                                <th>Fecha de Solicitud</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaPendientesBody"></tbody>
+                    </table>
+                    <div id="empty-pendientes" class="empty-state-msg">
+                        <i class="fa-solid fa-check-circle" style="color: #34d399;"></i>
+                        <span>No hay solicitudes pendientes de aprobación en este momento.</span>
+                    </div>
                 </div>
             </section>
         </main>
@@ -189,7 +335,7 @@
         </footer>
     </div>
 
-    <!-- VISTA SECUNDARIA: FICHA INDIVIDUAL DEL IDENTIFICADO -->
+    <!-- VISTA SECUNDARIA: FICHA DEL IDENTIFICADO -->
     <div class="profile-container" id="vistaPerfil" style="display: none;">
         <header class="top-header profile-header">
             <div class="header-title">
@@ -211,7 +357,7 @@
                         <div class="section-header">
                             <h2><i class="fa-solid fa-file-lines"></i> Notas de Inteligencia / Observaciones</h2>
                         </div>
-                        <textarea id="txtNotasPerfil" class="input-field textarea-field" rows="8" placeholder="Escriba aquí observaciones de campo, vehículos frecuentes, horarios o vínculos..."></textarea>
+                        <textarea id="txtNotasPerfil" class="input-field textarea-field" rows="8" placeholder="Observaciones de campo, vínculos..."></textarea>
                     </div>
                 </div>
             </div>
@@ -222,12 +368,12 @@
         </footer>
     </div>
 
-    <!-- SCRIPT DE FIREBASE Y LÓGICA DE SINCRONIZACIÓN -->
+    <!-- SCRIPT DE FIREBASE Y LÓGICA DE CONTROL DE ACCESO + AUDITORÍA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
             getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, 
-            serverTimestamp, getDoc, updateDoc, getDocs, writeBatch 
+            serverTimestamp, getDoc, updateDoc, getDocs, writeBatch, setDoc, query, where 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -242,34 +388,176 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Control de Sesión
-        const loginForm = document.getElementById('loginForm');
+        // Referencias de Login / Registro UI
         const loginOverlay = document.getElementById('loginOverlay');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const linkMostrarRegistro = document.getElementById('linkMostrarRegistro');
+        const linkVolverLogin = document.getElementById('linkVolverLogin');
+        const loginError = document.getElementById('loginError');
+        const registerError = document.getElementById('registerError');
         const btnLogout = document.getElementById('btnLogout');
+        const infoUsuarioLogueado = document.getElementById('infoUsuarioLogueado');
+        const menuAdminItem = document.getElementById('menuAdminItem');
+        const btnToggleAdminActas = document.getElementById('btnToggleAdminActas');
 
-        if (localStorage.getItem('sesion_activa') === 'true') {
+        // Verificar sesión activa almacenada
+        const usuarioActual = localStorage.getItem('usuario_activo');
+        if (usuarioActual) {
             loginOverlay.style.display = 'none';
+            configurarPermisosUsuario(usuarioActual);
         }
 
-        loginForm.addEventListener('submit', (e) => {
+        // Alternar vistas de Login / Registro
+        linkMostrarRegistro.addEventListener('click', (e) => {
             e.preventDefault();
-            const user = document.getElementById('user').value.trim().toUpperCase();
-            const pass = document.getElementById('pass').value.trim();
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block';
+            document.getElementById('subtextLogin').innerText = "Solicitud de Cuenta Institucional";
+        });
 
-            if (user === "COMISARIA QUINTA" && pass === "UNIDA") {
-                localStorage.setItem('sesion_activa', 'true');
+        linkVolverLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            registerForm.style.display = 'none';
+            loginForm.style.display = 'block';
+            document.getElementById('subtextLogin').innerText = "Acceso Restringido - Comisaría Quinta";
+        });
+
+        // Registrar nueva solicitud de usuario
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const u = document.getElementById('regUser').value.trim().toUpperCase();
+            const p = document.getElementById('regPass').value.trim();
+
+            if (!u || !p) return;
+
+            try {
+                // Verificar si ya existe
+                const userRef = doc(db, "usuarios", u);
+                const snap = await getDoc(userRef);
+                if (snap.exists()) {
+                    registerError.style.display = 'block';
+                    registerError.innerText = "El nombre de usuario ya está registrado o pendiente.";
+                    return;
+                }
+
+                await setDoc(userRef, {
+                    usuario: u,
+                    password: p,
+                    aprobado: false,
+                    solicitado: serverTimestamp()
+                });
+
+                alert("¡Solicitud enviada con éxito! Espere a que el Administrador apruebe su cuenta.");
+                registerForm.reset();
+                registerForm.style.display = 'none';
+                loginForm.style.display = 'block';
+                document.getElementById('subtextLogin').innerText = "Acceso Restringido - Comisaría Quinta";
+            } catch (err) {
+                registerError.style.display = 'block';
+                registerError.innerText = "Error: " + err.message;
+            }
+        });
+
+        // Iniciar Sesión con Verificación de Aprobación
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const u = document.getElementById('user').value.trim().toUpperCase();
+            const p = document.getElementById('pass').value.trim();
+
+            // Cuenta Maestra por defecto
+            if (u === "COMISARIA QUINTA" && p === "UNIDA") {
+                localStorage.setItem('usuario_activo', u);
                 loginOverlay.style.display = 'none';
-            } else {
-                document.getElementById('loginError').style.display = 'block';
+                configurarPermisosUsuario(u);
+                return;
+            }
+
+            try {
+                const docRef = doc(db, "usuarios", u);
+                const snap = await getDoc(docRef);
+
+                if (!snap.exists()) {
+                    loginError.style.display = 'block';
+                    loginError.innerText = "El usuario no existe. Solicite acceso.";
+                    return;
+                }
+
+                const data = snap.data();
+                if (data.password !== p) {
+                    loginError.style.display = 'block';
+                    loginError.innerText = "Contraseña incorrecta.";
+                    return;
+                }
+
+                if (!data.aprobado) {
+                    loginError.style.display = 'block';
+                    loginError.innerText = "Su cuenta aún no ha sido aprobada por el Administrador.";
+                    return;
+                }
+
+                localStorage.setItem('usuario_activo', u);
+                loginOverlay.style.display = 'none';
+                configurarPermisosUsuario(u);
+            } catch (err) {
+                loginError.style.display = 'block';
+                loginError.innerText = "Error al iniciar sesión: " + err.message;
             }
         });
 
         btnLogout.addEventListener('click', () => {
-            localStorage.removeItem('sesion_activa');
+            localStorage.removeItem('usuario_activo');
             location.reload();
         });
 
-        // Navegación entre Pestañas Independientes
+        function configurarPermisosUsuario(usuario) {
+            infoUsuarioLogueado.innerHTML = `<i class="fa-solid fa-user-check" style="color: #34d399;"></i> Conectado: <strong>${usuario}</strong>`;
+            
+            // Si es la cuenta administradora principal, habilitar panel admin y control de actas
+            if (usuario === "COMISARIA QUINTA") {
+                menuAdminItem.style.display = 'block';
+                btnToggleAdminActas.style.display = 'inline-block';
+            }
+        }
+
+        // --- PANEL DE ADMINISTRACIÓN (APROBAR USUARIOS) ---
+        onSnapshot(collection(db, "usuarios"), (snapshot) => {
+            const tbody = document.getElementById('tablaPendientesBody');
+            const emptyMsg = document.getElementById('empty-pendientes');
+            tbody.innerHTML = '';
+            
+            let hayPendientes = false;
+            snapshot.forEach((docSnap) => {
+                const usr = docSnap.data();
+                if (!usr.aprobado) {
+                    hayPendientes = true;
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${usr.usuario}</strong></td>
+                        <td>Pendiente de autorización</td>
+                        <td>
+                            <button type="button" class="btn-agregar" style="padding: 4px 10px; font-size: 0.75rem; background: #059669; margin: 0;" onclick="aprobarUsuario('${usr.usuario}')">
+                                <i class="fa-solid fa-check"></i> Aprobar
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+            });
+
+            emptyMsg.style.display = hayPendientes ? 'none' : 'flex';
+        });
+
+        window.aprobarUsuario = async function(nombreUsuario) {
+            try {
+                await updateDoc(doc(db, "usuarios", nombreUsuario), { aprobado: true });
+                alert(`¡Usuario ${nombreUsuario} aprobado con éxito! Ya puede iniciar sesión.`);
+            } catch (err) {
+                alert("Error al aprobar: " + err.message);
+            }
+        };
+
+        // Navegación entre Pestañas
         window.seleccionarMenu = function(elemento, seccionId) {
             const navLinks = document.querySelectorAll('.sidebar-menu .nav-link');
             navLinks.forEach(link => link.classList.remove('active'));
@@ -278,22 +566,20 @@
             document.getElementById('narraciones').style.display = 'none';
             document.getElementById('identificados').style.display = 'none';
             document.getElementById('documentos').style.display = 'none';
+            document.getElementById('formatoActa').style.display = 'none';
+            document.getElementById('panelAdmin').style.display = 'none';
 
             document.getElementById(seccionId).style.display = 'block';
             window.scrollTo(0, 0);
         };
 
-        // --- GESTIÓN DE FUNCIONARIOS ACTUANTES (8 HORAS DE EXPIRACIÓN) ---
+        // --- GESTIÓN DE FUNCIONARIOS ACTUANTES (8 HORAS) ---
         function verificarExpiracionActuantes() {
             const horaGuardada = localStorage.getItem('actuantes_timestamp');
-            if (horaGuardada) {
-                const ahora = Date.now();
-                const ochoHoras = 8 * 60 * 60 * 1000;
-                if (ahora - parseInt(horaGuardada) > ochoHoras) {
-                    localStorage.removeItem('agente_1');
-                    localStorage.removeItem('agente_2');
-                    localStorage.removeItem('actuantes_timestamp');
-                }
+            if (horaGuardada && (Date.now() - parseInt(horaGuardada) > 8 * 3600 * 1000)) {
+                localStorage.removeItem('agente_1');
+                localStorage.removeItem('agente_2');
+                localStorage.removeItem('actuantes_timestamp');
             }
         }
         verificarExpiracionActuantes();
@@ -303,15 +589,13 @@
         const estadoActuantes = document.getElementById('estadoActuantes');
 
         function actualizarUIActuantes() {
-            verificarExpiracionActuantes();
             const a1 = localStorage.getItem('agente_1') || '';
             const a2 = localStorage.getItem('agente_2') || '';
             inputAgente1.value = a1;
             inputAgente2.value = a2;
-
             if (a1 && a2) {
                 estadoActuantes.style.display = 'block';
-                estadoActuantes.innerHTML = `<i class="fa-solid fa-circle-check"></i> Activo en servicio: ${a1} y ${a2} (Válido por 8 horas)`;
+                estadoActuantes.innerHTML = `<i class="fa-solid fa-circle-check"></i> Activo: ${a1} y ${a2}`;
             } else {
                 estadoActuantes.style.display = 'none';
             }
@@ -321,12 +605,7 @@
         document.getElementById('btnGuardarActuantes').addEventListener('click', () => {
             const a1 = inputAgente1.value.trim().toUpperCase();
             const a2 = inputAgente2.value.trim().toUpperCase();
-            
-            if (!a1 || !a2) {
-                alert('Por favor ingrese ambos funcionarios.');
-                return;
-            }
-
+            if (!a1 || !a2) { alert('Ingrese ambos funcionarios.'); return; }
             localStorage.setItem('agente_1', a1);
             localStorage.setItem('agente_2', a2);
             localStorage.setItem('actuantes_timestamp', Date.now().toString());
@@ -335,7 +614,7 @@
         });
 
         document.getElementById('btnResetActuantes').addEventListener('click', () => {
-            if (confirm("¿Desea restablecer los funcionarios a modo neutro?")) {
+            if (confirm("¿Restablecer funcionarios a neutro?")) {
                 localStorage.removeItem('agente_1');
                 localStorage.removeItem('agente_2');
                 localStorage.removeItem('actuantes_timestamp');
@@ -344,7 +623,7 @@
             }
         });
 
-        // --- PLANTILLAS OFICIALES (18 NARRACIONES DEL DOCUMENTO) ---
+        // --- PLANTILLAS OPERATIVAS ---
         const plantillasOficiales = [
             { orden: 1, titulo: "01. Operativo Ciudad", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en Móvil Oficial SMI5783 se procede a efectuar OPERATIVO CIUDAD estático con conos para la ordenanza del tránsito en EL LUGAR DEL HECHO. Procediendo a identificar a los siguientes CONDUCTORES con sus respectivos Vehículos que a continuación se detalla:\n1)- CONDUCTOR: \nVEHÍCULO: \n2)- CONDUCTOR: \nVEHÍCULO: \nCursados los datos filiatorios de los conductores y sus vehículos en el Sistema de Gestión de Seguridad Pública carecen de requisitoria pendiente al día de la fecha.` },
             { orden: 2, titulo: "02. Recorrida Auto Balsa", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783, se efectuaron recorridas por AUTO BALSA, PLAYA SANTA MARÍA Y CAMINOS VECINALES de la zona. Finalizando sin novedad.-` },
@@ -355,7 +634,7 @@
             { orden: 7, titulo: "07. Recorrida Barrio Norte", texto: `En el día de la fecha FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por calle Valparaíso, Asunción, La Paz, Ecuador, Bolivia, Colombia, Costa Rica, Panamá Rep, Venezuela y calles internas del Barrio Norte. Finalizando sin novedad.-` },
             { orden: 8, titulo: "08. Cancha de Pádel", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se efectuó puesto de observación en CAMINO LAS CANTERAS Y REPÚBLICA DE CHILE (cancha de biopadel), finalizando sin novedad.-` },
             { orden: 9, titulo: "09. Recorrida Cancha de Racing", texto: `En el día de la fecha por parte de FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se efectuó recorrida en la UBICACIÓN DEL HECHO CALLE REPÚBLICA DE CHILE ESQUINA COSTA RICA (CANCHA DE RACING), finalizando sin novedad.` },
-            { orden: 10, titulo: "10. Puesto Melchora", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO AVENIDA DE LAS AMÉRICAS Y CAMINO LAS CANTERAS (centro educativo agrario MELCHORA CUENCA), por prevención y disuasión de los delitos, finalizando sin novedad.` },
+            { orden: 10, titulo: "10. Puesto Melchora", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO AVENIDA DE LAS AMÉricAS Y CAMINO LAS CANTERAS (centro educativo agrario MELCHORA CUENCA), por prevención y disuasión de los delitos, finalizando sin novedad.` },
             { orden: 11, titulo: "11. Recorrida Constancia", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO RUTA 3 KILÓMETRO 383, Localidad de Constancia. Finalizando sin novedad.` },
             { orden: 12, titulo: "12. Recorridas Moteles", texto: `- MOTEL VENUS:\nEn el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO BULEVAR ARTIGAS ENTRE REPÚBLICA DE CHILE Y REPÚBLICA DE BOLIVIA, en Motel VENUS y zonas aledañas, finalizando sin novedad.-\n\n- MOTEL GENESIS:\nEn el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO STEFANEL Y COSTA RICA, en Motel GENESIS y zonas aledañas, finalizando sin novedad.\n\n- MOTEL FEELING Y FECHORÍAS:\nEn el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO AVENIDA DOCTOR ROLDÁN Y CALLE LOS OLIVOS, en Motel FEELING y FECHORÍAS este último actualmente abandonado como así también zonas aledañas, finalizando sin novedad.` },
             { orden: 13, titulo: "13. Puesto AFE", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO CALLE COMERCIO ESQUINA AVENIDA DE LAS AMÉRICAS (Depósito AFE) en prevención y disuasión de los delitos, finalizando sin novedad.-` },
@@ -369,27 +648,17 @@
         async function sincronizarPlantillasOficiales() {
             const colRef = collection(db, "plantillas");
             const snap = await getDocs(colRef);
-            
             if (snap.size < 18) {
                 const batch = writeBatch(db);
-                snap.forEach((documento) => {
-                    batch.delete(documento.ref);
-                });
+                snap.forEach(d => batch.delete(d.ref));
                 await batch.commit();
-
                 for (const p of plantillasOficiales) {
-                    await addDoc(colRef, {
-                        orden: p.orden,
-                        titulo: p.titulo,
-                        texto: p.texto,
-                        creado: serverTimestamp()
-                    });
+                    await addDoc(colRef, { orden: p.orden, titulo: p.titulo, texto: p.texto, creado: serverTimestamp() });
                 }
             }
         }
         sincronizarPlantillasOficiales();
 
-        // --- SINCRONIZACIÓN DE PLANTILLAS Y REEMPLAZO DINÁMICO DE FUNCIONARIOS ---
         const gridPlantillas = document.getElementById('gridPlantillas');
         const inputBuscarPlantilla = document.getElementById('inputBuscarPlantilla');
         let listaPlantillasCargadas = [];
@@ -397,36 +666,24 @@
         function renderizarPlantillas() {
             gridPlantillas.innerHTML = '';
             const filtro = inputBuscarPlantilla ? inputBuscarPlantilla.value.toLowerCase().trim() : '';
-
-            verificarExpiracionActuantes();
             const a1 = localStorage.getItem('agente_1');
             const a2 = localStorage.getItem('agente_2');
 
             listaPlantillasCargadas.forEach((p) => {
                 let textoProcesado = p.texto || '';
-                
                 if (a1 && a2) {
                     textoProcesado = textoProcesado.replace(/FUNCIONARIOS ACTUANTES/g, `FUNCIONARIOS ACTUANTES ${a1} y ${a2}`);
                 }
-
-                if (filtro !== '') {
-                    const coincideTitulo = p.titulo.toLowerCase().includes(filtro);
-                    const coincideTexto = textoProcesado.toLowerCase().includes(filtro);
-                    if (!coincideTitulo && !coincideTexto) return;
-                }
+                if (filtro && !p.titulo.toLowerCase().includes(filtro) && !textoProcesado.toLowerCase().includes(filtro)) return;
 
                 const card = document.createElement('div');
                 card.className = 'card-plantilla';
                 card.innerHTML = `
-                    <h3 contenteditable="true" id="titulo-${p.id}">${p.titulo}</h3>
-                    <pre><code contenteditable="true" id="texto-${p.id}">${textoProcesado}</code></pre>
+                    <h3 contenteditable="true">${p.titulo}</h3>
+                    <pre><code contenteditable="true">${textoProcesado}</code></pre>
                     <div style="display: flex; gap: 8px; align-self: flex-end; margin-top: 6px;">
-                        <button type="button" class="btn-copiar-plantilla" title="Copiar texto" style="background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(96, 165, 250, 0.3); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; transition: all 0.2s;">
-                            <i class="fa-solid fa-copy"></i> Copiar
-                        </button>
-                        <button type="button" class="btn-eliminar-plantilla" title="Eliminar plantilla">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
+                        <button type="button" class="btn-copiar-plantilla" style="background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(96, 165, 250, 0.3); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.75rem;"><i class="fa-solid fa-copy"></i> Copiar</button>
+                        <button type="button" class="btn-eliminar-plantilla" title="Eliminar"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
                 `;
 
@@ -436,43 +693,23 @@
 
                 btnCopiar.addEventListener('click', () => {
                     navigator.clipboard.writeText(code.innerText).then(() => {
-                        const originalHTML = btnCopiar.innerHTML;
                         btnCopiar.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!';
-                        btnCopiar.style.backgroundColor = 'rgba(16, 185, 129, 0.2)';
-                        btnCopiar.style.color = '#34d399';
-                        setTimeout(() => {
-                            btnCopiar.innerHTML = originalHTML;
-                            btnCopiar.style.backgroundColor = 'rgba(59, 130, 246, 0.15)';
-                            btnCopiar.style.color = '#60a5fa';
-                        }, 1500);
+                        setTimeout(() => btnCopiar.innerHTML = '<i class="fa-solid fa-copy"></i> Copiar', 1500);
                     });
                 });
 
-                let timeoutId;
-                const guardarCambios = () => {
-                    clearTimeout(timeoutId);
-                    timeoutId = setTimeout(async () => {
-                        const docRef = doc(db, "plantillas", p.id);
-                        let textoLimpio = code.innerText;
-                        
-                        if (a1 && a2) {
-                            textoLimpio = textoLimpio.replace(new RegExp(`FUNCIONARIOS ACTUANTES ${a1} y ${a2}`, 'g'), 'FUNCIONARIOS ACTUANTES');
-                        }
-
-                        await updateDoc(docRef, {
-                            titulo: h3.innerText,
-                            texto: textoLimpio
-                        });
+                let tId;
+                const guardar = () => {
+                    clearTimeout(tId);
+                    tId = setTimeout(async () => {
+                        await updateDoc(doc(db, "plantillas", p.id), { titulo: h3.innerText, texto: code.innerText });
                     }, 800);
                 };
-
-                h3.addEventListener('input', guardarCambios);
-                code.addEventListener('input', guardarCambios);
+                h3.addEventListener('input', guardar);
+                code.addEventListener('input', guardar);
 
                 card.querySelector('.btn-eliminar-plantilla').addEventListener('click', async () => {
-                    if (confirm("¿Desea eliminar esta plantilla para todos los dispositivos?")) {
-                        await deleteDoc(doc(db, "plantillas", p.id));
-                    }
+                    if (confirm("¿Eliminar plantilla?")) await deleteDoc(doc(db, "plantillas", p.id));
                 });
 
                 gridPlantillas.appendChild(card);
@@ -481,42 +718,29 @@
 
         onSnapshot(collection(db, "plantillas"), (snapshot) => {
             listaPlantillasCargadas = [];
-            snapshot.forEach(docSnap => {
-                listaPlantillasCargadas.push({ id: docSnap.id, ...docSnap.data() });
-            });
+            snapshot.forEach(d => listaPlantillasCargadas.push({ id: d.id, ...d.data() }));
             listaPlantillasCargadas.sort((a, b) => (a.orden || 999) - (b.orden || 999));
             renderizarPlantillas();
         });
 
-        if (inputBuscarPlantilla) {
-            inputBuscarPlantilla.addEventListener('input', renderizarPlantillas);
-        }
+        if (inputBuscarPlantilla) inputBuscarPlantilla.addEventListener('input', renderizarPlantillas);
 
         document.getElementById('btnNuevaPlantilla').addEventListener('click', async () => {
-            await addDoc(collection(db, "plantillas"), {
-                orden: Date.now(),
-                titulo: "Nueva Plantilla Operativa",
-                texto: "En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES...",
-                creado: serverTimestamp()
-            });
+            await addDoc(collection(db, "plantillas"), { orden: Date.now(), titulo: "Nueva Plantilla", texto: "Texto...", creado: serverTimestamp() });
         });
 
-        // --- SINCRONIZACIÓN DE IDENTIFICADOS EN TIEMPO REAL ---
-        const tbody = document.getElementById('tablaIdentificadosBody');
+        // --- IDENTIFICADOS CON AUDITORÍA (REGISTRADO POR) ---
+        const tbodyIdentificados = document.getElementById('tablaIdentificadosBody');
         const emptyState = document.getElementById('empty-state');
 
         onSnapshot(collection(db, "identificados"), (snapshot) => {
-            tbody.innerHTML = '';
-            if (snapshot.empty) {
-                if (emptyState) emptyState.style.display = 'flex';
-                return;
-            }
+            tbodyIdentificados.innerHTML = '';
+            if (snapshot.empty) { if (emptyState) emptyState.style.display = 'flex'; return; }
             if (emptyState) emptyState.style.display = 'none';
 
             snapshot.forEach((documento) => {
                 const item = documento.data();
                 const id = documento.id;
-
                 const tr = document.createElement('tr');
                 tr.style.cursor = 'pointer';
                 tr.innerHTML = `
@@ -525,10 +749,9 @@
                     <td><span class="apodo-badge">${item.apodo || '-'}</span></td>
                     <td>${item.fechaNac || '-'}</td>
                     <td>${item.domicilio || '-'}</td>
+                    <td style="font-size: 0.75rem; color: #60a5fa;"><i class="fa-solid fa-user"></i> ${item.registradoPor || 'Sistema'}</td>
                     <td>
-                        <button type="button" class="btn-eliminar" title="Eliminar registro">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
+                        <button type="button" class="btn-eliminar" title="Eliminar registro"><i class="fa-solid fa-trash-can"></i></button>
                     </td>
                 `;
 
@@ -538,32 +761,26 @@
 
                 tr.querySelector('.btn-eliminar').addEventListener('click', async (e) => {
                     e.stopPropagation();
-                    if (confirm("¿Desea borrar este registro de la nube?")) {
-                        await deleteDoc(doc(db, "identificados", id));
-                    }
+                    if (confirm("¿Desea borrar este registro?")) await deleteDoc(doc(db, "identificados", id));
                 });
 
-                tbody.appendChild(tr);
+                tbodyIdentificados.appendChild(tr);
             });
         });
 
-        const btnAgregar = document.getElementById('btnAgregar');
-        btnAgregar.addEventListener('click', async () => {
+        document.getElementById('btnAgregar').addEventListener('click', async () => {
             const cedula = document.getElementById('inputCedula').value.trim();
             const nombre = document.getElementById('inputNombre').value.trim();
             const apodo = document.getElementById('inputApodo').value.trim();
             const fecha = document.getElementById('inputFecha').value;
             const domicilio = document.getElementById('inputDomicilio').value.trim();
 
-            if (!nombre) {
-                alert('Ingrese al menos el nombre completo.');
-                return;
-            }
+            if (!nombre) { alert('Ingrese al menos el nombre completo.'); return; }
 
             let fechaFormateada = '-';
             if (fecha) {
-                const partes = fecha.split('-');
-                fechaFormateada = `${partes[2]}/${partes[1]}/${partes[0]}`;
+                const p = fecha.split('-');
+                fechaFormateada = `${p[2]}/${p[1]}/${p[0]}`;
             }
 
             try {
@@ -574,6 +791,7 @@
                     fechaNac: fechaFormateada,
                     domicilio: domicilio || '-',
                     notas: '',
+                    registradoPor: localStorage.getItem('usuario_activo') || 'Desconocido',
                     creado: serverTimestamp()
                 });
 
@@ -583,24 +801,19 @@
                 document.getElementById('inputFecha').value = '';
                 document.getElementById('inputDomicilio').value = '';
             } catch (error) {
-                alert("Error al guardar en la nube: " + error.message);
+                alert("Error: " + error.message);
             }
         });
 
         async function abrirPerfilCloud(id) {
-            const docRef = doc(db, "identificados", id);
-            const snap = await getDoc(docRef);
+            const snap = await getDoc(doc(db, "identificados", id));
             if (snap.exists()) {
                 const data = snap.data();
                 document.getElementById('perfilTituloNombre').innerText = data.nombre;
-                document.getElementById('perfilSubInfo').innerText = `Cédula: ${data.cedula} | Apodo: ${data.apodo} | Domicilio: ${data.domicilio}`;
-                
+                document.getElementById('perfilSubInfo').innerText = `Cédula: ${data.cedula} | Registrado por: ${data.registradoPor || 'N/A'}`;
                 const txtNotas = document.getElementById('txtNotasPerfil');
                 txtNotas.value = data.notas || '';
-                
-                txtNotas.oninput = async () => {
-                    await updateDoc(docRef, { notas: txtNotas.value });
-                };
+                txtNotas.oninput = async () => { await updateDoc(doc(db, "identificados", id), { notas: txtNotas.value }); };
 
                 document.getElementById('vistaPrincipal').style.display = 'none';
                 document.getElementById('mainSidebar').style.display = 'none';
@@ -615,7 +828,7 @@
             document.getElementById('mainSidebar').style.display = 'flex';
         });
 
-        // --- GESTIÓN Y CARGA DIRECTA DE DOCUMENTOS E IMPRESIONES (SISTEMA BASE64) ---
+        // --- DOCUMENTOS E IMPRESIONES ---
         const inputNombreDoc = document.getElementById('inputNombreDoc');
         const inputFileDoc = document.getElementById('inputFileDoc');
         const btnSubirDoc = document.getElementById('btnSubirDoc');
@@ -626,82 +839,104 @@
         btnSubirDoc.addEventListener('click', () => {
             const nombreDoc = inputNombreDoc.value.trim();
             const archivo = inputFileDoc.files[0];
-
-            if (!nombreDoc || !archivo) {
-                alert('Por favor ingrese un nombre y seleccione un archivo.');
-                return;
-            }
+            if (!nombreDoc || !archivo) { alert('Ingrese nombre y archivo.'); return; }
 
             estadoSubidaDoc.style.display = 'block';
-            estadoSubidaDoc.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Procesando y guardando en la nube...`;
+            estadoSubidaDoc.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Guardando...`;
 
             const reader = new FileReader();
             reader.onload = async function (e) {
                 try {
-                    const base64Data = e.target.result;
-
                     await addDoc(collection(db, "documentos"), {
                         nombre: nombreDoc,
                         fileName: archivo.name,
-                        fileData: base64Data,
+                        fileData: e.target.result,
+                        subidoPor: localStorage.getItem('usuario_activo'),
                         creado: serverTimestamp()
                     });
-
                     inputNombreDoc.value = '';
                     inputFileDoc.value = '';
-                    estadoSubidaDoc.innerHTML = `<i class="fa-solid fa-circle-check"></i> Documento guardado exitosamente.`;
-                    setTimeout(() => { estadoSubidaDoc.style.display = 'none'; }, 3000);
-                } catch (error) {
-                    alert("Error al guardar documento: " + error.message);
-                    estadoSubidaDoc.style.display = 'none';
-                }
+                    estadoSubidaDoc.innerHTML = `<i class="fa-solid fa-circle-check"></i> Guardado.`;
+                    setTimeout(() => estadoSubidaDoc.style.display = 'none', 3000);
+                } catch (err) { alert("Error: " + err.message); estadoSubidaDoc.style.display = 'none'; }
             };
             reader.readAsDataURL(archivo);
         });
 
         onSnapshot(collection(db, "documentos"), (snapshot) => {
             gridDocumentos.innerHTML = '';
-            if (snapshot.empty) {
-                if (emptyDocsMsg) emptyDocsMsg.style.display = 'flex';
-                return;
-            }
+            if (snapshot.empty) { if (emptyDocsMsg) emptyDocsMsg.style.display = 'flex'; return; }
             if (emptyDocsMsg) emptyDocsMsg.style.display = 'none';
 
             snapshot.forEach((docSnap) => {
-                const docData = docSnap.data();
+                const d = docSnap.data();
                 const id = docSnap.id;
-
-                let iconoClase = 'fa-file-lines';
-                let iconoColor = '#60a5fa';
-                const nameLower = (docData.fileName || '').toLowerCase();
-                
-                if (nameLower.endsWith('.pdf')) { iconoClase = 'fa-file-pdf'; iconoColor = '#f87171'; }
-                else if (nameLower.endsWith('.doc') || nameLower.endsWith('.docx') || nameLower.endsWith('.odt')) { iconoClase = 'fa-file-word'; iconoColor = '#60a5fa'; }
-                else if (nameLower.endsWith('.xls') || nameLower.endsWith('.xlsx')) { iconoClase = 'fa-file-excel'; iconoColor = '#34d399'; }
-
                 const card = document.createElement('div');
                 card.className = 'card-plantilla';
                 card.innerHTML = `
-                    <h3><i class="fa-solid ${iconoClase}" style="color: ${iconoColor}; margin-right: 8px;"></i>${docData.nombre}</h3>
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; flex-grow: 1;">Archivo: ${docData.fileName}</p>
-                    <div style="display: flex; gap: 8px; justify-content: flex-end;">
-                        <a href="${docData.fileData}" download="${docData.fileName}" class="btn-add-plantilla" style="padding: 6px 12px; font-size: 0.75rem; text-decoration: none;">
-                            <i class="fa-solid fa-print"></i> Abrir / Imprimir
-                        </a>
-                        <button type="button" class="btn-eliminar-plantilla btn-eliminar-doc" title="Eliminar documento">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
+                    <h3><i class="fa-solid fa-file-pdf" style="color: #f87171; margin-right: 8px;"></i>${d.nombre}</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Archivo: ${d.fileName} <br><span style="color:#60a5fa;">Subido por: ${d.subidoPor || 'Admin'}</span></p>
+                    <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px;">
+                        <a href="${d.fileData}" download="${d.fileName}" class="btn-add-plantilla" style="padding: 6px 12px; font-size: 0.75rem; text-decoration: none;"><i class="fa-solid fa-print"></i> Abrir</a>
+                        <button type="button" class="btn-eliminar-plantilla btn-eliminar-doc" title="Eliminar"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
                 `;
-
                 card.querySelector('.btn-eliminar-doc').addEventListener('click', async () => {
-                    if (confirm(`¿Desea eliminar el documento "${docData.nombre}"?`)) {
-                        await deleteDoc(doc(db, "documentos", id));
-                    }
+                    if (confirm("¿Eliminar documento?")) await deleteDoc(doc(db, "documentos", id));
                 });
-
                 gridDocumentos.appendChild(card);
             });
+        });
+
+        // --- FORMATO DE ACTA ---
+        btnToggleAdminActas.addEventListener('click', () => {
+            const vis = document.getElementById('panelCargaActa1').style.display !== 'none';
+            document.getElementById('panelCargaActa1').style.display = vis ? 'none' : 'block';
+            document.getElementById('panelCargaActa2').style.display = vis ? 'none' : 'block';
+            btnToggleAdminActas.innerHTML = vis ? '<i class="fa-solid fa-gear"></i> Modo Carga' : '<i class="fa-solid fa-xmark"></i> Cerrar Carga';
+        });
+
+        function guardarActa(num, input, estado, nombre) {
+            const arch = input.files[0];
+            if (!arch) { alert('Seleccione un archivo.'); return; }
+            estado.style.display = 'block';
+            estado.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Guardando...`;
+
+            const r = new FileReader();
+            r.onload = async function(e) {
+                await setDoc(doc(db, "formato_actas", `acta_${num}`), {
+                    numero: num, fileName: arch.name, fileData: e.target.result, actualizado: serverTimestamp()
+                });
+                input.value = '';
+                estado.innerHTML = `<i class="fa-solid fa-circle-check"></i> Actualizado.`;
+                setTimeout(() => estado.style.display = 'none', 3000);
+            };
+            r.readAsDataURL(arch);
+        }
+
+        document.getElementById('btnSubirActa1').addEventListener('click', () => guardarActa(1, document.getElementById('inputFileActa1'), document.getElementById('estadoActa1'), "Acta 61"));
+        document.getElementById('btnSubirActa2').addEventListener('click', () => guardarActa(2, document.getElementById('inputFileActa2'), document.getElementById('estadoActa2'), "Acta Denunciante"));
+
+        onSnapshot(doc(db, "formato_actas", "acta_1"), (docSnap) => {
+            const cont = document.getElementById('contenedorActa1');
+            if (docSnap.exists()) {
+                const d = docSnap.data();
+                cont.innerHTML = `<div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(239, 68, 68, 0.3); padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                    <div><strong style="font-size: 0.85rem; color: #fff;">${d.fileName}</strong><span style="font-size:0.75rem; color:#34d399; display:block;"><i class="fa-solid fa-circle-check"></i> Disponible</span></div>
+                    <a href="${d.fileData}" download="${d.fileName}" class="btn-add-plantilla" style="padding: 6px 12px; font-size: 0.75rem; text-decoration: none; background: #dc2626;"><i class="fa-solid fa-download"></i> Descargar</a>
+                </div>`;
+            } else { cont.innerHTML = `<div class="empty-state-msg" style="padding:15px; font-size:0.8rem;"><span>Pendiente de carga.</span></div>`; }
+        });
+
+        onSnapshot(doc(db, "formato_actas", "acta_2"), (docSnap) => {
+            const cont = document.getElementById('contenedorActa2');
+            if (docSnap.exists()) {
+                const d = docSnap.data();
+                cont.innerHTML = `<div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(59, 130, 246, 0.3); padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                    <div><strong style="font-size: 0.85rem; color: #fff;">${d.fileName}</strong><span style="font-size:0.75rem; color:#34d399; display:block;"><i class="fa-solid fa-circle-check"></i> Disponible</span></div>
+                    <a href="${d.fileData}" download="${d.fileName}" class="btn-add-plantilla" style="padding: 6px 12px; font-size: 0.75rem; text-decoration: none; background: #2563eb;"><i class="fa-solid fa-download"></i> Descargar</a>
+                </div>`;
+            } else { cont.innerHTML = `<div class="empty-state-msg" style="padding:15px; font-size:0.8rem;"><span>Pendiente de carga.</span></div>`; }
         });
     </script>
 </body>
