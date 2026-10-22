@@ -46,6 +46,7 @@
         <ul class="sidebar-menu">
             <li><a href="#" class="nav-link active" onclick="seleccionarMenu(this, 'narraciones')"><i class="fa-solid fa-file-lines"></i> Plantillas de Narraciones</a></li>
             <li><a href="#" class="nav-link" onclick="seleccionarMenu(this, 'identificados')"><i class="fa-solid fa-id-card"></i> Datos de Identificados</a></li>
+            <li><a href="#" class="nav-link" onclick="seleccionarMenu(this, 'documentos')"><i class="fa-solid fa-folder-open"></i> Documentos e Impresiones</a></li>
         </ul>
         <div class="sidebar-footer-logout">
             <button type="button" id="btnLogout" class="btn-logout" title="Cerrar Sesión">
@@ -67,29 +68,30 @@
         </header>
 
         <main class="content-body">
-            
-            <!-- BLOQUE: CONFIGURADOR DE FUNCIONARIOS ACTUANTES (8 HORAS) -->
-            <section class="section-card" style="padding: 18px 24px; margin-bottom: 25px; background: linear-gradient(145deg, rgba(30, 58, 138, 0.25), rgba(16, 24, 39, 0.95)); border: 1px solid rgba(59, 130, 246, 0.3);">
-                <div class="section-header" style="margin-bottom: 12px;">
-                    <h2 style="font-size: 1.1rem;"><i class="fa-solid fa-user-shield" style="color: #60a5fa;"></i> Funcionarios Actuantes en Servicio (Autofill 8 Horas)</h2>
-                    <button type="button" id="btnResetActuantes" class="btn-volver" title="Restablecer a Neutro" style="margin: 0; padding: 6px 12px; font-size: 0.75rem;">
-                        <i class="fa-solid fa-rotate-right"></i> Restablecer Neutro
-                    </button>
-                </div>
-                <p class="section-desc" style="margin-bottom: 12px; font-size: 0.85rem;">Ingrese los dos funcionarios una sola vez. Las plantillas se autocompletarán automáticamente durante 8 horas.</p>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) auto; gap: 12px; align-items: center;">
-                    <input type="text" id="inputAgente1" placeholder="Primer Funcionario (Ej: AGENTE PÉREZ)" class="input-field">
-                    <input type="text" id="inputAgente2" placeholder="Segundo Funcionario (Ej: AGENTE GÓMEZ)" class="input-field">
-                    <button type="button" id="btnGuardarActuantes" class="btn-agregar" style="margin: 0;">
-                        <i class="fa-solid fa-clock"></i> Fijar por 8 Horas
-                    </button>
-                </div>
-                <div id="estadoActuantes" style="font-size: 0.78rem; color: #34d399; margin-top: 8px; font-weight: 600; display: none;"></div>
-            </section>
 
             <!-- SECCIÓN 1: PLANTILLAS DE NARRACIONES -->
             <section id="narraciones" class="section-card">
+
+                <!-- BLOQUE: CONFIGURADOR DE FUNCIONARIOS ACTUANTES (8 HORAS) - EXCLUSIVO DE NARRACIONES -->
+                <div style="padding: 18px 24px; margin-bottom: 25px; background: linear-gradient(145deg, rgba(30, 58, 138, 0.25), rgba(16, 24, 39, 0.95)); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px;">
+                    <div class="section-header" style="margin-bottom: 12px;">
+                        <h2 style="font-size: 1.1rem;"><i class="fa-solid fa-user-shield" style="color: #60a5fa;"></i> Funcionarios Actuantes en Servicio (Autofill 8 Horas)</h2>
+                        <button type="button" id="btnResetActuantes" class="btn-volver" title="Restablecer a Neutro" style="margin: 0; padding: 6px 12px; font-size: 0.75rem;">
+                            <i class="fa-solid fa-rotate-right"></i> Restablecer Neutro
+                        </button>
+                    </div>
+                    <p class="section-desc" style="margin-bottom: 12px; font-size: 0.85rem;">Ingrese los dos funcionarios una sola vez. Las plantillas se autocompletarán automáticamente durante 8 horas.</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) auto; gap: 12px; align-items: center;">
+                        <input type="text" id="inputAgente1" placeholder="Primer Funcionario (Ej: AGENTE PÉREZ)" class="input-field">
+                        <input type="text" id="inputAgente2" placeholder="Segundo Funcionario (Ej: AGENTE GÓMEZ)" class="input-field">
+                        <button type="button" id="btnGuardarActuantes" class="btn-agregar" style="margin: 0;">
+                            <i class="fa-solid fa-clock"></i> Fijar por 8 Horas
+                        </button>
+                    </div>
+                    <div id="estadoActuantes" style="font-size: 0.78rem; color: #34d399; margin-top: 8px; font-weight: 600; display: none;"></div>
+                </div>
+
                 <div class="section-header">
                     <h2><i class="fa-solid fa-file-pen"></i> Plantillas de Narraciones Operativas</h2>
                     <div class="header-actions">
@@ -150,10 +152,40 @@
                     </div>
                 </div>
             </section>
+
+            <!-- SECCIÓN 3: DOCUMENTOS E IMPRESIONES -->
+            <section id="documentos" class="section-card" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fa-solid fa-folder-open"></i> Archivos y Documentos para Imprimir</h2>
+                </div>
+                <p class="section-desc">Cargue y administre aquí los formularios, planillas y actas para tenerlos disponibles en la comisaría.</p>
+
+                <!-- FORMULARIO DE CARGA DE ARCHIVOS -->
+                <div style="background: rgba(15, 23, 42, 0.6); border: 1px dashed rgba(59, 130, 246, 0.4); padding: 18px; border-radius: 8px; margin-bottom: 25px;">
+                    <h3 style="font-size: 0.95rem; margin-bottom: 12px; color: #60a5fa;"><i class="fa-solid fa-cloud-arrow-up"></i> Cargar Nuevo Documento</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) auto; gap: 12px; align-items: center;">
+                        <input type="text" id="inputNombreDoc" placeholder="Nombre del Documento (Ej: Constancia de Autoevacuados)" class="input-field">
+                        <input type="file" id="inputFileDoc" class="input-field" style="padding: 6px;" accept=".pdf,.doc,.docx,.xls,.xlsx,.odt">
+                        <button type="button" id="btnSubirDoc" class="btn-agregar" style="margin: 0;">
+                            <i class="fa-solid fa-upload"></i> Guardar Documento
+                        </button>
+                    </div>
+                    <div id="estadoSubidaDoc" style="font-size: 0.78rem; color: #34d399; margin-top: 8px; font-weight: 600; display: none;"></div>
+                </div>
+
+                <!-- GRID DE DOCUMENTOS CARGADOS -->
+                <div class="grid-plantillas" id="gridDocumentos">
+                    <!-- Se cargan dinámicamente desde Firebase -->
+                </div>
+                <div id="empty-docs-msg" class="empty-state-msg" style="display: none;">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <span>No hay documentos cargados aún. Utilice el módulo superior para subir el primer archivo.</span>
+                </div>
+            </section>
         </main>
 
         <footer class="footer">
-            <p><i class="fa-solid fa-scale-balanced"></i> "Proteger, servir y hacer cumplir la ley con firmeza, honor y absoluta vocación de justicia."</p>
+            <p><i class="fa-solid fa-handshake-angle"></i> "En cada guardia y en cada procedimiento, la verdadera fuerza es el compañero que está al lado."</p>
         </footer>
     </div>
 
@@ -186,7 +218,7 @@
         </main>
 
         <footer class="footer">
-            <p><i class="fa-solid fa-shield-halved"></i> "Comisaría Quinta - Sistema de Archivo Táctico"</p>
+            <p><i class="fa-solid fa-handshake-angle"></i> "Comisaría Quinta - Lealtad y Vocación de Servicio"</p>
         </footer>
     </div>
 
@@ -245,6 +277,7 @@
 
             document.getElementById('narraciones').style.display = 'none';
             document.getElementById('identificados').style.display = 'none';
+            document.getElementById('documentos').style.display = 'none';
 
             document.getElementById(seccionId).style.display = 'block';
             window.scrollTo(0, 0);
@@ -325,10 +358,10 @@
             { orden: 10, titulo: "10. Puesto Melchora", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO AVENIDA DE LAS AMÉRICAS Y CAMINO LAS CANTERAS (centro educativo agrario MELCHORA CUENCA), por prevención y disuasión de los delitos, finalizando sin novedad.` },
             { orden: 11, titulo: "11. Recorrida Constancia", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO RUTA 3 KILÓMETRO 383, Localidad de Constancia. Finalizando sin novedad.` },
             { orden: 12, titulo: "12. Recorridas Moteles", texto: `- MOTEL VENUS:\nEn el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO BULEVAR ARTIGAS ENTRE REPÚBLICA DE CHILE Y REPÚBLICA DE BOLIVIA, en Motel VENUS y zonas aledañas, finalizando sin novedad.-\n\n- MOTEL GENESIS:\nEn el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO STEFANEL Y COSTA RICA, en Motel GENESIS y zonas aledañas, finalizando sin novedad.\n\n- MOTEL FEELING Y FECHORÍAS:\nEn el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO AVENIDA DOCTOR ROLDÁN Y CALLE LOS OLIVOS, en Motel FEELING y FECHORÍAS este último actualmente abandonado como así también zonas aledañas, finalizando sin novedad.` },
-            { orden: 13, titulo: "13. Puesto AFE", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO CALLE COMERCIO ESQUINA AVENIDA DE LAS AMERICAS (Depósito AFE) en prevención y disuasión de los delitos, finalizando sin novedad.-` },
+            { orden: 13, titulo: "13. Puesto AFE", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO CALLE COMERCIO ESQUINA AVENIDA DE LAS AMÉRICAS (Depósito AFE) en prevención y disuasión de los delitos, finalizando sin novedad.-` },
             { orden: 14, titulo: "14. Identificados", texto: `En el día de la fecha en circunstancias de recorridas, por parte de los FUNCIONARIOS ACTUANTES, en móvil SMI5783, se procede a Identificar a los TESTIGOS DEL EVENTO en el horario comprendido de _____ a _____ en las inmediaciones. Consultado a SGSP no poseen requisitoria al momento, a posterior se les permite continuar. Finalizando sin novedad.-` },
             { orden: 15, titulo: "15. Citación Cumplida", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil oficial SMI 5783 se concurre al domicilio de TESTIGO DEL EVENTO ____________________ quien firma recibo de citación dejando constancia de su notificación.-` },
-            { orden: 16, titulo: "16. Certificado de Vecindad", texto: `Se presenta el TESTIGO DEL EVENTO quien solicita al presente CERTIFICADO DE VECINDAD el que se expide a solicitud de la parte interesada y a solo efectos de justificar su domicilio ante Oficinas de __________________ expresando éste que reside en ______________.\nEl Compareciente es notificado de que la presente declaración posee carácter de DECLARACIÓN JURADA y que puede ser de aplicación el Art. 239 del Código Penal, que dice (Falsificación ideológica por un particular).\nEl que, con motivo del otorgamiento o formalización de un documento público, ante un funcionario público, prestare declaración falsa sobre su identidad o estado, o cualquiera otra circunstancia de hecho, será castigado con tres a veinticuatro meses de prisión.\nFirma al pié como constancia de que el domicilio declaredo es verdadero.-` },
+            { orden: 16, titulo: "16. Certificado de Vecindad", texto: `Se presenta el TESTIGO DEL EVENTO quien solicita al presente CERTIFICADO DE VECINDAD el que se expide a solicitud de la parte interesada y a solo efectos de justificar su domicilio ante Oficinas de __________________ expresando éste que reside en ______________.\nEl Compareciente es notificado de que la presente declaración posee carácter de DECLARACIÓN JURADA y que puede ser de aplicación el Art. 239 del Código Penal, que dice (Falsificación ideológica por un particular).\nEl que, con motivo del otorgamiento o formalización de un documento público, ante un funcionario público, prestare declaración falsa sobre su identidad o estado, o cualquiera otra circunstancia de hecho, será castigado con tres a veinticuatro meses de prisión.\nFirma al pié como constancia de que el domicilio declarado es verdadero.-` },
             { orden: 17, titulo: "17. Recorrida Los Olivos", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por Barrio los Olivos, recorriendo calles internas. Finalizando sin novedad.-` },
             { orden: 18, titulo: "18. Recorrida Los Ceibos", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por Barrio Los Ceibos sito calle ROLDÁN ESQUINA REPÚBLICA DE BOLIVIA, recorriendo calles internas. Finalizando sin novedad.-` }
         ];
@@ -376,7 +409,6 @@
                     textoProcesado = textoProcesado.replace(/FUNCIONARIOS ACTUANTES/g, `FUNCIONARIOS ACTUANTES ${a1} y ${a2}`);
                 }
 
-                // Filtrar por título o contenido
                 if (filtro !== '') {
                     const coincideTitulo = p.titulo.toLowerCase().includes(filtro);
                     const coincideTexto = textoProcesado.toLowerCase().includes(filtro);
@@ -581,6 +613,95 @@
             document.getElementById('vistaPerfil').style.display = 'none';
             document.getElementById('vistaPrincipal').style.display = 'flex';
             document.getElementById('mainSidebar').style.display = 'flex';
+        });
+
+        // --- GESTIÓN Y CARGA DIRECTA DE DOCUMENTOS E IMPRESIONES (SISTEMA BASE64) ---
+        const inputNombreDoc = document.getElementById('inputNombreDoc');
+        const inputFileDoc = document.getElementById('inputFileDoc');
+        const btnSubirDoc = document.getElementById('btnSubirDoc');
+        const estadoSubidaDoc = document.getElementById('estadoSubidaDoc');
+        const gridDocumentos = document.getElementById('gridDocumentos');
+        const emptyDocsMsg = document.getElementById('empty-docs-msg');
+
+        btnSubirDoc.addEventListener('click', () => {
+            const nombreDoc = inputNombreDoc.value.trim();
+            const archivo = inputFileDoc.files[0];
+
+            if (!nombreDoc || !archivo) {
+                alert('Por favor ingrese un nombre y seleccione un archivo.');
+                return;
+            }
+
+            estadoSubidaDoc.style.display = 'block';
+            estadoSubidaDoc.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Procesando y guardando en la nube...`;
+
+            const reader = new FileReader();
+            reader.onload = async function (e) {
+                try {
+                    const base64Data = e.target.result;
+
+                    await addDoc(collection(db, "documentos"), {
+                        nombre: nombreDoc,
+                        fileName: archivo.name,
+                        fileData: base64Data,
+                        creado: serverTimestamp()
+                    });
+
+                    inputNombreDoc.value = '';
+                    inputFileDoc.value = '';
+                    estadoSubidaDoc.innerHTML = `<i class="fa-solid fa-circle-check"></i> Documento guardado exitosamente.`;
+                    setTimeout(() => { estadoSubidaDoc.style.display = 'none'; }, 3000);
+                } catch (error) {
+                    alert("Error al guardar documento: " + error.message);
+                    estadoSubidaDoc.style.display = 'none';
+                }
+            };
+            reader.readAsDataURL(archivo);
+        });
+
+        onSnapshot(collection(db, "documentos"), (snapshot) => {
+            gridDocumentos.innerHTML = '';
+            if (snapshot.empty) {
+                if (emptyDocsMsg) emptyDocsMsg.style.display = 'flex';
+                return;
+            }
+            if (emptyDocsMsg) emptyDocsMsg.style.display = 'none';
+
+            snapshot.forEach((docSnap) => {
+                const docData = docSnap.data();
+                const id = docSnap.id;
+
+                let iconoClase = 'fa-file-lines';
+                let iconoColor = '#60a5fa';
+                const nameLower = (docData.fileName || '').toLowerCase();
+                
+                if (nameLower.endsWith('.pdf')) { iconoClase = 'fa-file-pdf'; iconoColor = '#f87171'; }
+                else if (nameLower.endsWith('.doc') || nameLower.endsWith('.docx') || nameLower.endsWith('.odt')) { iconoClase = 'fa-file-word'; iconoColor = '#60a5fa'; }
+                else if (nameLower.endsWith('.xls') || nameLower.endsWith('.xlsx')) { iconoClase = 'fa-file-excel'; iconoColor = '#34d399'; }
+
+                const card = document.createElement('div');
+                card.className = 'card-plantilla';
+                card.innerHTML = `
+                    <h3><i class="fa-solid ${iconoClase}" style="color: ${iconoColor}; margin-right: 8px;"></i>${docData.nombre}</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; flex-grow: 1;">Archivo: ${docData.fileName}</p>
+                    <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                        <a href="${docData.fileData}" download="${docData.fileName}" class="btn-add-plantilla" style="padding: 6px 12px; font-size: 0.75rem; text-decoration: none;">
+                            <i class="fa-solid fa-print"></i> Abrir / Imprimir
+                        </a>
+                        <button type="button" class="btn-eliminar-plantilla btn-eliminar-doc" title="Eliminar documento">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                `;
+
+                card.querySelector('.btn-eliminar-doc').addEventListener('click', async () => {
+                    if (confirm(`¿Desea eliminar el documento "${docData.nombre}"?`)) {
+                        await deleteDoc(doc(db, "documentos", id));
+                    }
+                });
+
+                gridDocumentos.appendChild(card);
+            });
         });
     </script>
 </body>
