@@ -245,7 +245,7 @@
                 </div>
             </section>
 
-            <!-- NUEVA SECCIÓN: ARMAR PARTE (DICTADO POR VOZ) -->
+            <!-- NUEVA SECCIÓN: ARMAR PARTE (DICTADO POR VOZ ESTABLE) -->
             <section id="armarParte" class="section-card" style="display: none;">
                 <div class="section-header">
                     <h2><i class="fa-solid fa-microphone-lines" style="color: #60a5fa;"></i> Armar Parte por Dictado de Voz</h2>
@@ -463,7 +463,7 @@
         </footer>
     </div>
 
-    <!-- SCRIPT DE FIREBASE Y LÓGICA DE CONTROL DE ACCESO + AUDITORÍA + DICTADO -->
+    <!-- SCRIPT DE FIREBASE Y LÓGICA DE CONTROL DE ACCESO + AUDITORÍA + DICTADO ESTABLE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
@@ -666,7 +666,7 @@
             window.scrollTo(0, 0);
         };
 
-        // --- LÓGICA DE DICTADO POR VOZ (ARMAR PARTE) ---
+        // --- LÓGICA DE DICTADO POR VOZ (ESTABLE) ---
         const btnDictar = document.getElementById('btnDictar');
         const txtHojaParte = document.getElementById('txtHojaParte');
         const iconoMic = document.getElementById('iconoMic');
@@ -682,7 +682,7 @@
 
         if (SpeechRecognition) {
             reconocedor = new SpeechRecognition();
-            reconocedor.continuous = true;
+            reconocedor.continuous = false; // Cambiado a falso para evitar bucles repetitivos de audio
             reconocedor.interimResults = true;
             reconocedor.lang = 'es-UY';
 
@@ -716,11 +716,7 @@
             };
 
             reconocedor.onend = () => {
-                if (estaGrabando) {
-                    reconocedor.start();
-                } else {
-                    detenerDictadoUI();
-                }
+                detenerDictadoUI();
             };
         } else {
             estadoDictado.innerText = 'El navegador actual no soporta reconocimiento de voz nativo.';
@@ -729,7 +725,9 @@
 
         function detenerDictado() {
             estaGrabando = false;
-            if (reconocedor) reconocedor.stop();
+            if (reconocedor) {
+                try { reconocedor.stop(); } catch(err) {}
+            }
             detenerDictadoUI();
         }
 
@@ -738,10 +736,8 @@
             btnDictar.classList.remove('grabando');
             iconoMic.className = 'fa-solid fa-microphone';
             labelMic.innerText = 'Iniciar Dictado';
-            if (estadoDictado.innerText.includes('Escuchando')) {
-                estadoDictado.innerText = 'Dictado pausado.';
-                estadoDictado.style.color = '#94a3b8';
-            }
+            estadoDictado.innerText = 'Dictado finalizado.';
+            estadoDictado.style.color = '#94a3b8';
         }
 
         btnDictar.addEventListener('click', () => {
