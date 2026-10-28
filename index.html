@@ -41,6 +41,72 @@
             border-color: rgba(59, 130, 246, 0.9);
             box-shadow: 0 0 25px rgba(59, 130, 246, 0.45), inset 0 0 15px rgba(59, 130, 246, 0.2);
         }
+
+        /* Estilos para el lienzo de Armar Parte y Botón de Dictado */
+        .hoja-parte-container {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);
+            position: relative;
+        }
+
+        .textarea-hoja-parte {
+            width: 100%;
+            min-height: 380px;
+            background: #070d18;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 10px;
+            color: #f8fafc;
+            padding: 20px;
+            font-size: 1rem;
+            line-height: 1.7;
+            resize: vertical;
+            outline: none;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+            transition: border-color 0.25s ease;
+        }
+
+        .textarea-hoja-parte:focus {
+            border-color: #60a5fa;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.6), 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .btn-dictar-audio {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: 1px solid rgba(147, 197, 253, 0.3);
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-dictar-audio:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.5);
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        }
+
+        .btn-dictar-audio.grabando {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            border-color: rgba(254, 202, 202, 0.4);
+            box-shadow: 0 0 25px rgba(220, 38, 38, 0.7);
+            animation: pulse-red 1.5s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(220, 38, 38, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+        }
     </style>
 </head>
 <body>
@@ -106,6 +172,7 @@
         </div>
         <ul class="sidebar-menu">
             <li><a href="#" class="nav-link active" onclick="seleccionarMenu(this, 'narraciones')"><i class="fa-solid fa-file-lines"></i> Plantillas de Narraciones</a></li>
+            <li><a href="#" class="nav-link" onclick="seleccionarMenu(this, 'armarParte')"><i class="fa-solid fa-microphone"></i> Armar Parte</a></li>
             <li><a href="#" class="nav-link" onclick="seleccionarMenu(this, 'identificados')"><i class="fa-solid fa-id-card"></i> Datos de Identificados</a></li>
             <li><a href="#" class="nav-link" onclick="seleccionarMenu(this, 'documentos')"><i class="fa-solid fa-folder-open"></i> Documentos e Impresiones</a></li>
             <li><a href="#" class="nav-link" onclick="seleccionarMenu(this, 'formatoActa')"><i class="fa-solid fa-file-signature"></i> Formato de Acta</a></li>
@@ -175,6 +242,34 @@
 
                 <div class="grid-plantillas" id="gridPlantillas">
                     <!-- Las plantillas se cargan dinámicamente desde Firebase -->
+                </div>
+            </section>
+
+            <!-- NUEVA SECCIÓN: ARMAR PARTE (DICTADO POR VOZ) -->
+            <section id="armarParte" class="section-card" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fa-solid fa-microphone-lines" style="color: #60a5fa;"></i> Armar Parte por Dictado de Voz</h2>
+                    <div class="header-actions">
+                        <button type="button" id="btnCopiarParte" class="btn-add-plantilla" title="Copiar texto del parte">
+                            <i class="fa-solid fa-copy"></i> Copiar Texto
+                        </button>
+                        <button type="button" id="btnLimpiarParte" class="btn-volver" style="margin: 0; padding: 6px 12px; font-size: 0.75rem;">
+                            <i class="fa-solid fa-eraser"></i> Limpiar Hoja
+                        </button>
+                    </div>
+                </div>
+                <p class="section-desc">Presione el botón de micrófono inferior para iniciar el dictado. Hable de forma clara y el sistema transcribirá todo el evento automáticamente.</p>
+
+                <div class="hoja-parte-container">
+                    <textarea id="txtHojaParte" class="textarea-hoja-parte" placeholder="El texto dictado o escrito aparecerá aquí listo para copiar al SGSP..."></textarea>
+                    
+                    <div style="display: flex; justify-content: center; align-items: center; margin-top: 25px; flex-direction: column; gap: 10px;">
+                        <button type="button" id="btnDictar" class="btn-dictar-audio">
+                            <i class="fa-solid fa-microphone" id="iconoMic"></i>
+                            <span id="labelMic">Iniciar Dictado</span>
+                        </button>
+                        <div id="estadoDictado" style="font-size: 0.85rem; color: #94a3b8; height: 20px;"></div>
+                    </div>
                 </div>
             </section>
 
@@ -368,7 +463,7 @@
         </footer>
     </div>
 
-    <!-- SCRIPT DE FIREBASE Y LÓGICA DE CONTROL DE ACCESO + AUDITORÍA -->
+    <!-- SCRIPT DE FIREBASE Y LÓGICA DE CONTROL DE ACCESO + AUDITORÍA + DICTADO -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
@@ -432,7 +527,6 @@
             if (!u || !p) return;
 
             try {
-                // Verificar si ya existe
                 const userRef = doc(db, "usuarios", u);
                 const snap = await getDoc(userRef);
                 if (snap.exists()) {
@@ -465,7 +559,6 @@
             const u = document.getElementById('user').value.trim().toUpperCase();
             const p = document.getElementById('pass').value.trim();
 
-            // Cuenta Maestra por defecto
             if (u === "COMISARIA QUINTA" && p === "UNIDA") {
                 localStorage.setItem('usuario_activo', u);
                 loginOverlay.style.display = 'none';
@@ -513,7 +606,6 @@
         function configurarPermisosUsuario(usuario) {
             infoUsuarioLogueado.innerHTML = `<i class="fa-solid fa-user-check" style="color: #34d399;"></i> Conectado: <strong>${usuario}</strong>`;
             
-            // Si es la cuenta administradora principal, habilitar panel admin y control de actas
             if (usuario === "COMISARIA QUINTA") {
                 menuAdminItem.style.display = 'block';
                 btnToggleAdminActas.style.display = 'inline-block';
@@ -564,6 +656,7 @@
             elemento.classList.add('active');
 
             document.getElementById('narraciones').style.display = 'none';
+            document.getElementById('armarParte').style.display = 'none';
             document.getElementById('identificados').style.display = 'none';
             document.getElementById('documentos').style.display = 'none';
             document.getElementById('formatoActa').style.display = 'none';
@@ -572,6 +665,121 @@
             document.getElementById(seccionId).style.display = 'block';
             window.scrollTo(0, 0);
         };
+
+        // --- LÓGICA DE DICTADO POR VOZ (ARMAR PARTE) ---
+        const btnDictar = document.getElementById('btnDictar');
+        const txtHojaParte = document.getElementById('txtHojaParte');
+        const iconoMic = document.getElementById('iconoMic');
+        const labelMic = document.getElementById('labelMic');
+        const estadoDictado = document.getElementById('estadoDictado');
+        const btnCopiarParte = document.getElementById('btnCopiarParte');
+        const btnLimpiarParte = document.getElementById('btnLimpiarParte');
+
+        let reconocedor = null;
+        let estaGrabando = false;
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        if (SpeechRecognition) {
+            reconocedor = new SpeechRecognition();
+            reconocedor.continuous = true;
+            reconocedor.interimResults = true;
+            reconocedor.lang = 'es-UY';
+
+            reconocedor.onstart = () => {
+                estaGrabando = true;
+                btnDictar.classList.add('grabando');
+                iconoMic.className = 'fa-solid fa-microphone-slash';
+                labelMic.innerText = 'Detener Dictado';
+                estadoDictado.innerText = 'Escuchando... hable con claridad.';
+                estadoDictado.style.color = '#34d399';
+            };
+
+            reconocedor.onresult = (e) => {
+                let textoFinal = '';
+                for (let i = e.resultIndex; i < e.results.length; i++) {
+                    const trans = e.results[i][0].transcript;
+                    if (e.results[i].isFinal) {
+                        textoFinal += trans + ' ';
+                    }
+                }
+                if (textoFinal) {
+                    txtHojaParte.value += (txtHojaParte.value && !txtHojaParte.value.endsWith(' ') ? ' ' : '') + textoFinal;
+                }
+            };
+
+            reconocedor.onerror = (e) => {
+                console.error("Error reconociendo voz:", e.error);
+                estadoDictado.innerText = 'Error en el micrófono o permiso denegado.';
+                estadoDictado.style.color = '#f87171';
+                detenerDictado();
+            };
+
+            reconocedor.onend = () => {
+                if (estaGrabando) {
+                    reconocedor.start();
+                } else {
+                    detenerDictadoUI();
+                }
+            };
+        } else {
+            estadoDictado.innerText = 'El navegador actual no soporta reconocimiento de voz nativo.';
+            estadoDictado.style.color = '#f87171';
+        }
+
+        function detenerDictado() {
+            estaGrabando = false;
+            if (reconocedor) reconocedor.stop();
+            detenerDictadoUI();
+        }
+
+        function detenerDictadoUI() {
+            estaGrabando = false;
+            btnDictar.classList.remove('grabando');
+            iconoMic.className = 'fa-solid fa-microphone';
+            labelMic.innerText = 'Iniciar Dictado';
+            if (estadoDictado.innerText.includes('Escuchando')) {
+                estadoDictado.innerText = 'Dictado pausado.';
+                estadoDictado.style.color = '#94a3b8';
+            }
+        }
+
+        btnDictar.addEventListener('click', () => {
+            if (!SpeechRecognition) {
+                alert('Su navegador no soporta el micrófono nativo. Le recomendamos utilizar Google Chrome o Microsoft Edge.');
+                return;
+            }
+
+            if (estaGrabando) {
+                detenerDictado();
+            } else {
+                try {
+                    reconocedor.start();
+                } catch (err) {
+                    console.log("Reiniciando reconocedor:", err);
+                    detenerDictado();
+                }
+            }
+        });
+
+        btnCopiarParte.addEventListener('click', () => {
+            if (!txtHojaParte.value.trim()) {
+                alert('No hay texto para copiar.');
+                return;
+            }
+            navigator.clipboard.writeText(txtHojaParte.value).then(() => {
+                const orig = btnCopiarParte.innerHTML;
+                btnCopiarParte.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!';
+                setTimeout(() => btnCopiarParte.innerHTML = orig, 1500);
+            });
+        });
+
+        btnLimpiarParte.addEventListener('click', () => {
+            if (txtHojaParte.value.trim() && confirm('¿Desea limpiar el contenido de la hoja?')) {
+                txtHojaParte.value = '';
+                estadoDictado.innerText = '';
+            }
+        });
 
         // --- GESTIÓN DE FUNCIONARIOS ACTUANTES (8 HORAS) ---
         function verificarExpiracionActuantes() {
@@ -634,7 +842,7 @@
             { orden: 7, titulo: "07. Recorrida Barrio Norte", texto: `En el día de la fecha FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por calle Valparaíso, Asunción, La Paz, Ecuador, Bolivia, Colombia, Costa Rica, Panamá Rep, Venezuela y calles internas del Barrio Norte. Finalizando sin novedad.-` },
             { orden: 8, titulo: "08. Cancha de Pádel", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se efectuó puesto de observación en CAMINO LAS CANTERAS Y REPÚBLICA DE CHILE (cancha de biopadel), finalizando sin novedad.-` },
             { orden: 9, titulo: "09. Recorrida Cancha de Racing", texto: `En el día de la fecha por parte de FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se efectuó recorrida en la UBICACIÓN DEL HECHO CALLE REPÚBLICA DE CHILE ESQUINA COSTA RICA (CANCHA DE RACING), finalizando sin novedad.` },
-            { orden: 10, titulo: "10. Puesto Melchora", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO AVENIDA DE LAS AMÉricAS Y CAMINO LAS CANTERAS (centro educativo agrario MELCHORA CUENCA), por prevención y disuasión de los delitos, finalizando sin novedad.` },
+            { orden: 10, titulo: "10. Puesto Melchora", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO AVENIDA DE LAS AMÉRICAS Y CAMINO LAS CANTERAS (centro educativo agrario MELCHORA CUENCA), por prevención y disuasión de los delitos, finalizando sin novedad.` },
             { orden: 11, titulo: "11. Recorrida Constancia", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO RUTA 3 KILÓMETRO 383, Localidad de Constancia. Finalizando sin novedad.` },
             { orden: 12, titulo: "12. Recorridas Moteles", texto: `- MOTEL VENUS:\nEn el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO BULEVAR ARTIGAS ENTRE REPÚBLICA DE CHILE Y REPÚBLICA DE BOLIVIA, en Motel VENUS y zonas aledañas, finalizando sin novedad.-\n\n- MOTEL GENESIS:\nEn el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO STEFANEL Y COSTA RICA, en Motel GENESIS y zonas aledañas, finalizando sin novedad.\n\n- MOTEL FEELING Y FECHORÍAS:\nEn el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO AVENIDA DOCTOR ROLDÁN Y CALLE LOS OLIVOS, en Motel FEELING y FECHORÍAS este último actualmente abandonado como así también zonas aledañas, finalizando sin novedad.` },
             { orden: 13, titulo: "13. Puesto AFE", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO CALLE COMERCIO ESQUINA AVENIDA DE LAS AMÉRICAS (Depósito AFE) en prevención y disuasión de los delitos, finalizando sin novedad.-` },
