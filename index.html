@@ -42,7 +42,7 @@
             box-shadow: 0 0 25px rgba(59, 130, 246, 0.45), inset 0 0 15px rgba(59, 130, 246, 0.2);
         }
 
-        /* Estilos para el lienzo de Armar Parte y Botón de Dictado */
+        /* Estilos para el lienzo de Armar Parte y Botón de Dictado Local */
         .hoja-parte-container {
             background: rgba(15, 23, 42, 0.85);
             border: 1px solid var(--card-border);
@@ -245,10 +245,10 @@
                 </div>
             </section>
 
-            <!-- NUEVA SECCIÓN: ARMAR PARTE (DICTADO POR VOZ ESTABLE Y EXTENDIDO) -->
+            <!-- SECCIÓN 2: ARMAR PARTE (BORRADOR LOCAL PRIVADO POR USUARIO) -->
             <section id="armarParte" class="section-card" style="display: none;">
                 <div class="section-header">
-                    <h2><i class="fa-solid fa-microphone-lines" style="color: #60a5fa;"></i> Armar Parte por Dictado de Voz</h2>
+                    <h2><i class="fa-solid fa-microphone-lines" style="color: #60a5fa;"></i> Armar Parte por Dictado de Voz (Borrador Privado)</h2>
                     <div class="header-actions">
                         <button type="button" id="btnCopiarParte" class="btn-add-plantilla" title="Copiar texto del parte">
                             <i class="fa-solid fa-copy"></i> Copiar Texto
@@ -258,7 +258,7 @@
                         </button>
                     </div>
                 </div>
-                <p class="section-desc">Presione el botón de micrófono inferior para iniciar el dictado. Puede hablar con tranquilidad y hacer pausas; el sistema no se cortará hasta que vuelva a presionar el botón.</p>
+                <p class="section-desc"><i class="fa-solid fa-user-lock" style="color: #34d399;"></i> Este borrador es 100% privado en su dispositivo. Lo que dicte o escriba aquí no se comparte en la nube ni se mezclará con el trabajo de otros compañeros.</p>
 
                 <div class="hoja-parte-container">
                     <textarea id="txtHojaParte" class="textarea-hoja-parte" placeholder="El texto dictado o escrito aparecerá aquí listo para copiar al SGSP..."></textarea>
@@ -273,7 +273,7 @@
                 </div>
             </section>
 
-            <!-- SECCIÓN 2: DATOS DE IDENTIFICADOS -->
+            <!-- SECCIÓN 3: DATOS DE IDENTIFICADOS -->
             <section id="identificados" class="section-card" style="display: none;">
                 <div class="section-header">
                     <h2><i class="fa-solid fa-address-book"></i> Datos de Identificados</h2>
@@ -314,7 +314,7 @@
                 </div>
             </section>
 
-            <!-- SECCIÓN 3: DOCUMENTOS E IMPRESIONES -->
+            <!-- SECCIÓN 4: DOCUMENTOS E IMPRESIONES -->
             <section id="documentos" class="section-card" style="display: none;">
                 <div class="section-header">
                     <h2><i class="fa-solid fa-folder-open"></i> Archivos y Documentos para Imprimir</h2>
@@ -340,7 +340,7 @@
                 </div>
             </section>
 
-            <!-- SECCIÓN 4: FORMATO DE ACTA -->
+            <!-- SECCIÓN 5: FORMATO DE ACTA -->
             <section id="formatoActa" class="section-card" style="display: none;">
                 <div class="section-header" style="border-bottom: 2px solid rgba(59, 130, 246, 0.3); padding-bottom: 12px; margin-bottom: 20px;">
                     <h2><i class="fa-solid fa-file-signature" style="color: #60a5fa;"></i> FORMATO DE ACTA</h2>
@@ -399,7 +399,7 @@
                 </div>
             </section>
 
-            <!-- SECCIÓN 5: PANEL DE ADMINISTRACIÓN DE USUARIOS (SOLO ADMIN) -->
+            <!-- SECCIÓN 6: PANEL DE ADMINISTRACIÓN DE USUARIOS (SOLO ADMIN) -->
             <section id="panelAdmin" class="section-card" style="display: none;">
                 <div class="section-header">
                     <h2><i class="fa-solid fa-user-shield" style="color: #f59e0b;"></i> Solicitudes Pendientes de Acceso</h2>
@@ -463,7 +463,7 @@
         </footer>
     </div>
 
-    <!-- SCRIPT DE FIREBASE Y LÓGICA DE CONTROL DE ACCESO + DICTADO ESTABLE EXTENDIDO -->
+    <!-- SCRIPT DE FIREBASE Y LÓGICA DE CONTROL DE ACCESO + DICTADO LOCAL Y PRIVADO -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
@@ -643,7 +643,7 @@
         window.aprobarUsuario = async function(nombreUsuario) {
             try {
                 await updateDoc(doc(db, "usuarios", nombreUsuario), { aprobado: true });
-                alert(`¡Usuario ${nombreUsuario} aprobado con éxito! Ya puede iniciar sesión.`);
+                alert(`¡Usuario ${nombreUsuario} approved con éxito! Ya puede iniciar sesión.`);
             } catch (err) {
                 alert("Error al aprobar: " + err.message);
             }
@@ -666,7 +666,7 @@
             window.scrollTo(0, 0);
         };
 
-        // --- LÓGICA DE DICTADO POR VOZ (CONTINUO Y SIN CORTES RÁPIDOS) ---
+        // --- LÓGICA DE DICTADO POR VOZ PRIVADA Y LOCAL (NO SE COMPARTE EN LA NUBE) ---
         const btnDictar = document.getElementById('btnDictar');
         const txtHojaParte = document.getElementById('txtHojaParte');
         const iconoMic = document.getElementById('iconoMic');
@@ -677,33 +677,47 @@
 
         let reconocedor = null;
         let estaGrabando = false;
-        let textoTranscritoSesion = '';
+
+        // Cargar texto borrador local del usuario si existe
+        const parteGuardadoLocal = localStorage.getItem('borrador_parte_privado');
+        if (parteGuardadoLocal) {
+            txtHojaParte.value = parteGuardadoLocal;
+        }
+
+        // Guardar automáticamente en el navegador local del usuario mientras escribe o dicta
+        txtHojaParte.addEventListener('input', () => {
+            localStorage.setItem('borrador_parte_privado', txtHojaParte.value);
+        });
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
         if (SpeechRecognition) {
             reconocedor = new SpeechRecognition();
-            reconocedor.continuous = true; // Mantiene el micrófono abierto para pausas largas
+            reconocedor.continuous = true; // Mantiene el micrófono abierto permitiendo pausas sin cortarse
             reconocedor.interimResults = true;
             reconocedor.lang = 'es-UY';
 
             reconocedor.onstart = () => {
                 estaGrabando = true;
-                textoTranscritoSesion = '';
                 btnDictar.classList.add('grabando');
                 iconoMic.className = 'fa-solid fa-microphone-slash';
                 labelMic.innerText = 'Detener Dictado';
-                estadoDictado.innerText = 'Escuchando... puedes hacer pausas para pensar.';
+                estadoDictado.innerText = 'Escuchando... hable tranquilamente y haga pausas si lo requiere.';
                 estadoDictado.style.color = '#34d399';
             };
 
             reconocedor.onresult = (e) => {
-                let transParcial = '';
-                for (let i = 0; i < e.results.length; i++) {
-                    transParcial += e.results[i][0].transcript + ' ';
+                let textoFinal = '';
+                for (let i = e.resultIndex; i < e.results.length; i++) {
+                    const trans = e.results[i][0].transcript;
+                    if (e.results[i].isFinal) {
+                        textoFinal += trans + ' ';
+                    }
                 }
-                textoTranscritoSesion = transParcial.trim();
-                txtHojaParte.value = textoTranscritoSesion;
+                if (textoFinal) {
+                    txtHojaParte.value += (txtHojaParte.value && !txtHojaParte.value.endsWith(' ') ? ' ' : '') + textoFinal;
+                    localStorage.setItem('borrador_parte_privado', txtHojaParte.value);
+                }
             };
 
             reconocedor.onerror = (e) => {
@@ -715,11 +729,7 @@
 
             reconocedor.onend = () => {
                 if (estaGrabando) {
-                    try {
-                        reconocedor.start(); // Reconecta automáticamente si el navegador intenta cerrarlo por silencio prolongado
-                    } catch (err) {
-                        detenerDictadoUI();
-                    }
+                    try { reconocedor.start(); } catch(err) { detenerDictadoUI(); }
                 } else {
                     detenerDictadoUI();
                 }
@@ -777,8 +787,9 @@
         });
 
         btnLimpiarParte.addEventListener('click', () => {
-            if (txtHojaParte.value.trim() && confirm('¿Desea limpiar el contenido de la hoja?')) {
+            if (txtHojaParte.value.trim() && confirm('¿Desea limpiar el contenido de su borrador?')) {
                 txtHojaParte.value = '';
+                localStorage.removeItem('borrador_parte_privado');
                 estadoDictado.innerText = '';
             }
         });
@@ -850,7 +861,7 @@
             { orden: 13, titulo: "13. Puesto AFE", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO CALLE COMERCIO ESQUINA AVENIDA DE LAS AMÉRICAS (Depósito AFE) en prevención y disuasión de los delitos, finalizando sin novedad.-` },
             { orden: 14, titulo: "14. Identificados", texto: `En el día de la fecha en circunstancias de recorridas, por parte de los FUNCIONARIOS ACTUANTES, en móvil SMI5783, se procede a Identificar a los TESTIGOS DEL EVENTO en el horario comprendido de _____ a _____ en las inmediaciones. Consultado a SGSP no poseen requisitoria al momento, a posterior se les permite continuar. Finalizando sin novedad.-` },
             { orden: 15, titulo: "15. Citación Cumplida", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil oficial SMI 5783 se concurre al domicilio de TESTIGO DEL EVENTO ____________________ quien firma recibo de citación dejando constancia de su notificación.-` },
-            { orden: 16, titulo: "16. Certificado de Vecindad", texto: `Se presenta el TESTIGO DEL EVENTO quien solicita al presente CERTIFICADO DE VECINDAD el que se expide a solicitud de la parte interesada y a solo efectos de justificar su domicilio ante Oficinas de __________________ expresando éste que reside en ______________.\nEl Compareciente es notificado de que la presente declaración posee carácter de DECLARACIÓN JURADA y que puede ser de aplicación el Art. 239 del Código Penal, que dice (Falsificación ideológica por un particular).\nEl que, con motivo del otorgamiento o formalización de un documento público, ante un funcionario público, prestare declaración falsa sobre su identidad o estado, o cualquiera otra circunstancia de hecho, será castigado con tres a veinticuatro meses de prisión.\nFirma al pié como constancia de que el domicilio declarado es verdadero.-` },
+            { orden: 16, titulo: "16. Certificado de Vecindad", texto: `Se presenta el TESTIGO DEL EVENTO quien solicita al presente CERTIFICADO DE VECINDAD el que se expide a solicitud de la parte interesada y a solo efectos de justificar su domicilio ante Oficinas de __________________ expresando éste que reside en ______________.\nEl Compareciente es notificado de que la presente declaración posee carácter de DECLARACIÓN JURADA y que puede ser de aplicación el Art. 239 del Código Penal, que dice (Falsificación ideológica por un particular).\nEl que, con motivo del otorgamiento o formalización de un documento público, ante un funcionario público, prestare declaración falsa sobre su identidad o estado, o cualquiera otra circunstancia de hecho, será castigado con tres a veinticuatro meses de prisión.\nFirma al pié como constancia de que el domicilio declared es verdadero.-` },
             { orden: 17, titulo: "17. Recorrida Los Olivos", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por Barrio los Olivos, recorriendo calles internas. Finalizando sin novedad.-` },
             { orden: 18, titulo: "18. Recorrida Los Ceibos", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por Barrio Los Ceibos sito calle ROLDÁN ESQUINA REPÚBLICA DE BOLIVIA, recorriendo calles internas. Finalizando sin novedad.-` }
         ];
