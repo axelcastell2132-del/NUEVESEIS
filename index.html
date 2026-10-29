@@ -463,7 +463,7 @@
         </footer>
     </div>
 
-    <!-- SCRIPT DE FIREBASE Y LÓGICA DE CONTROL DE ACCESO + DICTADO LOCAL Y PRIVADO -->
+    <!-- SCRIPT DE FIREBASE Y LÓGICA DE CONTROL DE ACCESO + DICTADO ESTABLE POR FRAGMENTOS -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
@@ -643,7 +643,7 @@
         window.aprobarUsuario = async function(nombreUsuario) {
             try {
                 await updateDoc(doc(db, "usuarios", nombreUsuario), { aprobado: true });
-                alert(`¡Usuario ${nombreUsuario} approved con éxito! Ya puede iniciar sesión.`);
+                alert(`¡Usuario ${nombreUsuario} aprobado con éxito! Ya puede iniciar sesión.`);
             } catch (err) {
                 alert("Error al aprobar: " + err.message);
             }
@@ -666,7 +666,7 @@
             window.scrollTo(0, 0);
         };
 
-        // --- LÓGICA DE DICTADO POR VOZ PRIVADA Y LOCAL (NO SE COMPARTE EN LA NUBE) ---
+        // --- LÓGICA DE DICTADO POR VOZ (ESTABLE POR FRAGMENTOS Y SIN BUCLES) ---
         const btnDictar = document.getElementById('btnDictar');
         const txtHojaParte = document.getElementById('txtHojaParte');
         const iconoMic = document.getElementById('iconoMic');
@@ -678,13 +678,12 @@
         let reconocedor = null;
         let estaGrabando = false;
 
-        // Cargar texto borrador local del usuario si existe
+        // Cargar borrador local privado
         const parteGuardadoLocal = localStorage.getItem('borrador_parte_privado');
         if (parteGuardadoLocal) {
             txtHojaParte.value = parteGuardadoLocal;
         }
 
-        // Guardar automáticamente en el navegador local del usuario mientras escribe o dicta
         txtHojaParte.addEventListener('input', () => {
             localStorage.setItem('borrador_parte_privado', txtHojaParte.value);
         });
@@ -693,8 +692,8 @@
 
         if (SpeechRecognition) {
             reconocedor = new SpeechRecognition();
-            reconocedor.continuous = true; // Mantiene el micrófono abierto permitiendo pausas sin cortarse
-            reconocedor.interimResults = true;
+            reconocedor.continuous = false; // Evita el bucle duplicador en móviles
+            reconocedor.interimResults = false; // Solo captura resultados seguros y definitivos
             reconocedor.lang = 'es-UY';
 
             reconocedor.onstart = () => {
@@ -702,34 +701,36 @@
                 btnDictar.classList.add('grabando');
                 iconoMic.className = 'fa-solid fa-microphone-slash';
                 labelMic.innerText = 'Detener Dictado';
-                estadoDictado.innerText = 'Escuchando... hable tranquilamente y haga pausas si lo requiere.';
+                estadoDictado.innerText = 'Escuchando... hable con claridad.';
                 estadoDictado.style.color = '#34d399';
             };
 
             reconocedor.onresult = (e) => {
-                let textoFinal = '';
+                let textoTranscrito = '';
                 for (let i = e.resultIndex; i < e.results.length; i++) {
-                    const trans = e.results[i][0].transcript;
                     if (e.results[i].isFinal) {
-                        textoFinal += trans + ' ';
+                        textoTranscrito += e.results[i][0].transcript.trim() + ' ';
                     }
                 }
-                if (textoFinal) {
-                    txtHojaParte.value += (txtHojaParte.value && !txtHojaParte.value.endsWith(' ') ? ' ' : '') + textoFinal;
+                if (textoTranscrito) {
+                    const actual = txtHojaParte.value.trim();
+                    txtHojaParte.value = actual ? (actual + ' ' + textoTranscrito) : textoTranscrito;
                     localStorage.setItem('borrador_parte_privado', txtHojaParte.value);
                 }
             };
 
             reconocedor.onerror = (e) => {
-                console.error("Error reconociendo voz:", e.error);
-                estadoDictado.innerText = 'Error en el micrófono o permiso denegado.';
-                estadoDictado.style.color = '#f87171';
-                detenerDictado();
+                console.error("Error en voz:", e.error);
             };
 
             reconocedor.onend = () => {
+                // Si el usuario sigue queriendo grabar, reinicia automáticamente de forma limpia
                 if (estaGrabando) {
-                    try { reconocedor.start(); } catch(err) { detenerDictadoUI(); }
+                    try {
+                        reconocedor.start();
+                    } catch (err) {
+                        detenerDictadoUI();
+                    }
                 } else {
                     detenerDictadoUI();
                 }
@@ -758,7 +759,7 @@
 
         btnDictar.addEventListener('click', () => {
             if (!SpeechRecognition) {
-                alert('Su navegador no soporta el micrófono nativo. Le recomendamos utilizar Google Chrome o Microsoft Edge.');
+                alert('Su navegador no soporta el micrófono nativo. Utilice Google Chrome o Microsoft Edge.');
                 return;
             }
 
@@ -768,7 +769,6 @@
                 try {
                     reconocedor.start();
                 } catch (err) {
-                    console.log("Reiniciando reconocedor:", err);
                     detenerDictado();
                 }
             }
@@ -861,7 +861,7 @@
             { orden: 13, titulo: "13. Puesto AFE", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO CALLE COMERCIO ESQUINA AVENIDA DE LAS AMÉRICAS (Depósito AFE) en prevención y disuasión de los delitos, finalizando sin novedad.-` },
             { orden: 14, titulo: "14. Identificados", texto: `En el día de la fecha en circunstancias de recorridas, por parte de los FUNCIONARIOS ACTUANTES, en móvil SMI5783, se procede a Identificar a los TESTIGOS DEL EVENTO en el horario comprendido de _____ a _____ en las inmediaciones. Consultado a SGSP no poseen requisitoria al momento, a posterior se les permite continuar. Finalizando sin novedad.-` },
             { orden: 15, titulo: "15. Citación Cumplida", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil oficial SMI 5783 se concurre al domicilio de TESTIGO DEL EVENTO ____________________ quien firma recibo de citación dejando constancia de su notificación.-` },
-            { orden: 16, titulo: "16. Certificado de Vecindad", texto: `Se presenta el TESTIGO DEL EVENTO quien solicita al presente CERTIFICADO DE VECINDAD el que se expide a solicitud de la parte interesada y a solo efectos de justificar su domicilio ante Oficinas de __________________ expresando éste que reside en ______________.\nEl Compareciente es notificado de que la presente declaración posee carácter de DECLARACIÓN JURADA y que puede ser de aplicación el Art. 239 del Código Penal, que dice (Falsificación ideológica por un particular).\nEl que, con motivo del otorgamiento o formalización de un documento público, ante un funcionario público, prestare declaración falsa sobre su identidad o estado, o cualquiera otra circunstancia de hecho, será castigado con tres a veinticuatro meses de prisión.\nFirma al pié como constancia de que el domicilio declared es verdadero.-` },
+            { orden: 16, titulo: "16. Certificado de Vecindad", texto: `Se presenta el TESTIGO DEL EVENTO quien solicita al presente CERTIFICADO DE VECINDAD el que se expide a solicitud de la parte interesada y a solo efectos de justificar su domicilio ante Oficinas de __________________ expresando éste que reside en ______________.\nEl Compareciente es notificado de que la presente declaración posee carácter de DECLARACIÓN JURADA y que puede ser de aplicación el Art. 239 del Código Penal, que dice (Falsificación ideológica por un particular).\nEl que, con motivo del otorgamiento o formalización de un documento público, ante un funcionario público, prestare declaración falsa sobre su identidad o estado, o cualquiera otra circunstancia de hecho, será castigado con tres a veinticuatro meses de prisión.\nFirma al pié como constancia de que el domicilio declarado es verdadero.-` },
             { orden: 17, titulo: "17. Recorrida Los Olivos", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por Barrio los Olivos, recorriendo calles internas. Finalizando sin novedad.-` },
             { orden: 18, titulo: "18. Recorrida Los Ceibos", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por Barrio Los Ceibos sito calle ROLDÁN ESQUINA REPÚBLICA DE BOLIVIA, recorriendo calles internas. Finalizando sin novedad.-` }
         ];
