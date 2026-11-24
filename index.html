@@ -12,159 +12,44 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Estilos de luz neón interactivos para la pestaña Formato de Acta */
-        .card-acta-61 {
-            background: linear-gradient(145deg, rgba(220, 38, 38, 0.15), rgba(15, 23, 42, 0.9));
-            border: 1px solid rgba(239, 68, 68, 0.35);
-            border-radius: 12px;
-            padding: 22px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
+        /* Garantizar edición fluida en título y narración de plantillas */
+        .card-plantilla h3[contenteditable="true"],
+        .card-plantilla code[contenteditable="true"] {
+            user-select: text;
+            -webkit-user-select: text;
+            cursor: text;
         }
 
-        .card-acta-61:hover {
-            transform: translateY(-4px);
-            border-color: rgba(239, 68, 68, 0.9);
-            box-shadow: 0 0 25px rgba(239, 68, 68, 0.45), inset 0 0 15px rgba(239, 68, 68, 0.2);
-        }
-
-        .card-acta-denunciante {
-            background: linear-gradient(145deg, rgba(30, 58, 138, 0.2), rgba(15, 23, 42, 0.9));
-            border: 1px solid rgba(59, 130, 246, 0.35);
-            border-radius: 12px;
-            padding: 22px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card-acta-denunciante:hover {
-            transform: translateY(-4px);
-            border-color: rgba(59, 130, 246, 0.9);
-            box-shadow: 0 0 25px rgba(59, 130, 246, 0.45), inset 0 0 15px rgba(59, 130, 246, 0.2);
-        }
-
-        /* Estilos para el lienzo de Armar Parte y Botón de Dictado Local */
-        .hoja-parte-container {
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);
-            position: relative;
-        }
-
-        .textarea-hoja-parte {
-            width: 100%;
-            min-height: 380px;
-            background: #070d18;
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            border-radius: 10px;
-            color: #f8fafc;
-            padding: 20px;
-            font-size: 1rem;
-            line-height: 1.7;
-            resize: vertical;
-            outline: none;
-            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
-            transition: border-color 0.25s ease;
-        }
-
-        .textarea-hoja-parte:focus {
-            border-color: #60a5fa;
-            box-shadow: inset 0 2px 6px rgba(0,0,0,0.6), 0 0 0 3px rgba(59, 130, 246, 0.15);
-        }
-
-        .btn-dictar-audio {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            color: white;
-            border: 1px solid rgba(147, 197, 253, 0.3);
-            padding: 14px 28px;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .btn-dictar-audio:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.5);
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-        }
-
-        .btn-dictar-audio.grabando {
-            background: linear-gradient(135deg, #dc2626, #b91c1c);
-            border-color: rgba(254, 202, 202, 0.4);
-            box-shadow: 0 0 25px rgba(220, 38, 38, 0.7);
-            animation: pulse-red 1.5s infinite;
-        }
-
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(220, 38, 38, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+        .card-plantilla code[contenteditable="true"] {
+            min-height: 110px;
         }
     </style>
 </head>
 <body>
 
-    <!-- PANTALLA DE LOGIN / REGISTRO -->
+    <!-- PANTALLA DE LOGIN ÚNICO -->
     <div id="loginOverlay" class="login-overlay">
         <div class="login-card">
             <div class="login-icon" style="background: transparent; border: none;">
                 <img src="logo-minterior.png" alt="Ministerio del Interior" style="width: 75px; height: 75px; object-fit: contain;">
             </div>
             <h2>NUEVE96SEIS</h2>
-            <p id="subtextLogin">Acceso Restringido - Comisaría Quinta</p>
+            <p id="subtextLogin">Acceso Institucional - Comisaría Quinta</p>
             
-            <!-- FORMULARIO DE INGRESO -->
             <form id="loginForm">
                 <div class="login-group">
-                    <label for="user"><i class="fa-solid fa-user"></i> Usuario</label>
-                    <input type="text" id="user" class="input-field" placeholder="SU NOMBRE O USUARIO" required>
+                    <label for="user"><i class="fa-solid fa-shield-halved"></i> Usuario</label>
+                    <input type="text" id="user" class="input-field" placeholder="COMISARIA QUINTA" autocomplete="username" required>
                 </div>
                 <div class="login-group">
                     <label for="pass"><i class="fa-solid fa-lock"></i> Contraseña</label>
-                    <input type="password" id="pass" class="input-field" placeholder="Contraseña" required>
+                    <input type="password" id="pass" class="input-field" placeholder="Contraseña" autocomplete="current-password" required>
                 </div>
                 <div id="loginError" class="login-error" style="display: none;"></div>
                 
                 <button type="submit" class="btn-login">
                     <i class="fa-solid fa-right-to-bracket"></i> Ingresar al Sistema
                 </button>
-                
-                <div style="text-align: center; margin-top: 15px;">
-                    <a href="#" id="linkMostrarRegistro" style="color: #60a5fa; font-size: 0.85rem; text-decoration: none;">¿No tienes cuenta? Solicitar acceso</a>
-                </div>
-            </form>
-
-            <!-- FORMULARIO DE REGISTRO / SOLICITUD -->
-            <form id="registerForm" style="display: none;">
-                <div class="login-group">
-                    <label for="regUser"><i class="fa-solid fa-user-plus"></i> Nuevo Usuario</label>
-                    <input type="text" id="regUser" class="input-field" placeholder="NOMBRE Y APELLIDO / RANGO" required>
-                </div>
-                <div class="login-group">
-                    <label for="regPass"><i class="fa-solid fa-lock"></i> Contraseña</label>
-                    <input type="password" id="regPass" class="input-field" placeholder="Cree una contraseña" required>
-                </div>
-                <div id="registerError" class="login-error" style="display: none;"></div>
-                
-                <button type="submit" class="btn-login" style="background: #2563eb;">
-                    <i class="fa-solid fa-paper-plane"></i> Enviar Solicitud de Acceso
-                </button>
-                
-                <div style="text-align: center; margin-top: 15px;">
-                    <a href="#" id="linkVolverLogin" style="color: #94a3b8; font-size: 0.85rem; text-decoration: none;">← Volver al Login</a>
-                </div>
             </form>
         </div>
     </div>
@@ -177,12 +62,7 @@
         </div>
         <ul class="sidebar-menu">
             <li><a href="#" class="nav-link active" onclick="seleccionarMenu(this, 'narraciones')"><i class="fa-solid fa-file-lines"></i> Plantillas de Narraciones</a></li>
-            <li><a href="#" class="nav-link" onclick="seleccionarMenu(this, 'armarParte')"><i class="fa-solid fa-microphone"></i> Armar Parte</a></li>
             <li><a href="#" class="nav-link" onclick="seleccionarMenu(this, 'identificados')"><i class="fa-solid fa-id-card"></i> Datos de Identificados</a></li>
-            <li><a href="#" class="nav-link" onclick="seleccionarMenu(this, 'documentos')"><i class="fa-solid fa-folder-open"></i> Documentos e Impresiones</a></li>
-            <li><a href="#" class="nav-link" onclick="seleccionarMenu(this, 'formatoActa')"><i class="fa-solid fa-file-signature"></i> Formato de Acta</a></li>
-            <!-- Panel Admin visible solo para COMISARIA QUINTA -->
-            <li id="menuAdminItem" style="display: none;"><a href="#" class="nav-link" onclick="seleccionarMenu(this, 'panelAdmin')"><i class="fa-solid fa-user-shield" style="color: #f59e0b;"></i> Administrar Usuarios</a></li>
         </ul>
         <div class="sidebar-footer-logout">
             <div id="infoUsuarioLogueado" style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; text-align: center; overflow: hidden; text-overflow: ellipsis;"></div>
@@ -197,7 +77,7 @@
         <header class="top-header">
             <div class="header-title">
                 <h1>Panel de Operaciones Policiales</h1>
-                <p>Gestión rápida de actas, identificaciones y registros de eventos en servicio</p>
+                <p>Gestión rápida de narraciones e identificaciones en servicio</p>
             </div>
             <div class="header-badge" id="badgeEstadoRed">
                 <span class="pulse-dot" id="dotEstadoRed"></span> <span id="textoEstadoRed">EN SERVICIO (SGSP)</span>
@@ -250,35 +130,7 @@
                 </div>
             </section>
 
-            <!-- SECCIÓN 2: ARMAR PARTE (BORRADOR LOCAL PRIVADO POR USUARIO) -->
-            <section id="armarParte" class="section-card" style="display: none;">
-                <div class="section-header">
-                    <h2><i class="fa-solid fa-microphone-lines" style="color: #60a5fa;"></i> Armar Parte por Dictado de Voz (Borrador Privado)</h2>
-                    <div class="header-actions">
-                        <button type="button" id="btnCopiarParte" class="btn-add-plantilla" title="Copiar texto del parte">
-                            <i class="fa-solid fa-copy"></i> Copiar Texto
-                        </button>
-                        <button type="button" id="btnLimpiarParte" class="btn-volver" style="margin: 0; padding: 6px 12px; font-size: 0.75rem;">
-                            <i class="fa-solid fa-eraser"></i> Limpiar Hoja
-                        </button>
-                    </div>
-                </div>
-                <p class="section-desc"><i class="fa-solid fa-user-lock" style="color: #34d399;"></i> Este borrador es 100% privado en su dispositivo. Lo que dicte o escriba aquí no se comparte en la nube ni se mezclará con el trabajo de otros compañeros.</p>
-
-                <div class="hoja-parte-container">
-                    <textarea id="txtHojaParte" class="textarea-hoja-parte" placeholder="El texto dictado o escrito aparecerá aquí listo para copiar al SGSP..."></textarea>
-                    
-                    <div style="display: flex; justify-content: center; align-items: center; margin-top: 25px; flex-direction: column; gap: 10px;">
-                        <button type="button" id="btnDictar" class="btn-dictar-audio">
-                            <i class="fa-solid fa-microphone" id="iconoMic"></i>
-                            <span id="labelMic">Iniciar Dictado</span>
-                        </button>
-                        <div id="estadoDictado" style="font-size: 0.85rem; color: #94a3b8; height: 20px;"></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- SECCIÓN 3: DATOS DE IDENTIFICADOS -->
+            <!-- SECCIÓN 2: DATOS DE IDENTIFICADOS -->
             <section id="identificados" class="section-card" style="display: none;">
                 <div class="section-header">
                     <h2><i class="fa-solid fa-address-book"></i> Datos de Identificados</h2>
@@ -318,120 +170,10 @@
                     </div>
                 </div>
             </section>
-
-            <!-- SECCIÓN 4: DOCUMENTOS E IMPRESIONES -->
-            <section id="documentos" class="section-card" style="display: none;">
-                <div class="section-header">
-                    <h2><i class="fa-solid fa-folder-open"></i> Archivos y Documentos para Imprimir</h2>
-                </div>
-                <p class="section-desc">Cargue y administre aquí los formularios, planillas y actas para tenerlos disponibles en la comisaría.</p>
-
-                <div style="background: rgba(15, 23, 42, 0.6); border: 1px dashed rgba(59, 130, 246, 0.4); padding: 18px; border-radius: 8px; margin-bottom: 25px;">
-                    <h3 style="font-size: 0.95rem; margin-bottom: 12px; color: #60a5fa;"><i class="fa-solid fa-cloud-arrow-up"></i> Cargar Nuevo Documento</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) auto; gap: 12px; align-items: center;">
-                        <input type="text" id="inputNombreDoc" placeholder="Nombre del Documento" class="input-field">
-                        <input type="file" id="inputFileDoc" class="input-field" style="padding: 6px;" accept=".pdf,.doc,.docx,.xls,.xlsx,.odt">
-                        <button type="button" id="btnSubirDoc" class="btn-agregar" style="margin: 0;">
-                            <i class="fa-solid fa-upload"></i> Guardar Documento
-                        </button>
-                    </div>
-                    <div id="estadoSubidaDoc" style="font-size: 0.78rem; color: #34d399; margin-top: 8px; font-weight: 600; display: none;"></div>
-                </div>
-
-                <div class="grid-plantillas" id="gridDocumentos"></div>
-                <div id="empty-docs-msg" class="empty-state-msg" style="display: none;">
-                    <i class="fa-solid fa-folder-open"></i>
-                    <span>No hay documentos cargados aún.</span>
-                </div>
-            </section>
-
-            <!-- SECCIÓN 5: FORMATO DE ACTA -->
-            <section id="formatoActa" class="section-card" style="display: none;">
-                <div class="section-header" style="border-bottom: 2px solid rgba(59, 130, 246, 0.3); padding-bottom: 12px; margin-bottom: 20px;">
-                    <h2><i class="fa-solid fa-file-signature" style="color: #60a5fa;"></i> FORMATO DE ACTA</h2>
-                    <button type="button" id="btnToggleAdminActas" class="btn-volver" style="font-size: 0.75rem; padding: 4px 10px; display: none;">
-                        <i class="fa-solid fa-gear"></i> Modo Carga
-                    </button>
-                </div>
-                <p class="section-desc">Modelos oficiales estandarizados de actas de la Comisaría Quinta.</p>
-
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-top: 25px;">
-                    
-                    <!-- RECUADRO 1: ACTA ART 61 CPP -->
-                    <div class="card-acta-61">
-                        <div style="position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: #ef4444;"></div>
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
-                            <h3 style="font-size: 1.1rem; color: #fca5a5; font-weight: 700; display: flex; align-items: center; gap: 10px;">
-                                <i class="fa-solid fa-scale-balanced" style="font-size: 1.3rem; color: #ef4444;"></i> ACTA ART 61 CPP
-                            </h3>
-                            <span style="font-size: 0.7rem; background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); padding: 3px 8px; border-radius: 12px; font-weight: 600;">OFICIAL</span>
-                        </div>
-                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 18px;">Modelo oficial de Acta de Derechos del Indagado.</p>
-
-                        <div id="panelCargaActa1" style="display: none; background: rgba(0, 0, 0, 0.3); padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px dashed #ef4444;">
-                            <input type="file" id="inputFileActa1" class="input-field" style="padding: 4px; margin-bottom: 8px; font-size: 0.8rem;" accept=".pdf,.doc,.docx,.odt">
-                            <button type="button" id="btnSubirActa1" class="btn-agregar" style="width: 100%; justify-content: center; background: #dc2626; font-size: 0.8rem; margin: 0;">Subir/Actualizar Acta 61</button>
-                            <div id="estadoActa1" style="font-size: 0.75rem; color: #34d399; margin-top: 6px; font-weight: 600; display: none;"></div>
-                        </div>
-
-                        <div id="contenedorActa1">
-                            <div class="empty-state-msg" style="padding: 15px; font-size: 0.8rem;"><i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem;"></i><span>Cargando formato...</span></div>
-                        </div>
-                    </div>
-
-                    <!-- RECUADRO 2: ACTA DENUNCIANTE -->
-                    <div class="card-acta-denunciante">
-                        <div style="position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: #3b82f6;"></div>
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
-                            <h3 style="font-size: 1.1rem; color: #93c5fd; font-weight: 700; display: flex; align-items: center; gap: 10px;">
-                                <i class="fa-solid fa-user-pen" style="font-size: 1.3rem; color: #3b82f6;"></i> ACTA DENUNCIANTE
-                            </h3>
-                            <span style="font-size: 0.7rem; background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); padding: 3px 8px; border-radius: 12px; font-weight: 600;">OFICIAL</span>
-                        </div>
-                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 18px;">Modelo oficial de Acta de Declaración de Denunciante.</p>
-
-                        <div id="panelCargaActa2" style="display: none; background: rgba(0, 0, 0, 0.3); padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px dashed #3b82f6;">
-                            <input type="file" id="inputFileActa2" class="input-field" style="padding: 4px; margin-bottom: 8px; font-size: 0.8rem;" accept=".pdf,.doc,.docx,.odt">
-                            <button type="button" id="btnSubirActa2" class="btn-agregar" style="width: 100%; justify-content: center; background: #2563eb; font-size: 0.8rem; margin: 0;">Subir/Actualizar Acta Denunciante</button>
-                            <div id="estadoActa2" style="font-size: 0.75rem; color: #34d399; margin-top: 6px; font-weight: 600; display: none;"></div>
-                        </div>
-
-                        <div id="contenedorActa2">
-                            <div class="empty-state-msg" style="padding: 15px; font-size: 0.8rem;"><i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem;"></i><span>Cargando formato...</span></div>
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-
-            <!-- SECCIÓN 6: PANEL DE ADMINISTRACIÓN DE USUARIOS (SOLO ADMIN) -->
-            <section id="panelAdmin" class="section-card" style="display: none;">
-                <div class="section-header">
-                    <h2><i class="fa-solid fa-user-shield" style="color: #f59e0b;"></i> Solicitudes Pendientes de Acceso</h2>
-                </div>
-                <p class="section-desc">Apruebe o rechace a los compañeros que han solicitado registrarse en el sistema.</p>
-
-                <div class="table-container">
-                    <table class="styled-table">
-                        <thead>
-                            <tr>
-                                <th>Usuario / Funcionario</th>
-                                <th>Fecha de Solicitud</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaPendientesBody"></tbody>
-                    </table>
-                    <div id="empty-pendientes" class="empty-state-msg">
-                        <i class="fa-solid fa-check-circle" style="color: #34d399;"></i>
-                        <span>No hay solicitudes pendientes de aprobación en este momento.</span>
-                    </div>
-                </div>
-            </section>
         </main>
 
         <footer class="footer">
-            <p><i class="fa-solid fa-handshake-angle"></i> "En cada guardia y en cada procedimiento, la verdadera fuerza es el compañero que está al lado."</p>
+            <p><i class="fa-solid fa-handshake-angle"></i> Donde hay buen compañerismo, ningún procedimiento se enfrenta solo</p>
         </footer>
     </div>
 
@@ -468,12 +210,12 @@
         </footer>
     </div>
 
-    <!-- SCRIPT DE FIREBASE Y LÓGICA DE CONTROL DE ACCESO + DICTADO ESTABLE POR FRAGMENTOS + RESPALDO OFFLINE -->
+    <!-- SCRIPT DE FIREBASE Y LÓGICA DE CONTROL DE ACCESO ÚNICO + RESPALDO OFFLINE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
             getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, 
-            serverTimestamp, getDoc, updateDoc, getDocs, writeBatch, setDoc, query, where 
+            serverTimestamp, getDoc, updateDoc, getDocs, writeBatch 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -512,130 +254,39 @@
         window.addEventListener('offline', actualizarEstadoRed);
         actualizarEstadoRed();
 
-        // Referencias de Login / Registro UI
+        // --- CONTROL DE ACCESO ÚNICO (COMISARIA QUINTA / UNIDA) ---
+        const USUARIO_UNICO = "COMISARIA QUINTA";
+        const CLAVE_UNICA = "UNIDA";
+
         const loginOverlay = document.getElementById('loginOverlay');
         const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        const linkMostrarRegistro = document.getElementById('linkMostrarRegistro');
-        const linkVolverLogin = document.getElementById('linkVolverLogin');
         const loginError = document.getElementById('loginError');
-        const registerError = document.getElementById('registerError');
         const btnLogout = document.getElementById('btnLogout');
         const infoUsuarioLogueado = document.getElementById('infoUsuarioLogueado');
-        const menuAdminItem = document.getElementById('menuAdminItem');
-        const btnToggleAdminActas = document.getElementById('btnToggleAdminActas');
 
-        // Verificar sesión activa almacenada
-        const usuarioActual = localStorage.getItem('usuario_activo');
-        if (usuarioActual) {
+        function iniciarSesionUI() {
             loginOverlay.style.display = 'none';
-            configurarPermisosUsuario(usuarioActual);
+            infoUsuarioLogueado.innerHTML = `<i class="fa-solid fa-shield-halved" style="color: #34d399;"></i> Unidad: <strong>${USUARIO_UNICO}</strong>`;
         }
 
-        // Alternar vistas de Login / Registro
-        linkMostrarRegistro.addEventListener('click', (e) => {
-            e.preventDefault();
-            loginForm.style.display = 'none';
-            registerForm.style.display = 'block';
-            document.getElementById('subtextLogin').innerText = "Solicitud de Cuenta Institucional";
-        });
+        if (localStorage.getItem('usuario_activo') === USUARIO_UNICO) {
+            iniciarSesionUI();
+        } else {
+            localStorage.removeItem('usuario_activo');
+        }
 
-        linkVolverLogin.addEventListener('click', (e) => {
-            e.preventDefault();
-            registerForm.style.display = 'none';
-            loginForm.style.display = 'block';
-            document.getElementById('subtextLogin').innerText = "Acceso Restringido - Comisaría Quinta";
-        });
-
-        // Registrar nueva solicitud de usuario
-        registerForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const u = document.getElementById('regUser').value.trim().toUpperCase();
-            const p = document.getElementById('regPass').value.trim();
-
-            if (!u || !p) return;
-
-            if (!navigator.onLine) {
-                registerError.style.display = 'block';
-                registerError.innerText = "Se requiere conexión a internet para solicitar una cuenta nueva.";
-                return;
-            }
-
-            try {
-                const userRef = doc(db, "usuarios", u);
-                const snap = await getDoc(userRef);
-                if (snap.exists()) {
-                    registerError.style.display = 'block';
-                    registerError.innerText = "El nombre de usuario ya está registrado o pendiente.";
-                    return;
-                }
-
-                await setDoc(userRef, {
-                    usuario: u,
-                    password: p,
-                    aprobado: false,
-                    solicitado: serverTimestamp()
-                });
-
-                alert("¡Solicitud enviada con éxito! Espere a que el Administrador apruebe su cuenta.");
-                registerForm.reset();
-                registerForm.style.display = 'none';
-                loginForm.style.display = 'block';
-                document.getElementById('subtextLogin').innerText = "Acceso Restringido - Comisaría Quinta";
-            } catch (err) {
-                registerError.style.display = 'block';
-                registerError.innerText = "Error: " + err.message;
-            }
-        });
-
-        // Iniciar Sesión con Verificación de Aprobación
-        loginForm.addEventListener('submit', async (e) => {
+        loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const u = document.getElementById('user').value.trim().toUpperCase();
-            const p = document.getElementById('pass').value.trim();
+            const p = document.getElementById('pass').value.trim().toUpperCase();
 
-            if (u === "COMISARIA QUINTA" && p === "UNIDA") {
-                localStorage.setItem('usuario_activo', u);
-                loginOverlay.style.display = 'none';
-                configurarPermisosUsuario(u);
-                return;
-            }
-
-            if (!navigator.onLine) {
+            if (u === USUARIO_UNICO && p === CLAVE_UNICA) {
+                loginError.style.display = 'none';
+                localStorage.setItem('usuario_activo', USUARIO_UNICO);
+                iniciarSesionUI();
+            } else {
                 loginError.style.display = 'block';
-                loginError.innerText = "Sin conexión a internet. Inicie sesión con Wi-Fi una vez para dejar guardada su sesión en la tablet.";
-                return;
-            }
-
-            try {
-                const docRef = doc(db, "usuarios", u);
-                const snap = await getDoc(docRef);
-
-                if (!snap.exists()) {
-                    loginError.style.display = 'block';
-                    loginError.innerText = "El usuario no existe. Solicite acceso.";
-                    return;
-                }
-
-                const data = snap.data();
-                if (data.password !== p) {
-                    loginError.style.display = 'block';
-                    loginError.innerText = "Contraseña incorrecta.";
-                    return;
-                }
-
-                if (!data.aprobado) {
-                    loginError.style.display = 'block';
-                    loginError.innerText = "Su cuenta aún no ha sido aprobada por el Administrador.";
-                    return;
-                }
-
-                localStorage.setItem('usuario_activo', u);
-                loginOverlay.style.display = 'none';
-                configurarPermisosUsuario(u);
-            } catch (err) {
-                loginError.style.display = 'block';
-                loginError.innerText = "Error al iniciar sesión: " + err.message;
+                loginError.innerText = "Usuario o contraseña incorrectos.";
             }
         });
 
@@ -644,51 +295,12 @@
             location.reload();
         });
 
-        function configurarPermisosUsuario(usuario) {
-            infoUsuarioLogueado.innerHTML = `<i class="fa-solid fa-user-check" style="color: #34d399;"></i> Conectado: <strong>${usuario}</strong>`;
-            
-            if (usuario === "COMISARIA QUINTA") {
-                menuAdminItem.style.display = 'block';
-                btnToggleAdminActas.style.display = 'inline-block';
-            }
+        function obtenerResponsableTurno() {
+            const a1 = localStorage.getItem('agente_1');
+            const a2 = localStorage.getItem('agente_2');
+            if (a1 && a2) return `${a1} y ${a2}`;
+            return USUARIO_UNICO;
         }
-
-        // --- PANEL DE ADMINISTRACIÓN (APROBAR USUARIOS) ---
-        onSnapshot(collection(db, "usuarios"), (snapshot) => {
-            const tbody = document.getElementById('tablaPendientesBody');
-            const emptyMsg = document.getElementById('empty-pendientes');
-            tbody.innerHTML = '';
-            
-            let hayPendientes = false;
-            snapshot.forEach((docSnap) => {
-                const usr = docSnap.data();
-                if (!usr.aprobado) {
-                    hayPendientes = true;
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td><strong>${usr.usuario}</strong></td>
-                        <td>Pendiente de autorización</td>
-                        <td>
-                            <button type="button" class="btn-agregar" style="padding: 4px 10px; font-size: 0.75rem; background: #059669; margin: 0;" onclick="aprobarUsuario('${usr.usuario}')">
-                                <i class="fa-solid fa-check"></i> Aprobar
-                            </button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                }
-            });
-
-            emptyMsg.style.display = hayPendientes ? 'none' : 'flex';
-        }, (err) => console.warn("Modo offline en usuarios:", err.message));
-
-        window.aprobarUsuario = async function(nombreUsuario) {
-            try {
-                await updateDoc(doc(db, "usuarios", nombreUsuario), { aprobado: true });
-                alert(`¡Usuario ${nombreUsuario} aprobado con éxito! Ya puede iniciar sesión.`);
-            } catch (err) {
-                alert("Error al aprobar: " + err.message);
-            }
-        };
 
         // Navegación entre Pestañas
         window.seleccionarMenu = function(elemento, seccionId) {
@@ -697,149 +309,11 @@
             elemento.classList.add('active');
 
             document.getElementById('narraciones').style.display = 'none';
-            document.getElementById('armarParte').style.display = 'none';
             document.getElementById('identificados').style.display = 'none';
-            document.getElementById('documentos').style.display = 'none';
-            document.getElementById('formatoActa').style.display = 'none';
-            document.getElementById('panelAdmin').style.display = 'none';
 
             document.getElementById(seccionId).style.display = 'block';
             window.scrollTo(0, 0);
         };
-
-        // --- LÓGICA DE DICTADO POR VOZ (ESTABLE POR FRAGMENTOS Y SIN BUCLES) ---
-        const btnDictar = document.getElementById('btnDictar');
-        const txtHojaParte = document.getElementById('txtHojaParte');
-        const iconoMic = document.getElementById('iconoMic');
-        const labelMic = document.getElementById('labelMic');
-        const estadoDictado = document.getElementById('estadoDictado');
-        const btnCopiarParte = document.getElementById('btnCopiarParte');
-        const btnLimpiarParte = document.getElementById('btnLimpiarParte');
-
-        let reconocedor = null;
-        let estaGrabando = false;
-
-        // Cargar borrador local privado
-        const parteGuardadoLocal = localStorage.getItem('borrador_parte_privado');
-        if (parteGuardadoLocal) {
-            txtHojaParte.value = parteGuardadoLocal;
-        }
-
-        txtHojaParte.addEventListener('input', () => {
-            localStorage.setItem('borrador_parte_privado', txtHojaParte.value);
-        });
-
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-        if (SpeechRecognition) {
-            reconocedor = new SpeechRecognition();
-            reconocedor.continuous = false; // Evita el bucle duplicador en móviles
-            reconocedor.interimResults = false; // Solo captura resultados seguros y definitivos
-            reconocedor.lang = 'es-UY';
-
-            reconocedor.onstart = () => {
-                estaGrabando = true;
-                btnDictar.classList.add('grabando');
-                iconoMic.className = 'fa-solid fa-microphone-slash';
-                labelMic.innerText = 'Detener Dictado';
-                estadoDictado.innerText = 'Escuchando... hable con claridad.';
-                estadoDictado.style.color = '#34d399';
-            };
-
-            reconocedor.onresult = (e) => {
-                let textoTranscrito = '';
-                for (let i = e.resultIndex; i < e.results.length; i++) {
-                    if (e.results[i].isFinal) {
-                        textoTranscrito += e.results[i][0].transcript.trim() + ' ';
-                    }
-                }
-                if (textoTranscrito) {
-                    const actual = txtHojaParte.value.trim();
-                    txtHojaParte.value = actual ? (actual + ' ' + textoTranscrito) : textoTranscrito;
-                    localStorage.setItem('borrador_parte_privado', txtHojaParte.value);
-                }
-            };
-
-            reconocedor.onerror = (e) => {
-                console.error("Error en voz:", e.error);
-                if (e.error === 'network') {
-                    estadoDictado.innerText = 'El dictado por voz requiere internet; puede escribir manualmente.';
-                    estadoDictado.style.color = '#fbbf24';
-                    estaGrabando = false;
-                }
-            };
-
-            reconocedor.onend = () => {
-                if (estaGrabando) {
-                    try {
-                        reconocedor.start();
-                    } catch (err) {
-                        detenerDictadoUI();
-                    }
-                } else {
-                    detenerDictadoUI();
-                }
-            };
-        } else {
-            estadoDictado.innerText = 'El navegador actual no soporta reconocimiento de voz nativo.';
-            estadoDictado.style.color = '#f87171';
-        }
-
-        function detenerDictado() {
-            estaGrabando = false;
-            if (reconocedor) {
-                try { reconocedor.stop(); } catch(err) {}
-            }
-            detenerDictadoUI();
-        }
-
-        function detenerDictadoUI() {
-            estaGrabando = false;
-            btnDictar.classList.remove('grabando');
-            iconoMic.className = 'fa-solid fa-microphone';
-            labelMic.innerText = 'Iniciar Dictado';
-            if (estadoDictado.style.color !== 'rgb(251, 191, 36)') {
-                estadoDictado.innerText = 'Dictado finalizado.';
-                estadoDictado.style.color = '#94a3b8';
-            }
-        }
-
-        btnDictar.addEventListener('click', () => {
-            if (!SpeechRecognition) {
-                alert('Su navegador no soporta el micrófono nativo. Utilice Google Chrome o Microsoft Edge.');
-                return;
-            }
-
-            if (estaGrabando) {
-                detenerDictado();
-            } else {
-                try {
-                    reconocedor.start();
-                } catch (err) {
-                    detenerDictado();
-                }
-            }
-        });
-
-        btnCopiarParte.addEventListener('click', () => {
-            if (!txtHojaParte.value.trim()) {
-                alert('No hay texto para copiar.');
-                return;
-            }
-            navigator.clipboard.writeText(txtHojaParte.value).then(() => {
-                const orig = btnCopiarParte.innerHTML;
-                btnCopiarParte.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!';
-                setTimeout(() => btnCopiarParte.innerHTML = orig, 1500);
-            });
-        });
-
-        btnLimpiarParte.addEventListener('click', () => {
-            if (txtHojaParte.value.trim() && confirm('¿Desea limpiar el contenido de su borrador?')) {
-                txtHojaParte.value = '';
-                localStorage.removeItem('borrador_parte_privado');
-                estadoDictado.innerText = '';
-            }
-        });
 
         // --- GESTIÓN DE FUNCIONARIOS ACTUANTES (8 HORAS) ---
         function verificarExpiracionActuantes() {
@@ -878,7 +352,7 @@
             localStorage.setItem('agente_2', a2);
             localStorage.setItem('actuantes_timestamp', Date.now().toString());
             actualizarUIActuantes();
-            renderizarPlantillas();
+            renderizarPlantillas(true);
         });
 
         document.getElementById('btnResetActuantes').addEventListener('click', () => {
@@ -887,11 +361,11 @@
                 localStorage.removeItem('agente_2');
                 localStorage.removeItem('actuantes_timestamp');
                 actualizarUIActuantes();
-                renderizarPlantillas();
+                renderizarPlantillas(true);
             }
         });
 
-        // --- PLANTILLAS OPERATIVAS (CON RESPALDO OFFLINE EN LOCALSTORAGE) ---
+        // --- PLANTILLAS OPERATIVAS (CON RESPALDO OFFLINE EN LOCALSTORAGE Y EDICIÓN SEGURA) ---
         const plantillasOficiales = [
             { orden: 1, titulo: "01. Operativo Ciudad", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en Móvil Oficial SMI5783 se procede a efectuar OPERATIVO CIUDAD estático con conos para la ordenanza del tránsito en EL LUGAR DEL HECHO. Procediendo a identificar a los siguientes CONDUCTORES con sus respectivos Vehículos que a continuación se detalla:\n1)- CONDUCTOR: \nVEHÍCULO: \n2)- CONDUCTOR: \nVEHÍCULO: \nCursados los datos filiatorios de los conductores y sus vehículos en el Sistema de Gestión de Seguridad Pública carecen de requisitoria pendiente al día de la fecha.` },
             { orden: 2, titulo: "02. Recorrida Auto Balsa", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783, se efectuaron recorridas por AUTO BALSA, PLAYA SANTA MARÍA Y CAMINOS VECINALES de la zona. Finalizando sin novedad.-` },
@@ -901,7 +375,7 @@
             { orden: 6, titulo: "06. Puesto Escuela Barrio Norte", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO CALLE REPÚBLICA DE VENEZUELA ESQUINA ASUNCIÓN, por prevención y disuasión de los delitos, finalizando sin novedad.` },
             { orden: 7, titulo: "07. Recorrida Barrio Norte", texto: `En el día de la fecha FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por calle Valparaíso, Asunción, La Paz, Ecuador, Bolivia, Colombia, Costa Rica, Panamá Rep, Venezuela y calles internas del Barrio Norte. Finalizando sin novedad.-` },
             { orden: 8, titulo: "08. Cancha de Pádel", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se efectuó puesto de observación en CAMINO LAS CANTERAS Y REPÚBLICA DE CHILE (cancha de biopadel), finalizando sin novedad.-` },
-            { orden: 9, titulo: "09. Recorrida Cancha de Racing", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se efectuó recorrida en la UBICACIÓN DEL HECHO CALLE REPÚBLICA DE CHILE ESQUINA COSTA RICA (CANCHA DE RACING), finalizando sin novedad.` },
+            { orden: 9, titulo: "09. Recorrida Cancha de Racing", texto: `En el día de la fecha por parte de FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se efectuó recorrida en la UBICACIÓN DEL HECHO CALLE REPÚBLICA DE CHILE ESQUINA COSTA RICA (CANCHA DE RACING), finalizando sin novedad.` },
             { orden: 10, titulo: "10. Puesto Melchora", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO AVENIDA DE LAS AMÉRICAS Y CAMINO LAS CANTERAS (centro educativo agrario MELCHORA CUENCA), por prevención y disuasión de los delitos, finalizando sin novedad.` },
             { orden: 11, titulo: "11. Recorrida Constancia", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO RUTA 3 KILÓMETRO 383, Localidad de Constancia. Finalizando sin novedad.` },
             { orden: 12, titulo: "12. Recorridas Moteles", texto: `- MOTEL VENUS:\nEn el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO BULEVAR ARTIGAS ENTRE REPÚBLICA DE CHILE Y REPÚBLICA DE BOLIVIA, en Motel VENUS y zonas aledañas, finalizando sin novedad.-\n\n- MOTEL GENESIS:\nEn el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO STEFANEL Y COSTA RICA, en Motel GENESIS y zonas aledañas, finalizando sin novedad.\n\n- MOTEL FEELING Y FECHORÍAS:\nEn el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO AVENIDA DOCTOR ROLDÁN Y CALLE LOS OLIVOS, en Motel FEELING y FECHORÍAS este último actualmente abandonado como así también zonas aledañas, finalizando sin novedad.` },
@@ -951,8 +425,13 @@
         const gridPlantillas = document.getElementById('gridPlantillas');
         const inputBuscarPlantilla = document.getElementById('inputBuscarPlantilla');
         let listaPlantillasCargadas = obtenerPlantillasLocales();
+        let editandoPlantillaActiva = false;
 
-        function renderizarPlantillas() {
+        function renderizarPlantillas(forzar = false) {
+            if (!forzar && (editandoPlantillaActiva || (document.activeElement && document.activeElement.isContentEditable))) {
+                return;
+            }
+
             gridPlantillas.innerHTML = '';
             const filtro = inputBuscarPlantilla ? inputBuscarPlantilla.value.toLowerCase().trim() : '';
             const a1 = localStorage.getItem('agente_1');
@@ -977,8 +456,37 @@
                 `;
 
                 const h3 = card.querySelector('h3');
+                const pre = card.querySelector('pre');
                 const code = card.querySelector('code');
                 const btnCopiar = card.querySelector('.btn-copiar-plantilla');
+
+                pre.addEventListener('mousedown', (e) => e.stopPropagation());
+                code.addEventListener('mousedown', (e) => e.stopPropagation());
+                pre.addEventListener('click', (e) => {
+                    if (e.target === pre) code.focus();
+                });
+
+                const pegarTextoPlano = (e) => {
+                    e.preventDefault();
+                    const texto = (e.clipboardData || window.clipboardData).getData('text/plain');
+                    document.execCommand('insertText', false, texto);
+                };
+                h3.addEventListener('paste', pegarTextoPlano);
+                code.addEventListener('paste', pegarTextoPlano);
+
+                const marcarEdicionActiva = () => { editandoPlantillaActiva = true; };
+                const liberarEdicionActiva = () => {
+                    setTimeout(() => {
+                        if (!document.activeElement || !document.activeElement.isContentEditable) {
+                            editandoPlantillaActiva = false;
+                        }
+                    }, 200);
+                };
+
+                h3.addEventListener('focus', marcarEdicionActiva);
+                code.addEventListener('focus', marcarEdicionActiva);
+                h3.addEventListener('blur', liberarEdicionActiva);
+                code.addEventListener('blur', liberarEdicionActiva);
 
                 btnCopiar.addEventListener('click', () => {
                     navigator.clipboard.writeText(code.innerText).then(() => {
@@ -1006,7 +514,7 @@
                     if (!confirm("¿Eliminar plantilla?")) return;
                     listaPlantillasCargadas = listaPlantillasCargadas.filter(item => item.id !== p.id);
                     guardarPlantillasLocales(listaPlantillasCargadas);
-                    renderizarPlantillas();
+                    renderizarPlantillas(true);
                     if (navigator.onLine && !String(p.id).startsWith('local_')) {
                         await deleteDoc(doc(db, "plantillas", p.id));
                     }
@@ -1016,22 +524,22 @@
             });
         }
 
-        // Renderizado inmediato desde caché local (funciona sin conexión al instante)
-        renderizarPlantillas();
+        renderizarPlantillas(true);
 
         onSnapshot(collection(db, "plantillas"), (snapshot) => {
             if (snapshot.empty) return;
-            listaPlantillasCargadas = [];
-            snapshot.forEach(d => listaPlantillasCargadas.push({ id: d.id, ...d.data() }));
-            listaPlantillasCargadas.sort((a, b) => (a.orden || 999) - (b.orden || 999));
+            const cargadas = [];
+            snapshot.forEach(d => cargadas.push({ id: d.id, ...d.data() }));
+            cargadas.sort((a, b) => (a.orden || 999) - (b.orden || 999));
+            listaPlantillasCargadas = cargadas;
             guardarPlantillasLocales(listaPlantillasCargadas);
-            renderizarPlantillas();
+            renderizarPlantillas(false);
         }, (err) => {
             console.warn("Usando plantillas desde caché local:", err.message);
-            renderizarPlantillas();
+            renderizarPlantillas(false);
         });
 
-        if (inputBuscarPlantilla) inputBuscarPlantilla.addEventListener('input', renderizarPlantillas);
+        if (inputBuscarPlantilla) inputBuscarPlantilla.addEventListener('input', () => renderizarPlantillas(true));
 
         document.getElementById('btnNuevaPlantilla').addEventListener('click', async () => {
             const nueva = { orden: Date.now(), titulo: "Nueva Plantilla", texto: "Texto..." };
@@ -1040,11 +548,11 @@
             } else {
                 listaPlantillasCargadas.push({ id: `local_${Date.now()}`, ...nueva });
                 guardarPlantillasLocales(listaPlantillasCargadas);
-                renderizarPlantillas();
+                renderizarPlantillas(true);
             }
         });
 
-        // --- IDENTIFICADOS CON AUDITORÍA (REGISTRADO POR) ---
+        // --- IDENTIFICADOS ---
         const tbodyIdentificados = document.getElementById('tablaIdentificadosBody');
         const emptyState = document.getElementById('empty-state');
 
@@ -1064,7 +572,7 @@
                     <td><span class="apodo-badge">${item.apodo || '-'}</span></td>
                     <td>${item.fechaNac || '-'}</td>
                     <td>${item.domicilio || '-'}</td>
-                    <td style="font-size: 0.75rem; color: #60a5fa;"><i class="fa-solid fa-user"></i> ${item.registradoPor || 'Sistema'}</td>
+                    <td style="font-size: 0.75rem; color: #60a5fa;"><i class="fa-solid fa-user"></i> ${item.registradoPor || USUARIO_UNICO}</td>
                     <td>
                         <button type="button" class="btn-eliminar" title="Eliminar registro"><i class="fa-solid fa-trash-can"></i></button>
                     </td>
@@ -1110,7 +618,7 @@
                     fechaNac: fechaFormateada,
                     domicilio: domicilio || '-',
                     notas: '',
-                    registradoPor: localStorage.getItem('usuario_activo') || 'Desconocido',
+                    registradoPor: obtenerResponsableTurno(),
                     creado: serverTimestamp()
                 });
 
@@ -1129,7 +637,7 @@
             if (snap.exists()) {
                 const data = snap.data();
                 document.getElementById('perfilTituloNombre').innerText = data.nombre;
-                document.getElementById('perfilSubInfo').innerText = `Cédula: ${data.cedula} | Registrado por: ${data.registradoPor || 'N/A'}`;
+                document.getElementById('perfilSubInfo').innerText = `Cédula: ${data.cedula} | Registrado por: ${data.registradoPor || USUARIO_UNICO}`;
                 const txtNotas = document.getElementById('txtNotasPerfil');
                 txtNotas.value = data.notas || '';
                 txtNotas.oninput = async () => { await updateDoc(doc(db, "identificados", id), { notas: txtNotas.value }); };
@@ -1145,125 +653,6 @@
             document.getElementById('vistaPerfil').style.display = 'none';
             document.getElementById('vistaPrincipal').style.display = 'flex';
             document.getElementById('mainSidebar').style.display = 'flex';
-        });
-
-        // --- DOCUMENTOS E IMPRESIONES ---
-        const inputNombreDoc = document.getElementById('inputNombreDoc');
-        const inputFileDoc = document.getElementById('inputFileDoc');
-        const btnSubirDoc = document.getElementById('btnSubirDoc');
-        const estadoSubidaDoc = document.getElementById('estadoSubidaDoc');
-        const gridDocumentos = document.getElementById('gridDocumentos');
-        const emptyDocsMsg = document.getElementById('empty-docs-msg');
-
-        btnSubirDoc.addEventListener('click', () => {
-            if (!navigator.onLine) {
-                alert('Se requiere conexión a internet para subir documentos.');
-                return;
-            }
-            const nombreDoc = inputNombreDoc.value.trim();
-            const archivo = inputFileDoc.files[0];
-            if (!nombreDoc || !archivo) { alert('Ingrese nombre y archivo.'); return; }
-
-            estadoSubidaDoc.style.display = 'block';
-            estadoSubidaDoc.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Guardando...`;
-
-            const reader = new FileReader();
-            reader.onload = async function (e) {
-                try {
-                    await addDoc(collection(db, "documentos"), {
-                        nombre: nombreDoc,
-                        fileName: archivo.name,
-                        fileData: e.target.result,
-                        subidoPor: localStorage.getItem('usuario_activo'),
-                        creado: serverTimestamp()
-                    });
-                    inputNombreDoc.value = '';
-                    inputFileDoc.value = '';
-                    estadoSubidaDoc.innerHTML = `<i class="fa-solid fa-circle-check"></i> Guardado.`;
-                    setTimeout(() => estadoSubidaDoc.style.display = 'none', 3000);
-                } catch (err) { alert("Error: " + err.message); estadoSubidaDoc.style.display = 'none'; }
-            };
-            reader.readAsDataURL(archivo);
-        });
-
-        onSnapshot(collection(db, "documentos"), (snapshot) => {
-            gridDocumentos.innerHTML = '';
-            if (snapshot.empty) { if (emptyDocsMsg) emptyDocsMsg.style.display = 'flex'; return; }
-            if (emptyDocsMsg) emptyDocsMsg.style.display = 'none';
-
-            snapshot.forEach((docSnap) => {
-                const d = docSnap.data();
-                const id = docSnap.id;
-                const card = document.createElement('div');
-                card.className = 'card-plantilla';
-                card.innerHTML = `
-                    <h3><i class="fa-solid fa-file-pdf" style="color: #f87171; margin-right: 8px;"></i>${d.nombre}</h3>
-                    <p style="font-size: 0.8rem; color: var(--text-muted);">Archivo: ${d.fileName} <br><span style="color:#60a5fa;">Subido por: ${d.subidoPor || 'Admin'}</span></p>
-                    <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px;">
-                        <a href="${d.fileData}" download="${d.fileName}" class="btn-add-plantilla" style="padding: 6px 12px; font-size: 0.75rem; text-decoration: none;"><i class="fa-solid fa-print"></i> Abrir</a>
-                        <button type="button" class="btn-eliminar-plantilla btn-eliminar-doc" title="Eliminar"><i class="fa-solid fa-trash-can"></i></button>
-                    </div>
-                `;
-                card.querySelector('.btn-eliminar-doc').addEventListener('click', async () => {
-                    if (confirm("¿Eliminar documento?")) await deleteDoc(doc(db, "documentos", id));
-                });
-                gridDocumentos.appendChild(card);
-            });
-        }, (err) => console.warn("Documentos sin conexión:", err.message));
-
-        // --- FORMATO DE ACTA ---
-        btnToggleAdminActas.addEventListener('click', () => {
-            const vis = document.getElementById('panelCargaActa1').style.display !== 'none';
-            document.getElementById('panelCargaActa1').style.display = vis ? 'none' : 'block';
-            document.getElementById('panelCargaActa2').style.display = vis ? 'none' : 'block';
-            btnToggleAdminActas.innerHTML = vis ? '<i class="fa-solid fa-gear"></i> Modo Carga' : '<i class="fa-solid fa-xmark"></i> Cerrar Carga';
-        });
-
-        function guardarActa(num, input, estado, nombre) {
-            if (!navigator.onLine) {
-                alert('Se requiere conexión a internet para actualizar actas.');
-                return;
-            }
-            const arch = input.files[0];
-            if (!arch) { alert('Seleccione un archivo.'); return; }
-            estado.style.display = 'block';
-            estado.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Guardando...`;
-
-            const r = new FileReader();
-            r.onload = async function(e) {
-                await setDoc(doc(db, "formato_actas", `acta_${num}`), {
-                    numero: num, fileName: arch.name, fileData: e.target.result, actualizado: serverTimestamp()
-                });
-                input.value = '';
-                estado.innerHTML = `<i class="fa-solid fa-circle-check"></i> Actualizado.`;
-                setTimeout(() => estado.style.display = 'none', 3000);
-            };
-            r.readAsDataURL(arch);
-        }
-
-        document.getElementById('btnSubirActa1').addEventListener('click', () => guardarActa(1, document.getElementById('inputFileActa1'), document.getElementById('estadoActa1'), "Acta 61"));
-        document.getElementById('btnSubirActa2').addEventListener('click', () => guardarActa(2, document.getElementById('inputFileActa2'), document.getElementById('estadoActa2'), "Acta Denunciante"));
-
-        onSnapshot(doc(db, "formato_actas", "acta_1"), (docSnap) => {
-            const cont = document.getElementById('contenedorActa1');
-            if (docSnap.exists()) {
-                const d = docSnap.data();
-                cont.innerHTML = `<div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(239, 68, 68, 0.3); padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-                    <div><strong style="font-size: 0.85rem; color: #fff;">${d.fileName}</strong><span style="font-size:0.75rem; color:#34d399; display:block;"><i class="fa-solid fa-circle-check"></i> Disponible</span></div>
-                    <a href="${d.fileData}" download="${d.fileName}" class="btn-add-plantilla" style="padding: 6px 12px; font-size: 0.75rem; text-decoration: none; background: #dc2626;"><i class="fa-solid fa-download"></i> Descargar</a>
-                </div>`;
-            } else { cont.innerHTML = `<div class="empty-state-msg" style="padding:15px; font-size:0.8rem;"><span>Pendiente de carga.</span></div>`; }
-        });
-
-        onSnapshot(doc(db, "formato_actas", "acta_2"), (docSnap) => {
-            const cont = document.getElementById('contenedorActa2');
-            if (docSnap.exists()) {
-                const d = docSnap.data();
-                cont.innerHTML = `<div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(59, 130, 246, 0.3); padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-                    <div><strong style="font-size: 0.85rem; color: #fff;">${d.fileName}</strong><span style="font-size:0.75rem; color:#34d399; display:block;"><i class="fa-solid fa-circle-check"></i> Disponible</span></div>
-                    <a href="${d.fileData}" download="${d.fileName}" class="btn-add-plantilla" style="padding: 6px 12px; font-size: 0.75rem; text-decoration: none; background: #2563eb;"><i class="fa-solid fa-download"></i> Descargar</a>
-                </div>`;
-            } else { cont.innerHTML = `<div class="empty-state-msg" style="padding:15px; font-size:0.8rem;"><span>Pendiente de carga.</span></div>`; }
         });
     </script>
 
