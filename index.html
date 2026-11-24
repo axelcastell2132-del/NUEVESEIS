@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Gestión Policial - NUEVE96SEIS</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#0b1220">
+    <link rel="apple-touch-icon" href="logo-minterior.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -194,8 +199,8 @@
                 <h1>Panel de Operaciones Policiales</h1>
                 <p>Gestión rápida de actas, identificaciones y registros de eventos en servicio</p>
             </div>
-            <div class="header-badge">
-                <span class="pulse-dot"></span> EN SERVICIO (SGSP)
+            <div class="header-badge" id="badgeEstadoRed">
+                <span class="pulse-dot" id="dotEstadoRed"></span> <span id="textoEstadoRed">EN SERVICIO (SGSP)</span>
             </div>
         </header>
 
@@ -241,7 +246,7 @@
                 </div>
 
                 <div class="grid-plantillas" id="gridPlantillas">
-                    <!-- Las plantillas se cargan dinámicamente desde Firebase -->
+                    <!-- Las plantillas se cargan dinámicamente desde Firebase o respaldo local -->
                 </div>
             </section>
 
@@ -463,7 +468,7 @@
         </footer>
     </div>
 
-    <!-- SCRIPT DE FIREBASE Y LÓGICA DE CONTROL DE ACCESO + DICTADO ESTABLE POR FRAGMENTOS -->
+    <!-- SCRIPT DE FIREBASE Y LÓGICA DE CONTROL DE ACCESO + DICTADO ESTABLE POR FRAGMENTOS + RESPALDO OFFLINE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
@@ -482,6 +487,30 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+
+        // --- INDICADOR DE ESTADO DE CONEXIÓN (ONLINE / OFFLINE) ---
+        const badgeEstadoRed = document.getElementById('badgeEstadoRed');
+        const dotEstadoRed = document.getElementById('dotEstadoRed');
+        const textoEstadoRed = document.getElementById('textoEstadoRed');
+
+        function actualizarEstadoRed() {
+            if (navigator.onLine) {
+                badgeEstadoRed.style.backgroundColor = 'rgba(16, 185, 129, 0.15)';
+                badgeEstadoRed.style.color = '#34d399';
+                badgeEstadoRed.style.borderColor = 'rgba(52, 211, 153, 0.3)';
+                dotEstadoRed.style.backgroundColor = '#34d399';
+                textoEstadoRed.innerText = 'EN SERVICIO (SGSP)';
+            } else {
+                badgeEstadoRed.style.backgroundColor = 'rgba(245, 158, 11, 0.15)';
+                badgeEstadoRed.style.color = '#fbbf24';
+                badgeEstadoRed.style.borderColor = 'rgba(251, 191, 36, 0.35)';
+                dotEstadoRed.style.backgroundColor = '#fbbf24';
+                textoEstadoRed.innerText = 'MODO OFFLINE (LOCAL)';
+            }
+        }
+        window.addEventListener('online', actualizarEstadoRed);
+        window.addEventListener('offline', actualizarEstadoRed);
+        actualizarEstadoRed();
 
         // Referencias de Login / Registro UI
         const loginOverlay = document.getElementById('loginOverlay');
@@ -526,6 +555,12 @@
 
             if (!u || !p) return;
 
+            if (!navigator.onLine) {
+                registerError.style.display = 'block';
+                registerError.innerText = "Se requiere conexión a internet para solicitar una cuenta nueva.";
+                return;
+            }
+
             try {
                 const userRef = doc(db, "usuarios", u);
                 const snap = await getDoc(userRef);
@@ -563,6 +598,12 @@
                 localStorage.setItem('usuario_activo', u);
                 loginOverlay.style.display = 'none';
                 configurarPermisosUsuario(u);
+                return;
+            }
+
+            if (!navigator.onLine) {
+                loginError.style.display = 'block';
+                loginError.innerText = "Sin conexión a internet. Inicie sesión con Wi-Fi una vez para dejar guardada su sesión en la tablet.";
                 return;
             }
 
@@ -638,7 +679,7 @@
             });
 
             emptyMsg.style.display = hayPendientes ? 'none' : 'flex';
-        });
+        }, (err) => console.warn("Modo offline en usuarios:", err.message));
 
         window.aprobarUsuario = async function(nombreUsuario) {
             try {
@@ -721,10 +762,14 @@
 
             reconocedor.onerror = (e) => {
                 console.error("Error en voz:", e.error);
+                if (e.error === 'network') {
+                    estadoDictado.innerText = 'El dictado por voz requiere internet; puede escribir manualmente.';
+                    estadoDictado.style.color = '#fbbf24';
+                    estaGrabando = false;
+                }
             };
 
             reconocedor.onend = () => {
-                // Si el usuario sigue queriendo grabar, reinicia automáticamente de forma limpia
                 if (estaGrabando) {
                     try {
                         reconocedor.start();
@@ -753,8 +798,10 @@
             btnDictar.classList.remove('grabando');
             iconoMic.className = 'fa-solid fa-microphone';
             labelMic.innerText = 'Iniciar Dictado';
-            estadoDictado.innerText = 'Dictado finalizado.';
-            estadoDictado.style.color = '#94a3b8';
+            if (estadoDictado.style.color !== 'rgb(251, 191, 36)') {
+                estadoDictado.innerText = 'Dictado finalizado.';
+                estadoDictado.style.color = '#94a3b8';
+            }
         }
 
         btnDictar.addEventListener('click', () => {
@@ -831,7 +878,7 @@
             localStorage.setItem('agente_2', a2);
             localStorage.setItem('actuantes_timestamp', Date.now().toString());
             actualizarUIActuantes();
-            location.reload();
+            renderizarPlantillas();
         });
 
         document.getElementById('btnResetActuantes').addEventListener('click', () => {
@@ -840,11 +887,11 @@
                 localStorage.removeItem('agente_2');
                 localStorage.removeItem('actuantes_timestamp');
                 actualizarUIActuantes();
-                location.reload();
+                renderizarPlantillas();
             }
         });
 
-        // --- PLANTILLAS OPERATIVAS ---
+        // --- PLANTILLAS OPERATIVAS (CON RESPALDO OFFLINE EN LOCALSTORAGE) ---
         const plantillasOficiales = [
             { orden: 1, titulo: "01. Operativo Ciudad", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en Móvil Oficial SMI5783 se procede a efectuar OPERATIVO CIUDAD estático con conos para la ordenanza del tránsito en EL LUGAR DEL HECHO. Procediendo a identificar a los siguientes CONDUCTORES con sus respectivos Vehículos que a continuación se detalla:\n1)- CONDUCTOR: \nVEHÍCULO: \n2)- CONDUCTOR: \nVEHÍCULO: \nCursados los datos filiatorios de los conductores y sus vehículos en el Sistema de Gestión de Seguridad Pública carecen de requisitoria pendiente al día de la fecha.` },
             { orden: 2, titulo: "02. Recorrida Auto Balsa", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783, se efectuaron recorridas por AUTO BALSA, PLAYA SANTA MARÍA Y CAMINOS VECINALES de la zona. Finalizando sin novedad.-` },
@@ -854,7 +901,7 @@
             { orden: 6, titulo: "06. Puesto Escuela Barrio Norte", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO CALLE REPÚBLICA DE VENEZUELA ESQUINA ASUNCIÓN, por prevención y disuasión de los delitos, finalizando sin novedad.` },
             { orden: 7, titulo: "07. Recorrida Barrio Norte", texto: `En el día de la fecha FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por calle Valparaíso, Asunción, La Paz, Ecuador, Bolivia, Colombia, Costa Rica, Panamá Rep, Venezuela y calles internas del Barrio Norte. Finalizando sin novedad.-` },
             { orden: 8, titulo: "08. Cancha de Pádel", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se efectuó puesto de observación en CAMINO LAS CANTERAS Y REPÚBLICA DE CHILE (cancha de biopadel), finalizando sin novedad.-` },
-            { orden: 9, titulo: "09. Recorrida Cancha de Racing", texto: `En el día de la fecha por parte de FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se efectuó recorrida en la UBICACIÓN DEL HECHO CALLE REPÚBLICA DE CHILE ESQUINA COSTA RICA (CANCHA DE RACING), finalizando sin novedad.` },
+            { orden: 9, titulo: "09. Recorrida Cancha de Racing", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se efectuó recorrida en la UBICACIÓN DEL HECHO CALLE REPÚBLICA DE CHILE ESQUINA COSTA RICA (CANCHA DE RACING), finalizando sin novedad.` },
             { orden: 10, titulo: "10. Puesto Melchora", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO AVENIDA DE LAS AMÉRICAS Y CAMINO LAS CANTERAS (centro educativo agrario MELCHORA CUENCA), por prevención y disuasión de los delitos, finalizando sin novedad.` },
             { orden: 11, titulo: "11. Recorrida Constancia", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO RUTA 3 KILÓMETRO 383, Localidad de Constancia. Finalizando sin novedad.` },
             { orden: 12, titulo: "12. Recorridas Moteles", texto: `- MOTEL VENUS:\nEn el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO BULEVAR ARTIGAS ENTRE REPÚBLICA DE CHILE Y REPÚBLICA DE BOLIVIA, en Motel VENUS y zonas aledañas, finalizando sin novedad.-\n\n- MOTEL GENESIS:\nEn el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO STEFANEL Y COSTA RICA, en Motel GENESIS y zonas aledañas, finalizando sin novedad.\n\n- MOTEL FEELING Y FECHORÍAS:\nEn el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO AVENIDA DOCTOR ROLDÁN Y CALLE LOS OLIVOS, en Motel FEELING y FECHORÍAS este último actualmente abandonado como así también zonas aledañas, finalizando sin novedad.` },
@@ -866,23 +913,44 @@
             { orden: 18, titulo: "18. Recorrida Los Ceibos", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por Barrio Los Ceibos sito calle ROLDÁN ESQUINA REPÚBLICA DE BOLIVIA, recorriendo calles internas. Finalizando sin novedad.-` }
         ];
 
+        const CACHE_PLANTILLAS_KEY = 'plantillas_offline_cache';
+
+        function obtenerPlantillasLocales() {
+            try {
+                const guardadas = JSON.parse(localStorage.getItem(CACHE_PLANTILLAS_KEY));
+                if (Array.isArray(guardadas) && guardadas.length > 0) return guardadas;
+            } catch (e) {}
+            return plantillasOficiales.map((p, idx) => ({ id: `local_${idx + 1}`, ...p }));
+        }
+
+        function guardarPlantillasLocales(lista) {
+            try {
+                localStorage.setItem(CACHE_PLANTILLAS_KEY, JSON.stringify(lista));
+            } catch (e) {}
+        }
+
         async function sincronizarPlantillasOficiales() {
-            const colRef = collection(db, "plantillas");
-            const snap = await getDocs(colRef);
-            if (snap.size < 18) {
-                const batch = writeBatch(db);
-                snap.forEach(d => batch.delete(d.ref));
-                await batch.commit();
-                for (const p of plantillasOficiales) {
-                    await addDoc(colRef, { orden: p.orden, titulo: p.titulo, texto: p.texto, creado: serverTimestamp() });
+            if (!navigator.onLine) return;
+            try {
+                const colRef = collection(db, "plantillas");
+                const snap = await getDocs(colRef);
+                if (snap.size < 18) {
+                    const batch = writeBatch(db);
+                    snap.forEach(d => batch.delete(d.ref));
+                    await batch.commit();
+                    for (const p of plantillasOficiales) {
+                        await addDoc(colRef, { orden: p.orden, titulo: p.titulo, texto: p.texto, creado: serverTimestamp() });
+                    }
                 }
+            } catch (e) {
+                console.warn("No se pudo sincronizar plantillas oficiales (offline):", e.message);
             }
         }
         sincronizarPlantillasOficiales();
 
         const gridPlantillas = document.getElementById('gridPlantillas');
         const inputBuscarPlantilla = document.getElementById('inputBuscarPlantilla');
-        let listaPlantillasCargadas = [];
+        let listaPlantillasCargadas = obtenerPlantillasLocales();
 
         function renderizarPlantillas() {
             gridPlantillas.innerHTML = '';
@@ -923,31 +991,57 @@
                 const guardar = () => {
                     clearTimeout(tId);
                     tId = setTimeout(async () => {
-                        await updateDoc(doc(db, "plantillas", p.id), { titulo: h3.innerText, texto: code.innerText });
+                        p.titulo = h3.innerText;
+                        p.texto = code.innerText;
+                        guardarPlantillasLocales(listaPlantillasCargadas);
+                        if (navigator.onLine && !String(p.id).startsWith('local_')) {
+                            await updateDoc(doc(db, "plantillas", p.id), { titulo: h3.innerText, texto: code.innerText });
+                        }
                     }, 800);
                 };
                 h3.addEventListener('input', guardar);
                 code.addEventListener('input', guardar);
 
                 card.querySelector('.btn-eliminar-plantilla').addEventListener('click', async () => {
-                    if (confirm("¿Eliminar plantilla?")) await deleteDoc(doc(db, "plantillas", p.id));
+                    if (!confirm("¿Eliminar plantilla?")) return;
+                    listaPlantillasCargadas = listaPlantillasCargadas.filter(item => item.id !== p.id);
+                    guardarPlantillasLocales(listaPlantillasCargadas);
+                    renderizarPlantillas();
+                    if (navigator.onLine && !String(p.id).startsWith('local_')) {
+                        await deleteDoc(doc(db, "plantillas", p.id));
+                    }
                 });
 
                 gridPlantillas.appendChild(card);
             });
         }
 
+        // Renderizado inmediato desde caché local (funciona sin conexión al instante)
+        renderizarPlantillas();
+
         onSnapshot(collection(db, "plantillas"), (snapshot) => {
+            if (snapshot.empty) return;
             listaPlantillasCargadas = [];
             snapshot.forEach(d => listaPlantillasCargadas.push({ id: d.id, ...d.data() }));
             listaPlantillasCargadas.sort((a, b) => (a.orden || 999) - (b.orden || 999));
+            guardarPlantillasLocales(listaPlantillasCargadas);
+            renderizarPlantillas();
+        }, (err) => {
+            console.warn("Usando plantillas desde caché local:", err.message);
             renderizarPlantillas();
         });
 
         if (inputBuscarPlantilla) inputBuscarPlantilla.addEventListener('input', renderizarPlantillas);
 
         document.getElementById('btnNuevaPlantilla').addEventListener('click', async () => {
-            await addDoc(collection(db, "plantillas"), { orden: Date.now(), titulo: "Nueva Plantilla", texto: "Texto...", creado: serverTimestamp() });
+            const nueva = { orden: Date.now(), titulo: "Nueva Plantilla", texto: "Texto..." };
+            if (navigator.onLine) {
+                await addDoc(collection(db, "plantillas"), { ...nueva, creado: serverTimestamp() });
+            } else {
+                listaPlantillasCargadas.push({ id: `local_${Date.now()}`, ...nueva });
+                guardarPlantillasLocales(listaPlantillasCargadas);
+                renderizarPlantillas();
+            }
         });
 
         // --- IDENTIFICADOS CON AUDITORÍA (REGISTRADO POR) ---
@@ -987,9 +1081,13 @@
 
                 tbodyIdentificados.appendChild(tr);
             });
-        });
+        }, (err) => console.warn("Identificados sin conexión:", err.message));
 
         document.getElementById('btnAgregar').addEventListener('click', async () => {
+            if (!navigator.onLine) {
+                alert('Se requiere conexión a internet para guardar identificados en la nube.');
+                return;
+            }
             const cedula = document.getElementById('inputCedula').value.trim();
             const nombre = document.getElementById('inputNombre').value.trim();
             const apodo = document.getElementById('inputApodo').value.trim();
@@ -1058,6 +1156,10 @@
         const emptyDocsMsg = document.getElementById('empty-docs-msg');
 
         btnSubirDoc.addEventListener('click', () => {
+            if (!navigator.onLine) {
+                alert('Se requiere conexión a internet para subir documentos.');
+                return;
+            }
             const nombreDoc = inputNombreDoc.value.trim();
             const archivo = inputFileDoc.files[0];
             if (!nombreDoc || !archivo) { alert('Ingrese nombre y archivo.'); return; }
@@ -1107,7 +1209,7 @@
                 });
                 gridDocumentos.appendChild(card);
             });
-        });
+        }, (err) => console.warn("Documentos sin conexión:", err.message));
 
         // --- FORMATO DE ACTA ---
         btnToggleAdminActas.addEventListener('click', () => {
@@ -1118,6 +1220,10 @@
         });
 
         function guardarActa(num, input, estado, nombre) {
+            if (!navigator.onLine) {
+                alert('Se requiere conexión a internet para actualizar actas.');
+                return;
+            }
             const arch = input.files[0];
             if (!arch) { alert('Seleccione un archivo.'); return; }
             estado.style.display = 'block';
@@ -1159,6 +1265,17 @@
                 </div>`;
             } else { cont.innerHTML = `<div class="empty-state-msg" style="padding:15px; font-size:0.8rem;"><span>Pendiente de carga.</span></div>`; }
         });
+    </script>
+
+    <!-- REGISTRO DE SERVICE WORKER PARA INSTALACIÓN PWA Y CACHÉ OFFLINE -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((reg) => console.log('Service Worker registrado:', reg.scope))
+                    .catch((err) => console.error('Error al registrar SW:', err));
+            });
+        }
     </script>
 </body>
 </html>

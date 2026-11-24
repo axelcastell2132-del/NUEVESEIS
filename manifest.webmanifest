@@ -1,0 +1,26 @@
+{
+  "name": "Sistema de Gestión Policial - NUEVE96SEIS",
+  "short_name": "NUEVE96SEIS",
+  "description": "Panel de operaciones policiales, plantillas de narraciones y actas - Comisaría Quinta",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#070b14",
+  "theme_color": "#0b1220",
+  "lang": "es-UY",
+  "icons": [
+    {
+      "src": "logo-minterior.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo-minterior.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
