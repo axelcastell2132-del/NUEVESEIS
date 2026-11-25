@@ -24,18 +24,76 @@
             min-height: 110px;
         }
 
-        /* Estilos para el directorio de cédulas de funcionarios */
+        /* Diseño responsivo horizontal para Cédulas de Funcionarios (evita quiebres verticales) */
+        .lista-funcionarios-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .item-funcionario-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 10px;
+            padding: 12px 16px;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .item-funcionario-row:hover {
+            border-color: rgba(96, 165, 250, 0.45);
+            background: rgba(30, 58, 138, 0.2);
+        }
+
+        .func-info-izq {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .func-nombre-bloque {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .func-apellidos {
+            font-weight: 700;
+            color: #f8fafc;
+            font-size: 0.95rem;
+            line-height: 1.3;
+        }
+
+        .func-nombres {
+            font-size: 0.82rem;
+            color: #94a3b8;
+            line-height: 1.3;
+        }
+
+        .func-acciones-der {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
         .ci-badge {
             font-family: 'Courier New', Courier, monospace;
             font-weight: 700;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             color: #93c5fd;
             background: rgba(37, 99, 235, 0.16);
             border: 1px solid rgba(96, 165, 250, 0.35);
-            padding: 4px 10px;
+            padding: 6px 10px;
             border-radius: 6px;
             letter-spacing: 0.5px;
-            display: inline-block;
+            white-space: nowrap;
         }
 
         .grado-badge {
@@ -44,11 +102,33 @@
             color: #fbbf24;
             background: rgba(245, 158, 11, 0.14);
             border: 1px solid rgba(251, 191, 36, 0.3);
-            padding: 3px 8px;
-            border-radius: 5px;
-            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 6px;
             min-width: 42px;
             text-align: center;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .btn-copiar-ci {
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 12px;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 480px) {
+            .item-funcionario-row {
+                flex-wrap: wrap;
+            }
+            .func-acciones-der {
+                width: 100%;
+                justify-content: space-between;
+                padding-top: 8px;
+                border-top: 1px solid rgba(148, 163, 184, 0.12);
+            }
         }
     </style>
 </head>
@@ -153,7 +233,7 @@
                 </div>
 
                 <div class="grid-plantillas" id="gridPlantillas">
-                    <!-- Las plantillas se cargan dinámicamente desde Firebase o respaldo local -->
+                    <!-- Las plantillas se cargan dinámicamente -->
                 </div>
             </section>
 
@@ -170,24 +250,12 @@
                     <input type="text" id="inputBuscarFuncionario" class="input-field" placeholder="Buscar por apellido (ej: Tormos, Castell, Petcoff...) o C.I..." style="padding-left: 42px; width: 100%; font-size: 0.95rem;">
                 </div>
 
-                <div class="table-container">
-                    <table class="styled-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 10%;">Grado</th>
-                                <th style="width: 30%;">Apellidos</th>
-                                <th style="width: 28%;">Nombres</th>
-                                <th style="width: 17%;">C.I. N.º</th>
-                                <th style="width: 15%;">Copiar</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaFuncionariosBody">
-                        </tbody>
-                    </table>
-                    <div id="empty-funcionarios" class="empty-state-msg" style="display: none;">
-                        <i class="fa-solid fa-user-slash"></i>
-                        <span>No se encontraron funcionarios con ese apellido o número de cédula.</span>
-                    </div>
+                <!-- LISTA HORIZONTAL COMPACTA DE FUNCIONARIOS -->
+                <div id="listaFuncionariosContainer" class="lista-funcionarios-grid"></div>
+
+                <div id="empty-funcionarios" class="empty-state-msg" style="display: none;">
+                    <i class="fa-solid fa-user-slash"></i>
+                    <span>No se encontraron funcionarios con ese apellido o número de cédula.</span>
                 </div>
             </section>
         </main>
@@ -202,7 +270,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
             getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, 
-            serverTimestamp, updateDoc, getDocs, writeBatch 
+            serverTimestamp, updateDoc, getDocs 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -350,7 +418,7 @@
             }
         });
 
-        // --- DIRECTORIO DE CÉDULAS DE FUNCIONARIOS ---
+        // --- DIRECTORIO DE CÉDULAS DE FUNCIONARIOS (TARJETAS HORIZONTALES) ---
         const funcionariosBase = [
             { grado: "6", apellidos: "TORMOS LOPEZ", nombres: "MARCOS JAVIER", cedula: "4598013-4" },
             { grado: "4", apellidos: "DURE CABAÑA", nombres: "MARCELO RAMON", cedula: "4284136-3" },
@@ -378,12 +446,12 @@
             return (txt || '').toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
         }
 
-        const tablaFuncionariosBody = document.getElementById('tablaFuncionariosBody');
+        const listaFuncionariosContainer = document.getElementById('listaFuncionariosContainer');
         const inputBuscarFuncionario = document.getElementById('inputBuscarFuncionario');
         const emptyFuncionarios = document.getElementById('empty-funcionarios');
 
         function renderizarFuncionarios() {
-            tablaFuncionariosBody.innerHTML = '';
+            listaFuncionariosContainer.innerHTML = '';
             const filtro = normalizarTexto(inputBuscarFuncionario ? inputBuscarFuncionario.value : '');
             const filtroDigitos = filtro.replace(/[^0-9]/g, '');
 
@@ -411,23 +479,26 @@
             emptyFuncionarios.style.display = 'none';
 
             filtrados.forEach((f) => {
-                const tr = document.createElement('tr');
                 const ciSinGuion = (f.cedula || '').replace(/[^0-9]/g, '');
-                tr.innerHTML = `
-                    <td><span class="grado-badge">${f.grado || '-'}</span></td>
-                    <td><strong>${f.apellidos}</strong></td>
-                    <td>${f.nombres}</td>
-                    <td><span class="ci-badge">${f.cedula}</span></td>
-                    <td>
-                        <div style="display: flex; gap: 6px; align-items: center;">
-                            <button type="button" class="btn-add-plantilla btn-copiar-ci" data-ci="${ciSinGuion}" title="Copiar solo números (${ciSinGuion})" style="padding: 6px 10px; font-size: 0.75rem;">
-                                <i class="fa-solid fa-copy"></i> Copiar
-                            </button>
+                const fila = document.createElement('div');
+                fila.className = 'item-funcionario-row';
+                fila.innerHTML = `
+                    <div class="func-info-izq">
+                        <span class="grado-badge">${f.grado || '-'}</span>
+                        <div class="func-nombre-bloque">
+                            <span class="func-apellidos">${f.apellidos}</span>
+                            <span class="func-nombres">${f.nombres}</span>
                         </div>
-                    </td>
+                    </div>
+                    <div class="func-acciones-der">
+                        <span class="ci-badge">${f.cedula}</span>
+                        <button type="button" class="btn-add-plantilla btn-copiar-ci" title="Copiar solo números (${ciSinGuion})">
+                            <i class="fa-solid fa-copy"></i> Copiar
+                        </button>
+                    </div>
                 `;
 
-                const btnCopiarCi = tr.querySelector('.btn-copiar-ci');
+                const btnCopiarCi = fila.querySelector('.btn-copiar-ci');
                 btnCopiarCi.addEventListener('click', () => {
                     navigator.clipboard.writeText(ciSinGuion).then(() => {
                         btnCopiarCi.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiada!';
@@ -439,7 +510,7 @@
                     });
                 });
 
-                tablaFuncionariosBody.appendChild(tr);
+                listaFuncionariosContainer.appendChild(fila);
             });
         }
 
@@ -449,7 +520,7 @@
             inputBuscarFuncionario.addEventListener('input', renderizarFuncionarios);
         }
 
-        // --- PLANTILLAS OPERATIVAS (CON RESPALDO OFFLINE EN LOCALSTORAGE Y EDICIÓN SEGURA) ---
+        // --- PLANTILLAS OPERATIVAS (GARANTIZANDO LAS 18 OFICIALES + PERSONALIZADAS) ---
         const plantillasOficiales = [
             { orden: 1, titulo: "01. Operativo Ciudad", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en Móvil Oficial SMI5783 se procede a efectuar OPERATIVO CIUDAD estático con conos para la ordenanza del tránsito en EL LUGAR DEL HECHO. Procediendo a identificar a los siguientes CONDUCTORES con sus respectivos Vehículos que a continuación se detalla:\n1)- CONDUCTOR: \nVEHÍCULO: \n2)- CONDUCTOR: \nVEHÍCULO: \nCursados los datos filiatorios de los conductores y sus vehículos en el Sistema de Gestión de Seguridad Pública carecen de requisitoria pendiente al día de la fecha.` },
             { orden: 2, titulo: "02. Recorrida Auto Balsa", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783, se efectuaron recorridas por AUTO BALSA, PLAYA SANTA MARÍA Y CAMINOS VECINALES de la zona. Finalizando sin novedad.-` },
@@ -459,7 +530,7 @@
             { orden: 6, titulo: "06. Puesto Escuela Barrio Norte", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO CALLE REPÚBLICA DE VENEZUELA ESQUINA ASUNCIÓN, por prevención y disuasión de los delitos, finalizando sin novedad.` },
             { orden: 7, titulo: "07. Recorrida Barrio Norte", texto: `En el día de la fecha FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por calle Valparaíso, Asunción, La Paz, Ecuador, Bolivia, Colombia, Costa Rica, Panamá Rep, Venezuela y calles internas del Barrio Norte. Finalizando sin novedad.-` },
             { orden: 8, titulo: "08. Cancha de Pádel", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se efectuó puesto de observación en CAMINO LAS CANTERAS Y REPÚBLICA DE CHILE (cancha de biopadel), finalizando sin novedad.-` },
-            { orden: 9, titulo: "09. Recorrida Cancha de Racing", texto: `En el día de la fecha por parte de FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se efectuó recorrida en la UBICACIÓN DEL HECHO CALLE REPÚBLICA DE CHILE ESQUINA COSTA RICA (CANCHA DE RACING), finalizando sin novedad.` },
+            { orden: 9, titulo: "09. Recorrida Cancha de Racing", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se efectuó recorrida en la UBICACIÓN DEL HECHO CALLE REPÚBLICA DE CHILE ESQUINA COSTA RICA (CANCHA DE RACING), finalizando sin novedad.` },
             { orden: 10, titulo: "10. Puesto Melchora", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar un puesto de observación sito en la UBICACIÓN DEL HECHO AVENIDA DE LAS AMÉRICAS Y CAMINO LAS CANTERAS (centro educativo agrario MELCHORA CUENCA), por prevención y disuasión de los delitos, finalizando sin novedad.` },
             { orden: 11, titulo: "11. Recorrida Constancia", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO RUTA 3 KILÓMETRO 383, Localidad de Constancia. Finalizando sin novedad.` },
             { orden: 12, titulo: "12. Recorridas Moteles", texto: `- MOTEL VENUS:\nEn el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO BULEVAR ARTIGAS ENTRE REPÚBLICA DE CHILE Y REPÚBLICA DE BOLIVIA, en Motel VENUS y zonas aledañas, finalizando sin novedad.-\n\n- MOTEL GENESIS:\nEn el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO STEFANEL Y COSTA RICA, en Motel GENESIS y zonas aledañas, finalizando sin novedad.\n\n- MOTEL FEELING Y FECHORÍAS:\nEn el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por la UBICACIÓN DEL HECHO AVENIDA DOCTOR ROLDÁN Y CALLE LOS OLIVOS, en Motel FEELING y FECHORÍAS este último actualmente abandonado como así también zonas aledañas, finalizando sin novedad.` },
@@ -471,14 +542,30 @@
             { orden: 18, titulo: "18. Recorrida Los Ceibos", texto: `En el día de la fecha por parte de los FUNCIONARIOS ACTUANTES en móvil Oficial SMI5783 se procede a realizar recorridas por Barrio Los Ceibos sito calle ROLDÁN ESQUINA REPÚBLICA DE BOLIVIA, recorriendo calles internas. Finalizando sin novedad.-` }
         ];
 
-        const CACHE_PLANTILLAS_KEY = 'plantillas_offline_cache';
+        const CACHE_PLANTILLAS_KEY = 'plantillas_offline_cache_v2';
+
+        // Garantiza que las 18 plantillas base estén siempre presentes aunque en caché o nube falte alguna
+        function fusionarConOficiales(listaExterna) {
+            const mapa = new Map();
+            plantillasOficiales.forEach((p, idx) => {
+                mapa.set(p.orden, { id: `local_${idx + 1}`, ...p });
+            });
+            if (Array.isArray(listaExterna)) {
+                listaExterna.forEach((item) => {
+                    const clave = item.orden || item.id;
+                    mapa.set(clave, item);
+                });
+            }
+            return Array.from(mapa.values()).sort((a, b) => (a.orden || 999) - (b.orden || 999));
+        }
 
         function obtenerPlantillasLocales() {
             try {
                 const guardadas = JSON.parse(localStorage.getItem(CACHE_PLANTILLAS_KEY));
-                if (Array.isArray(guardadas) && guardadas.length > 0) return guardadas;
-            } catch (e) {}
-            return plantillasOficiales.map((p, idx) => ({ id: `local_${idx + 1}`, ...p }));
+                return fusionarConOficiales(guardadas);
+            } catch (e) {
+                return fusionarConOficiales([]);
+            }
         }
 
         function guardarPlantillasLocales(lista) {
@@ -492,11 +579,12 @@
             try {
                 const colRef = collection(db, "plantillas");
                 const snap = await getDocs(colRef);
-                if (snap.size < 18) {
-                    const batch = writeBatch(db);
-                    snap.forEach(d => batch.delete(d.ref));
-                    await batch.commit();
-                    for (const p of plantillasOficiales) {
+                const existentesPorOrden = new Set();
+                snap.forEach(d => {
+                    if (d.data().orden) existentesPorOrden.add(d.data().orden);
+                });
+                for (const p of plantillasOficiales) {
+                    if (!existentesPorOrden.has(p.orden)) {
                         await addDoc(colRef, { orden: p.orden, titulo: p.titulo, texto: p.texto, creado: serverTimestamp() });
                     }
                 }
@@ -611,11 +699,9 @@
         renderizarPlantillas(true);
 
         onSnapshot(collection(db, "plantillas"), (snapshot) => {
-            if (snapshot.empty) return;
             const cargadas = [];
             snapshot.forEach(d => cargadas.push({ id: d.id, ...d.data() }));
-            cargadas.sort((a, b) => (a.orden || 999) - (b.orden || 999));
-            listaPlantillasCargadas = cargadas;
+            listaPlantillasCargadas = fusionarConOficiales(cargadas);
             guardarPlantillasLocales(listaPlantillasCargadas);
             renderizarPlantillas(false);
         }, (err) => {
