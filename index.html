@@ -196,7 +196,7 @@
             <!-- SECCIÓN 1: PLANTILLAS DE NARRACIONES -->
             <section id="narraciones" class="section-card">
 
-                <!-- BLOQUE: CONFIGURADOR DE FUNCIONARIOS ACTUANTES (8 HORAS) -->
+                <!-- BLOQUE: CONFIGURADOR DE FUNCIONARIOS ACTUANTES (HASTA 3 - 8 HORAS) -->
                 <div style="padding: 18px 24px; margin-bottom: 25px; background: linear-gradient(145deg, rgba(30, 58, 138, 0.25), rgba(16, 24, 39, 0.95)); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px;">
                     <div class="section-header" style="margin-bottom: 12px;">
                         <h2 style="font-size: 1.1rem;"><i class="fa-solid fa-user-shield" style="color: #60a5fa;"></i> Funcionarios Actuantes en Servicio (Autofill 8 Horas)</h2>
@@ -204,11 +204,12 @@
                             <i class="fa-solid fa-rotate-right"></i> Restablecer Neutro
                         </button>
                     </div>
-                    <p class="section-desc" style="margin-bottom: 12px; font-size: 0.85rem;">Ingrese los dos funcionarios una sola vez. Las plantillas se autocompletarán automáticamente durante 8 horas.</p>
+                    <p class="section-desc" style="margin-bottom: 12px; font-size: 0.85rem;">Ingrese 2 o hasta 3 funcionarios una sola vez. Las plantillas se autocompletarán automáticamente durante 8 horas.</p>
                     
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) auto; gap: 12px; align-items: center;">
-                        <input type="text" id="inputAgente1" placeholder="Primer Funcionario (Ej: AGENTE PÉREZ)" class="input-field">
-                        <input type="text" id="inputAgente2" placeholder="Segundo Funcionario (Ej: AGENTE GÓMEZ)" class="input-field">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) auto; gap: 12px; align-items: center;">
+                        <input type="text" id="inputAgente1" placeholder="1.º Funcionario (Ej: AGENTE PÉREZ)" class="input-field">
+                        <input type="text" id="inputAgente2" placeholder="2.º Funcionario (Ej: AGENTE GÓMEZ)" class="input-field">
+                        <input type="text" id="inputAgente3" placeholder="3.º Funcionario (Opcional)" class="input-field">
                         <button type="button" id="btnGuardarActuantes" class="btn-agregar" style="margin: 0;">
                             <i class="fa-solid fa-clock"></i> Fijar por 8 Horas
                         </button>
@@ -368,12 +369,13 @@
             }
         };
 
-        // --- GESTIÓN DE FUNCIONARIOS ACTUANTES (8 HORAS) ---
+        // --- GESTIÓN DE FUNCIONARIOS ACTUANTES (HASTA 3 - 8 HORAS) ---
         function verificarExpiracionActuantes() {
             const horaGuardada = localStorage.getItem('actuantes_timestamp');
             if (horaGuardada && (Date.now() - parseInt(horaGuardada) > 8 * 3600 * 1000)) {
                 localStorage.removeItem('agente_1');
                 localStorage.removeItem('agente_2');
+                localStorage.removeItem('agente_3');
                 localStorage.removeItem('actuantes_timestamp');
             }
         }
@@ -381,16 +383,34 @@
 
         const inputAgente1 = document.getElementById('inputAgente1');
         const inputAgente2 = document.getElementById('inputAgente2');
+        const inputAgente3 = document.getElementById('inputAgente3');
         const estadoActuantes = document.getElementById('estadoActuantes');
+
+        function formatearActuantesTexto() {
+            const lista = [
+                localStorage.getItem('agente_1'),
+                localStorage.getItem('agente_2'),
+                localStorage.getItem('agente_3')
+            ].filter(Boolean);
+
+            if (lista.length === 0) return '';
+            if (lista.length === 1) return lista[0];
+            if (lista.length === 2) return `${lista[0]} y ${lista[1]}`;
+            return `${lista[0]}, ${lista[1]} y ${lista[2]}`;
+        }
 
         function actualizarUIActuantes() {
             const a1 = localStorage.getItem('agente_1') || '';
             const a2 = localStorage.getItem('agente_2') || '';
+            const a3 = localStorage.getItem('agente_3') || '';
             inputAgente1.value = a1;
             inputAgente2.value = a2;
-            if (a1 && a2) {
+            inputAgente3.value = a3;
+
+            const textoFormateado = formatearActuantesTexto();
+            if (textoFormateado) {
                 estadoActuantes.style.display = 'block';
-                estadoActuantes.innerHTML = `<i class="fa-solid fa-circle-check"></i> Activo: ${a1} y ${a2}`;
+                estadoActuantes.innerHTML = `<i class="fa-solid fa-circle-check"></i> Activo: ${textoFormateado}`;
             } else {
                 estadoActuantes.style.display = 'none';
             }
@@ -400,9 +420,20 @@
         document.getElementById('btnGuardarActuantes').addEventListener('click', () => {
             const a1 = inputAgente1.value.trim().toUpperCase();
             const a2 = inputAgente2.value.trim().toUpperCase();
-            if (!a1 || !a2) { alert('Ingrese ambos funcionarios.'); return; }
+            const a3 = inputAgente3.value.trim().toUpperCase();
+
+            if (!a1 || !a2) {
+                alert('Ingrese al menos los dos primeros funcionarios.');
+                return;
+            }
+
             localStorage.setItem('agente_1', a1);
             localStorage.setItem('agente_2', a2);
+            if (a3) {
+                localStorage.setItem('agente_3', a3);
+            } else {
+                localStorage.removeItem('agente_3');
+            }
             localStorage.setItem('actuantes_timestamp', Date.now().toString());
             actualizarUIActuantes();
             renderizarPlantillas(true);
@@ -412,6 +443,7 @@
             if (confirm("¿Restablecer funcionarios a neutro?")) {
                 localStorage.removeItem('agente_1');
                 localStorage.removeItem('agente_2');
+                localStorage.removeItem('agente_3');
                 localStorage.removeItem('actuantes_timestamp');
                 actualizarUIActuantes();
                 renderizarPlantillas(true);
@@ -544,7 +576,6 @@
 
         const CACHE_PLANTILLAS_KEY = 'plantillas_offline_cache_v2';
 
-        // Garantiza que las 18 plantillas base estén siempre presentes aunque en caché o nube falte alguna
         function fusionarConOficiales(listaExterna) {
             const mapa = new Map();
             plantillasOficiales.forEach((p, idx) => {
@@ -606,13 +637,12 @@
 
             gridPlantillas.innerHTML = '';
             const filtro = inputBuscarPlantilla ? inputBuscarPlantilla.value.toLowerCase().trim() : '';
-            const a1 = localStorage.getItem('agente_1');
-            const a2 = localStorage.getItem('agente_2');
+            const actuantesTexto = formatearActuantesTexto();
 
             listaPlantillasCargadas.forEach((p) => {
                 let textoProcesado = p.texto || '';
-                if (a1 && a2) {
-                    textoProcesado = textoProcesado.replace(/FUNCIONARIOS ACTUANTES/g, `FUNCIONARIOS ACTUANTES ${a1} y ${a2}`);
+                if (actuantesTexto) {
+                    textoProcesado = textoProcesado.replace(/FUNCIONARIOS ACTUANTES/g, `FUNCIONARIOS ACTUANTES ${actuantesTexto}`);
                 }
                 if (filtro && !p.titulo.toLowerCase().includes(filtro) && !textoProcesado.toLowerCase().includes(filtro)) return;
 
