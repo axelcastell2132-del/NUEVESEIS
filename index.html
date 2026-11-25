@@ -23,6 +23,33 @@
         .card-plantilla code[contenteditable="true"] {
             min-height: 110px;
         }
+
+        /* Estilos para el directorio de cédulas de funcionarios */
+        .ci-badge {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #93c5fd;
+            background: rgba(37, 99, 235, 0.16);
+            border: 1px solid rgba(96, 165, 250, 0.35);
+            padding: 4px 10px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+
+        .grado-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #fbbf24;
+            background: rgba(245, 158, 11, 0.14);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            padding: 3px 8px;
+            border-radius: 5px;
+            display: inline-block;
+            min-width: 42px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -62,7 +89,7 @@
         </div>
         <ul class="sidebar-menu">
             <li><a href="#" class="nav-link active" onclick="seleccionarMenu(this, 'narraciones')"><i class="fa-solid fa-file-lines"></i> Plantillas de Narraciones</a></li>
-            <li><a href="#" class="nav-link" onclick="seleccionarMenu(this, 'identificados')"><i class="fa-solid fa-id-card"></i> Datos de Identificados</a></li>
+            <li><a href="#" class="nav-link" onclick="seleccionarMenu(this, 'cedulasFuncionarios')"><i class="fa-solid fa-address-card"></i> Cédulas de Funcionarios</a></li>
         </ul>
         <div class="sidebar-footer-logout">
             <div id="infoUsuarioLogueado" style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; text-align: center; overflow: hidden; text-overflow: ellipsis;"></div>
@@ -77,7 +104,7 @@
         <header class="top-header">
             <div class="header-title">
                 <h1>Panel de Operaciones Policiales</h1>
-                <p>Gestión rápida de narraciones e identificaciones en servicio</p>
+                <p>Gestión rápida de narraciones y cédulas de personal en servicio</p>
             </div>
             <div class="header-badge" id="badgeEstadoRed">
                 <span class="pulse-dot" id="dotEstadoRed"></span> <span id="textoEstadoRed">EN SERVICIO (SGSP)</span>
@@ -130,92 +157,52 @@
                 </div>
             </section>
 
-            <!-- SECCIÓN 2: DATOS DE IDENTIFICADOS -->
-            <section id="identificados" class="section-card" style="display: none;">
+            <!-- SECCIÓN 2: CÉDULAS DE FUNCIONARIOS -->
+            <section id="cedulasFuncionarios" class="section-card" style="display: none;">
                 <div class="section-header">
-                    <h2><i class="fa-solid fa-address-book"></i> Datos de Identificados</h2>
+                    <h2><i class="fa-solid fa-address-card"></i> Cédulas de Funcionarios - Comisaría Quinta</h2>
                 </div>
-                <p class="section-desc">Haga clic sobre cualquier ciudadano en la tabla para acceder a su ficha individual de inteligencia.</p>
+                <p class="section-desc">Busque rápidamente por apellido, nombre, grado o cédula y copie el número con un toque para cargarlo en el SGSP. Funciona 100% sin conexión.</p>
 
-                <div class="form-identificado-container">
-                    <input type="text" id="inputCedula" placeholder="Cédula / ID" class="input-field">
-                    <input type="text" id="inputNombre" placeholder="Nombre Completo (Apellido y Nombre)" class="input-field">
-                    <input type="text" id="inputApodo" placeholder="Apodo / Alias" class="input-field">
-                    <input type="date" id="inputFecha" class="input-field">
-                    <input type="text" id="inputDomicilio" placeholder="Domicilio / Antecedentes" class="input-field">
-                    <button type="button" id="btnAgregar" class="btn-agregar">
-                        <i class="fa-solid fa-user-plus"></i> Agregar Identificado
-                    </button>
+                <!-- BUSCADOR RÁPIDO POR APELLIDO O CÉDULA -->
+                <div style="position: relative; margin-bottom: 20px;">
+                    <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.95rem;"></i>
+                    <input type="text" id="inputBuscarFuncionario" class="input-field" placeholder="Buscar por apellido (ej: Tormos, Castell, Petcoff...) o C.I..." style="padding-left: 42px; width: 100%; font-size: 0.95rem;">
                 </div>
 
                 <div class="table-container">
                     <table class="styled-table">
                         <thead>
                             <tr>
-                                <th style="width: 15%;">Cédula / ID</th>
-                                <th style="width: 25%;">Nombre Completo</th>
-                                <th style="width: 15%;">Apodo</th>
-                                <th style="width: 15%;">Fecha Nac.</th>
-                                <th style="width: 20%;">Domicilio</th>
-                                <th style="width: 10%;">Registrado por</th>
-                                <th style="width: 5%;">Acción</th>
+                                <th style="width: 10%;">Grado</th>
+                                <th style="width: 30%;">Apellidos</th>
+                                <th style="width: 28%;">Nombres</th>
+                                <th style="width: 17%;">C.I. N.º</th>
+                                <th style="width: 15%;">Copiar</th>
                             </tr>
                         </thead>
-                        <tbody id="tablaIdentificadosBody">
+                        <tbody id="tablaFuncionariosBody">
                         </tbody>
                     </table>
-                    <div id="empty-state" class="empty-state-msg">
-                        <i class="fa-solid fa-folder-open"></i>
-                        <span>No hay registros cargados. Complete el formulario superior y presione "Agregar Identificado".</span>
+                    <div id="empty-funcionarios" class="empty-state-msg" style="display: none;">
+                        <i class="fa-solid fa-user-slash"></i>
+                        <span>No se encontraron funcionarios con ese apellido o número de cédula.</span>
                     </div>
                 </div>
             </section>
         </main>
 
         <footer class="footer">
-            <p><i class="fa-solid fa-handshake-angle"></i> Donde hay buen compañerismo, ningún procedimiento se enfrenta solo</p>
+            <p><i class="fa-solid fa-handshake-angle"></i> "Un buen turno no se mide por lo tranquilo que esté, sino por saber que tenés a alguien que te respalda al lado."</p>
         </footer>
     </div>
 
-    <!-- VISTA SECUNDARIA: FICHA DEL IDENTIFICADO -->
-    <div class="profile-container" id="vistaPerfil" style="display: none;">
-        <header class="top-header profile-header">
-            <div class="header-title">
-                <button type="button" class="btn-volver" id="btnVolverInicio">
-                    <i class="fa-solid fa-arrow-left"></i> Volver al Panel
-                </button>
-                <h1 id="perfilTituloNombre">Ficha del Identificado</h1>
-                <p id="perfilSubInfo">Cédula: - | Apodo: -</p>
-            </div>
-            <div class="header-badge profile-badge">
-                <i class="fa-solid fa-folder-closed"></i> EXPEDIENTE DIGITAL CLOUD
-            </div>
-        </header>
-
-        <main class="content-body">
-            <div class="profile-grid">
-                <div class="profile-col" style="grid-column: span 2;">
-                    <div class="section-card">
-                        <div class="section-header">
-                            <h2><i class="fa-solid fa-file-lines"></i> Notas de Inteligencia / Observaciones</h2>
-                        </div>
-                        <textarea id="txtNotasPerfil" class="input-field textarea-field" rows="8" placeholder="Observaciones de campo, vínculos..."></textarea>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <footer class="footer">
-            <p><i class="fa-solid fa-handshake-angle"></i> "Comisaría Quinta - Lealtad y Vocación de Servicio"</p>
-        </footer>
-    </div>
-
-    <!-- SCRIPT DE FIREBASE Y LÓGICA DE CONTROL DE ACCESO ÚNICO + RESPALDO OFFLINE -->
+    <!-- SCRIPT DE FIREBASE Y LÓGICA DE CONTROL DE ACCESO ÚNICO + CÉDULAS + RESPALDO OFFLINE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
             getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, 
-            serverTimestamp, getDoc, updateDoc, getDocs, writeBatch 
+            serverTimestamp, updateDoc, getDocs, writeBatch 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -295,13 +282,6 @@
             location.reload();
         });
 
-        function obtenerResponsableTurno() {
-            const a1 = localStorage.getItem('agente_1');
-            const a2 = localStorage.getItem('agente_2');
-            if (a1 && a2) return `${a1} y ${a2}`;
-            return USUARIO_UNICO;
-        }
-
         // Navegación entre Pestañas
         window.seleccionarMenu = function(elemento, seccionId) {
             const navLinks = document.querySelectorAll('.sidebar-menu .nav-link');
@@ -309,10 +289,15 @@
             elemento.classList.add('active');
 
             document.getElementById('narraciones').style.display = 'none';
-            document.getElementById('identificados').style.display = 'none';
+            document.getElementById('cedulasFuncionarios').style.display = 'none';
 
             document.getElementById(seccionId).style.display = 'block';
             window.scrollTo(0, 0);
+
+            if (seccionId === 'cedulasFuncionarios') {
+                const buscadorFunc = document.getElementById('inputBuscarFuncionario');
+                if (buscadorFunc) setTimeout(() => buscadorFunc.focus(), 50);
+            }
         };
 
         // --- GESTIÓN DE FUNCIONARIOS ACTUANTES (8 HORAS) ---
@@ -364,6 +349,105 @@
                 renderizarPlantillas(true);
             }
         });
+
+        // --- DIRECTORIO DE CÉDULAS DE FUNCIONARIOS ---
+        const funcionariosBase = [
+            { grado: "6", apellidos: "TORMOS LOPEZ", nombres: "MARCOS JAVIER", cedula: "4598013-4" },
+            { grado: "4", apellidos: "DURE CABAÑA", nombres: "MARCELO RAMON", cedula: "4284136-3" },
+            { grado: "4PA", apellidos: "MEZQUITA ARANDA", nombres: "MARÍA DEL CARMEN", cedula: "3689524-1" },
+            { grado: "4PA", apellidos: "LAMELA DALMAO", nombres: "ADRIANA GISELL", cedula: "4235902-3" },
+            { grado: "2", apellidos: "BATTISTESSA SILVA", nombres: "YOVANA EDITH", cedula: "3837231-4" },
+            { grado: "2", apellidos: "ALVAREZ CASTILLO", nombres: "SANDRA CARINA", cedula: "4729142-4" },
+            { grado: "2", apellidos: "GONZALEZ RODRIGUEZ", nombres: "PEDRO FABRICIO", cedula: "5303581-4" },
+            { grado: "2", apellidos: "CAMPOS", nombres: "ALEJANDRA FAVIANA", cedula: "3235174-4" },
+            { grado: "2", apellidos: "MARTINEZ SILVA", nombres: "CARINA OFELIA", cedula: "4088368-4" },
+            { grado: "1", apellidos: "PITETTA FLEITAS", nombres: "PABLO ALEJANDRO", cedula: "4620587-0" },
+            { grado: "1", apellidos: "MENDEZ SILVA", nombres: "RUTH NOEMI", cedula: "4700992-0" },
+            { grado: "1", apellidos: "RODRIGUEZ", nombres: "CLAUDIA FELIPA", cedula: "3787804-4" },
+            { grado: "1", apellidos: "ALVAREZ ALVEZ", nombres: "DAHIANA", cedula: "4885750-4" },
+            { grado: "1", apellidos: "IRIGOYEN ARRÚA", nombres: "CARLOS GILBERTO", cedula: "5123603-6" },
+            { grado: "1PA", apellidos: "VIZCARRA GARCIA", nombres: "YEMINA PAMELA", cedula: "5213605-7" },
+            { grado: "1", apellidos: "CASTELL CACERES", nombres: "AXEL XAVIER", cedula: "5264015-3" },
+            { grado: "1", apellidos: "ELLIOT ALGALARRONDO", nombres: "CINDY YAMILA", cedula: "5218624-0" },
+            { grado: "1", apellidos: "CASTILLO MONTERO", nombres: "JUAN MICHAEL", cedula: "5254549-6" },
+            { grado: "1", apellidos: "PETCOFF ROSANO", nombres: "YESSICA INES", cedula: "5206367-6" },
+            { grado: "1", apellidos: "CABRERA LÓPEZ", nombres: "HÉCTOR SANTIAGO", cedula: "5321830-3" }
+        ];
+
+        function normalizarTexto(txt) {
+            return (txt || '').toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+        }
+
+        const tablaFuncionariosBody = document.getElementById('tablaFuncionariosBody');
+        const inputBuscarFuncionario = document.getElementById('inputBuscarFuncionario');
+        const emptyFuncionarios = document.getElementById('empty-funcionarios');
+
+        function renderizarFuncionarios() {
+            tablaFuncionariosBody.innerHTML = '';
+            const filtro = normalizarTexto(inputBuscarFuncionario ? inputBuscarFuncionario.value : '');
+            const filtroDigitos = filtro.replace(/[^0-9]/g, '');
+
+            const filtrados = funcionariosBase.filter(f => {
+                if (!filtro) return true;
+                const apellidosNorm = normalizarTexto(f.apellidos);
+                const nombresNorm = normalizarTexto(f.nombres);
+                const gradoNorm = normalizarTexto(f.grado);
+                const ciLimpia = (f.cedula || '').replace(/[^0-9]/g, '');
+
+                return (
+                    apellidosNorm.includes(filtro) ||
+                    nombresNorm.includes(filtro) ||
+                    `${apellidosNorm} ${nombresNorm}`.includes(filtro) ||
+                    `${nombresNorm} ${apellidosNorm}`.includes(filtro) ||
+                    gradoNorm.includes(filtro) ||
+                    (filtroDigitos && ciLimpia.includes(filtroDigitos))
+                );
+            });
+
+            if (filtrados.length === 0) {
+                emptyFuncionarios.style.display = 'flex';
+                return;
+            }
+            emptyFuncionarios.style.display = 'none';
+
+            filtrados.forEach((f) => {
+                const tr = document.createElement('tr');
+                const ciSinGuion = (f.cedula || '').replace(/[^0-9]/g, '');
+                tr.innerHTML = `
+                    <td><span class="grado-badge">${f.grado || '-'}</span></td>
+                    <td><strong>${f.apellidos}</strong></td>
+                    <td>${f.nombres}</td>
+                    <td><span class="ci-badge">${f.cedula}</span></td>
+                    <td>
+                        <div style="display: flex; gap: 6px; align-items: center;">
+                            <button type="button" class="btn-add-plantilla btn-copiar-ci" data-ci="${ciSinGuion}" title="Copiar solo números (${ciSinGuion})" style="padding: 6px 10px; font-size: 0.75rem;">
+                                <i class="fa-solid fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </td>
+                `;
+
+                const btnCopiarCi = tr.querySelector('.btn-copiar-ci');
+                btnCopiarCi.addEventListener('click', () => {
+                    navigator.clipboard.writeText(ciSinGuion).then(() => {
+                        btnCopiarCi.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiada!';
+                        btnCopiarCi.style.background = '#059669';
+                        setTimeout(() => {
+                            btnCopiarCi.innerHTML = '<i class="fa-solid fa-copy"></i> Copiar';
+                            btnCopiarCi.style.background = '';
+                        }, 1400);
+                    });
+                });
+
+                tablaFuncionariosBody.appendChild(tr);
+            });
+        }
+
+        renderizarFuncionarios();
+
+        if (inputBuscarFuncionario) {
+            inputBuscarFuncionario.addEventListener('input', renderizarFuncionarios);
+        }
 
         // --- PLANTILLAS OPERATIVAS (CON RESPALDO OFFLINE EN LOCALSTORAGE Y EDICIÓN SEGURA) ---
         const plantillasOficiales = [
@@ -550,109 +634,6 @@
                 guardarPlantillasLocales(listaPlantillasCargadas);
                 renderizarPlantillas(true);
             }
-        });
-
-        // --- IDENTIFICADOS ---
-        const tbodyIdentificados = document.getElementById('tablaIdentificadosBody');
-        const emptyState = document.getElementById('empty-state');
-
-        onSnapshot(collection(db, "identificados"), (snapshot) => {
-            tbodyIdentificados.innerHTML = '';
-            if (snapshot.empty) { if (emptyState) emptyState.style.display = 'flex'; return; }
-            if (emptyState) emptyState.style.display = 'none';
-
-            snapshot.forEach((documento) => {
-                const item = documento.data();
-                const id = documento.id;
-                const tr = document.createElement('tr');
-                tr.style.cursor = 'pointer';
-                tr.innerHTML = `
-                    <td><strong>${item.cedula || '-'}</strong></td>
-                    <td>${item.nombre || '-'}</td>
-                    <td><span class="apodo-badge">${item.apodo || '-'}</span></td>
-                    <td>${item.fechaNac || '-'}</td>
-                    <td>${item.domicilio || '-'}</td>
-                    <td style="font-size: 0.75rem; color: #60a5fa;"><i class="fa-solid fa-user"></i> ${item.registradoPor || USUARIO_UNICO}</td>
-                    <td>
-                        <button type="button" class="btn-eliminar" title="Eliminar registro"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
-                `;
-
-                tr.querySelectorAll('td:not(:last-child)').forEach(cell => {
-                    cell.addEventListener('click', () => abrirPerfilCloud(id));
-                });
-
-                tr.querySelector('.btn-eliminar').addEventListener('click', async (e) => {
-                    e.stopPropagation();
-                    if (confirm("¿Desea borrar este registro?")) await deleteDoc(doc(db, "identificados", id));
-                });
-
-                tbodyIdentificados.appendChild(tr);
-            });
-        }, (err) => console.warn("Identificados sin conexión:", err.message));
-
-        document.getElementById('btnAgregar').addEventListener('click', async () => {
-            if (!navigator.onLine) {
-                alert('Se requiere conexión a internet para guardar identificados en la nube.');
-                return;
-            }
-            const cedula = document.getElementById('inputCedula').value.trim();
-            const nombre = document.getElementById('inputNombre').value.trim();
-            const apodo = document.getElementById('inputApodo').value.trim();
-            const fecha = document.getElementById('inputFecha').value;
-            const domicilio = document.getElementById('inputDomicilio').value.trim();
-
-            if (!nombre) { alert('Ingrese al menos el nombre completo.'); return; }
-
-            let fechaFormateada = '-';
-            if (fecha) {
-                const p = fecha.split('-');
-                fechaFormateada = `${p[2]}/${p[1]}/${p[0]}`;
-            }
-
-            try {
-                await addDoc(collection(db, "identificados"), {
-                    cedula: cedula || '-',
-                    nombre: nombre,
-                    apodo: apodo || '-',
-                    fechaNac: fechaFormateada,
-                    domicilio: domicilio || '-',
-                    notas: '',
-                    registradoPor: obtenerResponsableTurno(),
-                    creado: serverTimestamp()
-                });
-
-                document.getElementById('inputCedula').value = '';
-                document.getElementById('inputNombre').value = '';
-                document.getElementById('inputApodo').value = '';
-                document.getElementById('inputFecha').value = '';
-                document.getElementById('inputDomicilio').value = '';
-            } catch (error) {
-                alert("Error: " + error.message);
-            }
-        });
-
-        async function abrirPerfilCloud(id) {
-            const snap = await getDoc(doc(db, "identificados", id));
-            if (snap.exists()) {
-                const data = snap.data();
-                document.getElementById('perfilTituloNombre').innerText = data.nombre;
-                document.getElementById('perfilSubInfo').innerText = `Cédula: ${data.cedula} | Registrado por: ${data.registradoPor || USUARIO_UNICO}`;
-                const txtNotas = document.getElementById('txtNotasPerfil');
-                txtNotas.value = data.notas || '';
-                txtNotas.oninput = async () => { await updateDoc(doc(db, "identificados", id), { notas: txtNotas.value }); };
-
-                document.getElementById('vistaPrincipal').style.display = 'none';
-                document.getElementById('mainSidebar').style.display = 'none';
-                document.getElementById('vistaPerfil').style.display = 'block';
-                window.scrollTo(0, 0);
-            }
-        }
-
-        document.getElementById('btnVolverInicio').addEventListener('click', () => {
-            document.getElementById('vistaPerfil').style.display = 'none';
-            document.getElementById('vistaPrincipal').style.display = 'flex';
-            document.getElementById('mainSidebar').style.display = 'flex';
         });
     </script>
 
