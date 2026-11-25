@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nueve96seis-v1';
+const CACHE_NAME = 'nueve96seis-v3';
 
 // Archivos locales y externos esenciales para que la interfaz abra sin conexión
 const ASSETS_TO_CACHE = [
